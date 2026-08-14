@@ -7,7 +7,7 @@ killall nwg-dock-hyprland 2>/dev/null
 sleep 0.2
 
 # Iniciar directamente en segundo plano y desacoplar del proceso padre
-nwg-dock-hyprland -i 56 -d -mb 8 -nolauncher >/dev/null 2>&1 &
+nwg-dock-hyprland -i 40 -d -mb 8 -nolauncher >/dev/null 2>&1 &
 disown
 
 echo "[Dock] nwg-dock-hyprland iniciado de forma autónoma."
