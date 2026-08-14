@@ -8,6 +8,8 @@
   # Habilitar la gestión propia de Home Manager
   programs.home-manager.enable = true;
 
+  home.sessionPath = [ "$HOME/.local/bin" ];
+
   # Variables de entorno globales del sistema de usuario (Wayland / GTK Dark / Qt / Electron)
   home.sessionVariables = {
     XDG_CURRENT_DESKTOP = "Hyprland";
