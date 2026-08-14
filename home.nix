@@ -36,6 +36,6 @@
     bibata-cursors
     font-awesome
     nerd-fonts.jetbrains-mono
-    nixfmt-rfc-style # Formateador oficial de código Nix
+    nixfmt # Formateador oficial de código Nix
   ];
 }
