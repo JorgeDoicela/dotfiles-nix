@@ -5,8 +5,8 @@
 killall nwg-dock-hyprland 2>/dev/null
 sleep 0.2
 
-# Iniciar permanentemente visible en la parte inferior (estilo macOS fijo)
-nwg-dock-hyprland -i 40 -mb 6 -nolauncher >/dev/null 2>&1 &
+# Iniciar el Dock oficial de Hyprland
+nwg-dock-hyprland -i 48 -d -mb 6 -nolauncher >/dev/null 2>&1 &
 disown
 
 echo "[Dock] nwg-dock-hyprland iniciado de forma autónoma."
