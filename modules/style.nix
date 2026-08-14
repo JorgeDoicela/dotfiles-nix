@@ -1,15 +1,12 @@
 { config, pkgs, ... }:
 
 {
-  # Configuración Declarativa de GTK
+  # Configuración Declarativa de GTK con tema oficial macOS WhiteSur (Gris Neutro macOS)
   gtk = {
     enable = true;
     theme = {
-      name = "Catppuccin-Mocha";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "blue" ];
-        variant = "mocha";
-      };
+      name = "WhiteSur-Dark";
+      package = pkgs.whitesur-gtk-theme;
     };
     iconTheme = {
       name = "Tela-circle-dracula";
@@ -40,7 +37,7 @@
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
-      gtk-theme = "Catppuccin-Mocha";
+      gtk-theme = "WhiteSur-Dark";
       icon-theme = "Tela-circle-dracula";
       cursor-theme = "Bibata-Modern-Ice";
     };
@@ -48,7 +45,7 @@
 
   # Enlace declarativo de xsettingsd.conf para compatibilidad con X11 / XWayland
   xdg.configFile."xsettingsd/xsettingsd.conf".text = ''
-    Net/ThemeName "Catppuccin-Mocha"
+    Net/ThemeName "WhiteSur-Dark"
     Net/IconThemeName "Tela-circle-dracula"
     Gtk/CursorThemeName "Bibata-Modern-Ice"
     Net/EnableEventSounds 1

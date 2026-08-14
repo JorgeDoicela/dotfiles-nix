@@ -31,11 +31,11 @@
 
   # Paquetes útiles de sistema instalados de forma declarativa mediante Nix
   home.packages = with pkgs; [
-    catppuccin-gtk
+    whitesur-gtk-theme
     tela-circle-icon-theme
     bibata-cursors
     font-awesome
     nerd-fonts.jetbrains-mono
-    nixfmt # Formateador oficial de código Nix
+    nixfmt
   ];
 }
