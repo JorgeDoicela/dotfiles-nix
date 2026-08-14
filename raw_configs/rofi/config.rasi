@@ -22,7 +22,7 @@ window {
     background-color:            @main-bg;
     border:                      2px;
     border-color:                @main-br;
-    border-radius:               12px;
+    border-radius:               16px;
 }
 
 mainbox {
