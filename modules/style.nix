@@ -26,9 +26,15 @@
     };
   };
 
-  # Enlaces simbólicos directos en ~/.local/share/themes para compatibilidad absoluta con GTK3/GTK4 en Debian
+  # Enlaces simbólicos directos en ~/.local/share y ~/.themes / ~/.icons para compatibilidad universal en Debian
   home.file.".local/share/themes/WhiteSur-Dark".source = "${pkgs.whitesur-gtk-theme}/share/themes/WhiteSur-Dark";
   home.file.".themes/WhiteSur-Dark".source = "${pkgs.whitesur-gtk-theme}/share/themes/WhiteSur-Dark";
+
+  home.file.".local/share/icons/Tela-circle-dracula".source = "${pkgs.tela-circle-icon-theme}/share/icons/Tela-circle-dracula";
+  home.file.".icons/Tela-circle-dracula".source = "${pkgs.tela-circle-icon-theme}/share/icons/Tela-circle-dracula";
+
+  home.file.".local/share/icons/Bibata-Modern-Ice".source = "${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice";
+  home.file.".icons/Bibata-Modern-Ice".source = "${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice";
 
   # Configuración Declarativa de Qt (Fusion nativo + Qt6CT)
   qt = {
