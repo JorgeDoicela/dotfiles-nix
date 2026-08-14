@@ -1,0 +1,9 @@
+show_calendar = 1
+show_timebars = 0
+mark_today = 1
+show_week_numbers = 0
+close_on_unfocus = 1
+clock_format = %a %d %b %H:%M
+force_shift = 1
+align = right
+show_icon = 0

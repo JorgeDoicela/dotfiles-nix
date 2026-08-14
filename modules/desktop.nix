@@ -12,9 +12,12 @@
   # Enlace declarativo de Waybar
   xdg.configFile."waybar".source = ../raw_configs/waybar;
 
-  # Enlace declarativo de Rofi (con el tema estático de Catppuccin Mocha)
+  # Enlace declarativo de Rofi
   xdg.configFile."rofi".source = ../raw_configs/rofi;
 
   # Enlace declarativo de SwayNC
   xdg.configFile."swaync".source = ../raw_configs/swaync;
+
+  # Enlace declarativo de gsimplecal
+  xdg.configFile."gsimplecal".source = ../raw_configs/gsimplecal;
 }
