@@ -29,7 +29,6 @@
   "widgets": [
     "title",
     "dnd",
-    "mpris",
     "notifications"
   ],
   "widget-config": {
@@ -40,10 +39,6 @@
     },
     "dnd": {
       "text": "No Molestar"
-    },
-    "mpris": {
-      "image-size": 96,
-      "image-radius": 12
     }
   }
 }
