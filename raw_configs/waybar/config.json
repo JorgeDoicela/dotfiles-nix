@@ -99,14 +99,10 @@
         "on-click": "gsimplecal"
     },
     "network": {
-        "format": "󰤨",
         "format-wifi": "󰤨 {ssid}",
-        "format-ethernet": "󰈀",
-        "format-disconnected": "󰤮",
-        "tooltip-format": "{ifname} vía {gwaddr}",
-        "tooltip-format-wifi": "{ssid} ({signalStrength}%)",
-        "tooltip-format-ethernet": "{ifname}",
-        "tooltip-format-disconnected": "Desconectado",
+        "format-ethernet": "󰈀 Conectado",
+        "format-disconnected": "󰤮 Desconectado",
+        "tooltip-format": "{ifname}",
         "on-click": "nm-connection-editor"
     },
     "bluetooth": {
