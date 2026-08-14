@@ -1,0 +1,7 @@
+# Archivos temporales y de compilación de Nix
+result
+result-*
+*.backup
+*.swp
+*.tmp
+.DS_Store
