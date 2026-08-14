@@ -1,0 +1,48 @@
+/*
+ * nwg-dock-hyprland — Tema Monocromatico Espacial (macOS Dark)
+ * Paleta coherente con el resto del sistema: WhiteSur-Dark + StarShip monocromatico
+ */
+
+window {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+#box {
+    background-color: rgba(18, 18, 20, 0.72);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 6px 10px;
+    margin-bottom: 4px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+}
+
+#active {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.85);
+    border-radius: 1px;
+}
+
+button, image {
+    background: none;
+    border-style: none;
+    box-shadow: none;
+    transition: all 0.18s ease-in-out;
+}
+
+button {
+    padding: 5px;
+    margin: 0 3px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+}
+
+button:hover {
+    background-color: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+}
+
+button:active {
+    background-color: rgba(255, 255, 255, 0.18);
+}

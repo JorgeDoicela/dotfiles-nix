@@ -15,6 +15,9 @@
   # Enlace declarativo de Rofi
   xdg.configFile."rofi".source = ../raw_configs/rofi;
 
+  # Enlace declarativo de nwg-dock-hyprland
+  xdg.configFile."nwg-dock-hyprland".source = ../raw_configs/nwg-dock-hyprland;
+
   # Enlace declarativo de SwayNC
   xdg.configFile."swaync".source = ../raw_configs/swaync;
 
