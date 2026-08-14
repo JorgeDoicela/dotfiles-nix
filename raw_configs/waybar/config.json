@@ -163,7 +163,7 @@
     },
     "custom/screenshot": {
         "format": "󰈙",
-        "on-click": "flameshot-hypr gui",
+        "on-click": "~/.local/bin/flameshot-hypr gui",
         "tooltip": "Captura"
     },
     "custom/audio": {

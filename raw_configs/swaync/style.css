@@ -1,16 +1,16 @@
 /*
- * SwayNC Dark Elegant Theme (Catppuccin Mocha Extended)
+ * SwayNC macOS Dark Monochrome Theme
  */
 
-@define-color bg-selected rgb(30, 30, 46);
-@define-color bg-hover rgb(45, 45, 70);
-@define-color bg-main rgba(17, 17, 27, 0.95);
-@define-color border-color rgba(255, 255, 255, 0.1);
-@define-color text-color #cdd6f4;
-@define-color text-muted #a6adc8;
-@define-color accent-color #cba6f7; /* Mauve Catppuccin */
-@define-color error-color #f38ba8;  /* Red Catppuccin */
-@define-color success-color #a6e3a1;/* Green Catppuccin */
+@define-color bg-main rgba(28, 28, 30, 0.85);
+@define-color bg-selected rgba(44, 44, 46, 0.90);
+@define-color bg-hover rgba(58, 58, 60, 0.90);
+@define-color border-color rgba(255, 255, 255, 0.15);
+@define-color text-color #f5f5f7;
+@define-color text-muted #8e8e93;
+@define-color accent-color #ffffff; /* Blanco puro para acentos */
+@define-color error-color #ff453a;  /* Red Apple */
+@define-color success-color #30d158;/* Green Apple */
 
 .notification-row {
   outline: none;
@@ -24,7 +24,7 @@
 }
 
 .notification {
-  border-radius: 12px;
+  border-radius: 14px;
   margin: 6px 12px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
   padding: 12px;
@@ -34,7 +34,7 @@
 }
 
 .notification-default-action {
-  border-radius: 12px;
+  border-radius: 14px;
   transition: all 0.2s ease-in-out;
 }
 
@@ -44,7 +44,7 @@
 
 .notification.critical {
   border: 1px solid @error-color;
-  background: rgba(243, 139, 168, 0.08);
+  background: rgba(255, 69, 58, 0.12);
 }
 
 .notification.critical .summary {
@@ -98,7 +98,7 @@
 
 .notification-action-button:hover {
   background: @accent-color;
-  color: @bg-selected;
+  color: #000000;
   border-color: @accent-color;
 }
 
@@ -118,7 +118,7 @@
 
 .notification-reply-button {
   background: @accent-color;
-  color: @bg-selected;
+  color: #000000;
   border-radius: 8px;
   border: none;
   padding: 6px 12px;
@@ -129,6 +129,7 @@
 
 .notification-reply-button:hover {
   background: @success-color;
+  color: #ffffff;
 }
 
 /* Centro de Control */
@@ -150,7 +151,7 @@
   font-size: 18px;
   font-weight: bold;
   margin: 10px;
-  color: @accent-color;
+  color: @text-color;
 }
 
 .widget-title > button {
@@ -165,7 +166,7 @@
 
 .widget-title > button:hover {
   background: @error-color;
-  color: @bg-selected;
+  color: #ffffff;
   border-color: @error-color;
 }
 
@@ -230,4 +231,3 @@
   background: @bg-hover;
   color: @accent-color;
 }
-

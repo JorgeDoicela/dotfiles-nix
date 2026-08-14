@@ -34,6 +34,9 @@
 
   # Paquetes útiles de sistema instalados de forma declarativa mediante Nix
   home.packages = with pkgs; [
+    flameshot
+    grim
+    slurp
     whitesur-gtk-theme
     tela-circle-icon-theme
     bibata-cursors
