@@ -1,6 +1,11 @@
 { config, pkgs, ... }:
 
 {
+  # Servicio de usuario Systemd para garantizar que SwayNC siempre esté activo en DBus
+  services.swaync = {
+    enable = true;
+  };
+
   # Enlace declarativo de configuraciones de Hyprland
   xdg.configFile."hypr".source = ../raw_configs/hypr;
 
