@@ -1,7 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  # Configuración Declarativa de GTK con tema oficial macOS WhiteSur (Gris Neutro macOS)
+  # Configuración Declarativa de GTK con tema oficial macOS WhiteSur
   gtk = {
     enable = true;
     theme = {
@@ -25,6 +25,10 @@
       gtk-application-prefer-dark-theme = 1;
     };
   };
+
+  # Enlaces simbólicos directos en ~/.local/share/themes para compatibilidad absoluta con GTK3/GTK4 en Debian
+  home.file.".local/share/themes/WhiteSur-Dark".source = "${pkgs.whitesur-gtk-theme}/share/themes/WhiteSur-Dark";
+  home.file.".themes/WhiteSur-Dark".source = "${pkgs.whitesur-gtk-theme}/share/themes/WhiteSur-Dark";
 
   # Configuración Declarativa de Qt (Fusion nativo + Qt6CT)
   qt = {
