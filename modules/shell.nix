@@ -1,14 +1,18 @@
 { config, pkgs, ... }:
 
 {
-  # Configuración declarativa de Git
+  # Configuración declarativa de Git (sintaxis actualizada de Home Manager)
   programs.git = {
     enable = true;
-    userName = "JorgeDoicela";
-    userEmail = "ismael02doicela@gmail.com";
+    settings = {
+      user = {
+        name = "JorgeDoicela";
+        email = "ismael02doicela@gmail.com";
+      };
+    };
   };
 
-  # Configuración declarativa de Xresources (para X11/XWayland cursores)
+  # Configuración declarativa de Xresources
   xresources.properties = {
     "Xcursor.theme" = "Bibata-Modern-Ice";
     "Xcursor.size" = 24;
