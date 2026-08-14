@@ -26,7 +26,7 @@
   };
   xdg.configFile."starship/starship.toml".source = ../raw_configs/starship/starship.toml;
 
-  # FZF con paleta Tokyo Night declarativa
+  # FZF con paleta Monocromática Blanco / Gris Espacial declarativa
   programs.fzf = {
     enable = true;
     enableZshIntegration = true;
@@ -35,10 +35,10 @@
       "--height 45%"
       "--layout=reverse"
       "--border"
-      "--color=fg:#c0caf5,bg:#1a1b26,hl:#bb9af7"
-      "--color=fg+:#c0caf5,bg+:#2e3c64,hl+:#7dcfff"
-      "--color=info:#7ac824,prompt:#7aa2f7,pointer:#f7768e"
-      "--color=marker:#9ece6a,spinner:#f7768e,header:#9ece6a"
+      "--color=fg:#f5f5f7,bg:#0d0d0f,hl:#ffffff"
+      "--color=fg+:#ffffff,bg+:#2c2c2e,hl+:#ffffff"
+      "--color=info:#8e8e93,prompt:#ffffff,pointer:#ffffff"
+      "--color=marker:#ffffff,spinner:#ffffff,header:#8e8e93"
     ];
   };
 

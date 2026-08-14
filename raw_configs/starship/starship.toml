@@ -1,13 +1,12 @@
-# No añadir una línea en blanco al inicio
+# Configuración Monocromática Blanco / Gris Espacial para Starship
 add_newline = false
 
-# Estilo premium con píldoras redondeadas (Nerd Fonts U+E0B6 / U+E0B4)
 format = """
-[\ue0b6](fg:#3b4261)\
-[$os](bg:#3b4261)\
-[\ue0b4](fg:#3b4261 bg:#2b2f44)\
-[$directory](bg:#2b2f44)\
-[\ue0b4](fg:#2b2f44)\
+[\ue0b6](fg:#2c2c2e)\
+[$os](bg:#2c2c2e)\
+[\ue0b4](fg:#2c2c2e bg:#1c1c1e)\
+[$directory](bg:#1c1c1e)\
+[\ue0b4](fg:#1c1c1e)\
  \
 $git_branch\
 $git_status\
@@ -21,14 +20,14 @@ $character"""
 
 [os]
 disabled = false
-style = "bg:#3b4261 fg:#f7768e bold"
+style = "bg:#2c2c2e fg:#ffffff bold"
 format = "[ $symbol ]($style)"
 
 [os.symbols]
 Debian = "\uf306"
 
 [directory]
-style = "bg:#2b2f44 fg:#73daca bold"
+style = "bg:#1c1c1e fg:#ffffff bold"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncate_to_repo = true
@@ -37,16 +36,16 @@ read_only = " \U000f033e"
 
 [git_branch]
 symbol = "\uf126 "
-style = "bold purple"
+style = "bold #e5e5ea"
 format = "on [$symbol$branch]($style) "
 
 [git_status]
-style = "bold red"
+style = "bold #ff453a"
 format = "[$all_status$ahead_behind]($style) "
 
 [kubernetes]
 symbol = "\u2638 "
-style = "bold blue"
+style = "bold #e5e5ea"
 format = 'at [$symbol$context(\($namespace\))]($style) '
 disabled = false
 detect_files = ['*.yaml', 'Dockerfile', 'docker-compose.yml', 'helmfile.yaml']
@@ -54,24 +53,24 @@ detect_folders = ['k8s', 'helm', 'kubernetes', 'manifests', 'charts']
 
 [nodejs]
 symbol = "\ued13 "
-style = "bold green"
+style = "bold #e5e5ea"
 format = "via [$symbol($version)]($style) "
 
 [rust]
 symbol = "\ue7a8 "
-style = "bold red"
+style = "bold #e5e5ea"
 format = "via [$symbol($version)]($style) "
 
 [python]
 symbol = "\uf81f "
-style = "bold yellow"
+style = "bold #e5e5ea"
 format = "via [$symbol($version)]($style) "
 
 [cmd_duration]
 min_time = 500
-style = "bold yellow"
+style = "bold #8e8e93"
 format = "took [$duration]($style) "
 
 [character]
-success_symbol = "[\U000f0627](bold green) "
-error_symbol = "[\U000f0627](bold red) "
+success_symbol = "[\U000f0627](bold white) "
+error_symbol = "[\U000f0627](bold #ff453a) "
