@@ -8,11 +8,12 @@
   # Habilitar la gestión propia de Home Manager
   programs.home-manager.enable = true;
 
-  # Variables de entorno globales del sistema de usuario (Wayland / Qt / Electron)
+  # Variables de entorno globales del sistema de usuario (Wayland / GTK Dark / Qt / Electron)
   home.sessionVariables = {
     XDG_CURRENT_DESKTOP = "Hyprland";
     XDG_SESSION_TYPE = "wayland";
     XDG_SESSION_DESKTOP = "Hyprland";
+    GTK_THEME = "WhiteSur-Dark"; # Forzar tema GTK oscuro en todas las aplicaciones GTK
     QT_QPA_PLATFORM = "wayland;xcb";
     QT_AUTO_SCREEN_SCALE_FACTOR = "1";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
