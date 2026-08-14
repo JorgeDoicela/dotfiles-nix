@@ -1,10 +1,10 @@
-# ❄️ JorgeDoicela's Nix Flakes & Home Manager Dotfiles
+# JorgeDoicela's Nix Flakes & Home Manager Dotfiles
 
-Configuración declarativa modular, ultralimpia y estática para **Debian + Hyprland**, gestionada con **Nix Flakes** y **Home Manager**.
+Configuración declarativa modular, ultralimpia y estática para Debian + Hyprland, gestionada con Nix Flakes y Home Manager.
 
 ---
 
-## 🏗️ Arquitectura del Repositorio
+## Arquitectura del Repositorio
 
 ```text
 dotfiles-nix/
@@ -22,7 +22,7 @@ dotfiles-nix/
 
 ---
 
-## 🛠️ Cómo aplicar cambios en tu máquina actual
+## Cómo aplicar cambios en tu máquina actual
 
 Si realizas alguna modificación dentro de `~/dotfiles-nix/`, aplica los cambios ejecutando:
 
@@ -32,7 +32,7 @@ home-manager switch --flake ~/dotfiles-nix#jorge
 
 ---
 
-## 🚀 Despliegue en una máquina nueva (2 Pasos)
+## Despliegue en una máquina nueva (2 Pasos)
 
 ### 1. Aprovisionar el Sistema Base (Debian)
 Clona este repositorio y ejecuta el script de aprovisionamiento de sistema:
