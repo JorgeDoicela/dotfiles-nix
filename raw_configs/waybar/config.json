@@ -99,9 +99,9 @@
         "on-click": "gsimplecal"
     },
     "network": {
-        "format-wifi": "󰤨 {ssid}",
-        "format-ethernet": "󰈀 Conectado",
-        "format-disconnected": "󰤮 Desconectado",
+        "format-wifi": "󰤨",
+        "format-ethernet": "󰈀",
+        "format-disconnected": "󰤮",
         "tooltip-format": "{ifname}",
         "on-click": "nm-connection-editor"
     },
