@@ -1,0 +1,202 @@
+/*
+ * Waybar — Tema macOS premium
+ * Estilo Frosted Glass translúcido con detalles monocromáticos y minimalistas.
+ */
+
+@import "theme.css";
+
+* {
+    border: none;
+    border-radius: 0;
+    font-family: "JetBrainsMono Nerd Font", "SF Pro", "Inter", sans-serif;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: @bar-bg;
+    color: @text-main;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    margin: 5px 10px;
+}
+
+/* ── Estilo general de módulos ────────────────────────────────────── */
+#workspaces,
+#custom-layout,
+#window,
+#clock,
+#cpu,
+#memory,
+#disk,
+#mpris,
+#network,
+#bluetooth,
+#pulseaudio,
+#battery,
+#language,
+#custom-notification,
+#custom-launcher,
+#custom-keybinds,
+#custom-screenshot,
+#custom-audio,
+#custom-theme,
+#custom-wallpaper,
+#custom-emoji,
+#custom-terminal,
+#custom-files,
+#custom-clipboard,
+#custom-look,
+#custom-lock,
+#custom-session {
+    padding: 0 10px;
+    margin: 3px 2px;
+    border-radius: 6px;
+    background-color: transparent;
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Efecto Hover Unificado (estilo barra macOS) ──────────────────── */
+#custom-launcher:hover,
+#custom-layout:hover,
+#cpu:hover,
+#memory:hover,
+#disk:hover,
+#mpris:hover,
+#network:hover,
+#bluetooth:hover,
+#pulseaudio:hover,
+#battery:hover,
+#language:hover,
+#custom-notification:hover,
+#clock:hover,
+#custom-keybinds:hover,
+#custom-screenshot:hover,
+#custom-audio:hover,
+#custom-theme:hover,
+#custom-wallpaper:hover,
+#custom-emoji:hover,
+#custom-terminal:hover,
+#custom-files:hover,
+#custom-clipboard:hover,
+#custom-look:hover {
+    background-color: @hover-bg;
+    color: @text-main;
+}
+
+/* ── Lanzador (Manzana de Apple) ──────────────────────────────────── */
+#custom-launcher {
+    font-size: 15px;
+    color: @text-main;
+    padding-left: 12px;
+    padding-right: 14px;
+}
+
+/* ── Workspaces (Discretos y planos) ──────────────────────────────── */
+#workspaces {
+    padding: 0 2px;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    margin: 2px 1px;
+    color: @text-muted;
+    background-color: transparent;
+    border-radius: 6px;
+    transition: all 0.15s ease;
+}
+
+#workspaces button:hover {
+    color: @text-main;
+    background-color: @hover-bg;
+}
+
+#workspaces button.active {
+    color: @text-main;
+    background-color: @active-bg;
+    font-weight: bold;
+}
+
+/* ── Título de Ventana ────────────────────────────────────────────── */
+#window {
+    font-weight: 600;
+    color: @text-main;
+    font-size: 12px;
+}
+
+/* ── Módulos del Centro (Limpios y Monocromáticos) ────────────────── */
+#cpu,
+#memory,
+#disk,
+#mpris {
+    color: @text-main;
+}
+
+/* ── Módulos del Extremo Derecho (Iconografía del Sistema) ────────── */
+#network,
+#bluetooth,
+#pulseaudio,
+#clock {
+    color: @text-main;
+}
+
+#clock {
+    font-weight: 600;
+    padding: 0 12px;
+}
+
+/* ── Batería con Estados Inteligentes ─────────────────────────────── */
+#battery {
+    color: @text-main;
+}
+
+#battery.warning {
+    color: @apple-orange;
+}
+
+#battery.critical:not(.charging) {
+    color: @apple-red;
+    animation: blink 0.6s linear infinite alternate;
+}
+
+#battery.charging {
+    color: @apple-green;
+}
+
+/* ── Notificaciones ───────────────────────────────────────────────── */
+#custom-notification {
+    color: @text-main;
+}
+
+/* ── Accesos Rápidos (Monocromo con Hover de Color) ───────────────── */
+#custom-keybinds,
+#custom-screenshot,
+#custom-audio,
+#custom-theme,
+#custom-wallpaper,
+#custom-emoji,
+#custom-terminal,
+#custom-files,
+#custom-clipboard,
+#custom-look {
+    color: @text-muted;
+    font-size: 13px;
+}
+
+/* ── Botones de Sesión y Bloqueo (Semáforo Apple) ─────────────────── */
+#custom-lock {
+    color: @apple-orange;
+}
+
+#custom-lock:hover {
+    background-color: alpha(@apple-orange, 0.15);
+}
+
+#custom-session {
+    color: @apple-red;
+}
+
+#custom-session:hover {
+    background-color: alpha(@apple-red, 0.15);
+}

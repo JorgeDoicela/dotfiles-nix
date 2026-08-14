@@ -1,0 +1,80 @@
+{
+    // --- APARIENCIA Y ESTILO ---
+    "workbench.colorTheme": "One Dark Pro Night Flat", // Iconos claros para identificar archivos rápido
+    // --- TIPOGRAFÍA TÉCNICA (JETBRAINS MONO) ---
+    "editor.fontFamily": "'JetBrains Mono', Consolas, monospace", // Fuente diseñada para programadores
+    "editor.fontSize": 14, // Tamaño ideal para lectura clara
+    "editor.lineHeight": 1.6, // Espaciado vertical para que el código "respire"
+    "editor.fontLigatures": true, // Fusiona símbolos como => o != (clave en JetBrains)
+    "editor.fontWeight": "400", // Peso visual estándar, ni muy delgado ni muy grueso
+    // --- INTERFAZ Y RENDERIZADO (FLUIDEZ) ---
+    "editor.cursorBlinking": "expand", // Animación moderna del cursor al parpadear
+    "editor.cursorSmoothCaretAnimation": "on", // El cursor se desliza suavemente al escribir
+    "editor.smoothScrolling": true, // Desplazamiento fluido en el editor de código
+    "workbench.list.smoothScrolling": true, // Desplazamiento fluido en el explorador de archivos
+    "editor.stickyScroll.enabled": true, // Mantiene la función/clase actual fija arriba al bajar
+    "editor.minimap.enabled": false, // Quita el mapa lateral para ganar espacio y enfoque
+    "editor.bracketPairColorization.enabled": true, // Colorea parejas de llaves para no perderte en la lógica
+    "editor.guides.bracketPairs": "active", // Resalta la guía del bloque de código donde estás parado
+    // --- COMPORTAMIENTO Y LIMPIEZA ---
+    "editor.formatOnSave": true, // Formatea el código automáticamente al guardar
+    "editor.tabSize": 4, // Estándar de la industria para indentación
+    "editor.insertSpaces": true, // Usa espacios en lugar de tabs para evitar líos de formato
+    "editor.detectIndentation": false, // Fuerza que siempre use tus reglas, no las del archivo
+    "files.trimTrailingWhitespace": true, // Borra espacios innecesarios al final de las líneas
+    "files.insertFinalNewline": true, // Asegura que cada archivo termine con una línea vacía (estándar Unix)
+    // --- AJUSTES PARA DEVSECOPS Y LOGS ---
+    "editor.wordWrap": "on", // Ajusta líneas largas a la ventana (vital para logs y políticas)
+    "explorer.compactFolders": false, // No colapsa carpetas vacías (permite ver la arquitectura real)
+    "editor.renderWhitespace": "none", // Mantiene el fondo limpio de puntos de espacios
+    "editor.suggestSelection": "first", // Preselecciona la primera sugerencia de autocompletado
+    "workbench.editor.tabSizing": "shrink", // Achica las pestañas si hay muchas abiertas para verlas todas
+    // --- CONTROL DE VERSIONES (GIT) ---
+    "git.autofetch": true, // Revisa cambios en el servidor automáticamente
+    "git.enableSmartCommit": true, // Permite hacer commit de todo si no hay cambios en stage
+    "git.confirmSync": false, // No pide confirmación cada vez que subes cambios al repo
+    // --- EXCLUSIÓN DE ARCHIVOS (ORDEN) ---
+    "files.exclude": {
+        "**/.git": true, // Oculta la carpeta interna de Git
+        "**/.DS_Store": true, // Oculta basura de archivos de sistema
+        "**/node_modules": true // Oculta la carpeta pesada de dependencias de JS
+    },
+    "search.exclude": {
+        "**/node_modules": true, // No busca dentro de librerías externas
+        "**/dist": true, // No busca en archivos compilados
+        "**/vendor": true // No busca en carpetas de terceros
+    },
+    // --- TERMINAL INTEGRADA (FLUJO DE TRABAJO) ---
+    "terminal.integrated.fontFamily": "'JetBrains Mono', monospace", // Misma fuente para que no dé errores
+    "terminal.integrated.fontSize": 13, // Terminal un poco más pequeña para ganar espacio
+    "terminal.integrated.cursorBlinking": true, // Parpadeo activo en la consola
+    "terminal.integrated.cursorStyle": "line", // Estilo de línea (más moderno que el bloque)
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "workbench.iconTheme": "material-icon-theme",
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "path": "C:\\Program Files\\PowerShell\\7\\pwsh.exe"
+        },
+        "Command Prompt": {
+            "path": [
+                "${env:windir}\\Sysnative\\cmd.exe",
+                "${env:windir}\\System32\\cmd.exe"
+            ],
+            "args": [],
+            "icon": "terminal-cmd"
+        },
+        "Git Bash": {
+            "source": "Git Bash",
+            "icon": "terminal-git-bash"
+        }
+    },
+    "editor.largeFileOptimizations": false,
+    "editor.unicodeHighlight.nonBasicASCII": false,
+    "security.workspace.trust.untrustedFiles": "open",
+    "chat.tools.terminal.autoApprove": {
+        "/^cd c:\\\\Users\\\\DESARROLLADOR\\\\Desktop\\\\informe-istpet; python -c \"from pathlib import Path; p=Path\\('generar_informe\\.js'\\); text=p\\.read_text\\(encoding='utf-8'\\); old='                                        dataCell\\(`Impacto: \\$\\{c\\.impacto\\}`, 4360, \\{ fill: GRAY_BG \\}\\)\\\\r\\\\n                                \\[\\]\\)\\]\\\\r\\\\n            \\]\\\\r\\\\n          \\}\\),'; new='                                        dataCell\\(`Impacto: \\$\\{c\\.impacto\\}`, 4360, \\{ fill: GRAY_BG \\}\\)\\\\r\\\\n                                    \\]\\\\r\\\\n                                \\}\\)\\\\r\\\\n                            \\]\\\\r\\\\n                        \\}\\),';\nif old not in text:\n    raise SystemExit\\('Pattern not found'\\);\ntext=text\\.replace\\(old,new,1\\);\np\\.write_text\\(text,encoding='utf-8'\\);\nprint\\('patched'\\)\"$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    } // Perfil por defecto en tu Windows
+}

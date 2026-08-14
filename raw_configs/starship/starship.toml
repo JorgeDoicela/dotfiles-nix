@@ -1,0 +1,77 @@
+# No añadir una línea en blanco al inicio
+add_newline = false
+
+# Estilo premium con píldoras redondeadas (Nerd Fonts U+E0B6 / U+E0B4)
+format = """
+[\ue0b6](fg:#3b4261)\
+[$os](bg:#3b4261)\
+[\ue0b4](fg:#3b4261 bg:#2b2f44)\
+[$directory](bg:#2b2f44)\
+[\ue0b4](fg:#2b2f44)\
+ \
+$git_branch\
+$git_status\
+$kubernetes\
+$nodejs\
+$rust\
+$python\
+$cmd_duration\
+$line_break\
+$character"""
+
+[os]
+disabled = false
+style = "bg:#3b4261 fg:#f7768e bold"
+format = "[ $symbol ]($style)"
+
+[os.symbols]
+Debian = "\uf306"
+
+[directory]
+style = "bg:#2b2f44 fg:#73daca bold"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncate_to_repo = true
+truncation_symbol = "…/"
+read_only = " \U000f033e"
+
+[git_branch]
+symbol = "\uf126 "
+style = "bold purple"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold red"
+format = "[$all_status$ahead_behind]($style) "
+
+[kubernetes]
+symbol = "\u2638 "
+style = "bold blue"
+format = 'at [$symbol$context(\($namespace\))]($style) '
+disabled = false
+detect_files = ['*.yaml', 'Dockerfile', 'docker-compose.yml', 'helmfile.yaml']
+detect_folders = ['k8s', 'helm', 'kubernetes', 'manifests', 'charts']
+
+[nodejs]
+symbol = "\ued13 "
+style = "bold green"
+format = "via [$symbol($version)]($style) "
+
+[rust]
+symbol = "\ue7a8 "
+style = "bold red"
+format = "via [$symbol($version)]($style) "
+
+[python]
+symbol = "\uf81f "
+style = "bold yellow"
+format = "via [$symbol($version)]($style) "
+
+[cmd_duration]
+min_time = 500
+style = "bold yellow"
+format = "took [$duration]($style) "
+
+[character]
+success_symbol = "[\U000f0627](bold green) "
+error_symbol = "[\U000f0627](bold red) "

@@ -1,0 +1,233 @@
+/*
+ * SwayNC Dark Elegant Theme (Catppuccin Mocha Extended)
+ */
+
+@define-color bg-selected rgb(30, 30, 46);
+@define-color bg-hover rgb(45, 45, 70);
+@define-color bg-main rgba(17, 17, 27, 0.95);
+@define-color border-color rgba(255, 255, 255, 0.1);
+@define-color text-color #cdd6f4;
+@define-color text-muted #a6adc8;
+@define-color accent-color #cba6f7; /* Mauve Catppuccin */
+@define-color error-color #f38ba8;  /* Red Catppuccin */
+@define-color success-color #a6e3a1;/* Green Catppuccin */
+
+.notification-row {
+  outline: none;
+  background: transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+.notification-row:focus,
+.notification-row:hover {
+  background: transparent;
+}
+
+.notification {
+  border-radius: 12px;
+  margin: 6px 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  border: 1px solid @border-color;
+  background: @bg-main;
+  transition: all 0.2s ease-in-out;
+}
+
+.notification-default-action {
+  border-radius: 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+.notification-default-action:hover {
+  background: @bg-hover;
+}
+
+.notification.critical {
+  border: 1px solid @error-color;
+  background: rgba(243, 139, 168, 0.08);
+}
+
+.notification.critical .summary {
+  color: @error-color;
+}
+
+.notification-content {
+  margin: 6px;
+}
+
+.summary {
+  font-weight: bold;
+  font-size: 14px;
+  color: @text-color;
+}
+
+.body {
+  font-size: 13px;
+  color: @text-muted;
+  margin-top: 4px;
+}
+
+/* Botón de cerrar de las notificaciones */
+.close-button {
+  background: transparent;
+  border: none;
+  color: @text-muted;
+  border-radius: 100%;
+  margin: 2px;
+  padding: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.close-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: @error-color;
+}
+
+/* Botones de acción de las notificaciones (ej. 2FA, Aceptar) */
+.notification-action-button {
+  background: @bg-selected;
+  color: @text-color;
+  border-radius: 8px;
+  border: 1px solid @border-color;
+  margin: 6px 4px 2px 4px;
+  padding: 6px 12px;
+  font-weight: bold;
+  font-size: 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+.notification-action-button:hover {
+  background: @accent-color;
+  color: @bg-selected;
+  border-color: @accent-color;
+}
+
+/* Respuestas rápidas en línea */
+.notification-reply-entry {
+  background: @bg-selected;
+  border: 1px solid @border-color;
+  border-radius: 8px;
+  color: @text-color;
+  padding: 6px 10px;
+  margin-top: 8px;
+}
+
+.notification-reply-entry:focus {
+  border-color: @accent-color;
+}
+
+.notification-reply-button {
+  background: @accent-color;
+  color: @bg-selected;
+  border-radius: 8px;
+  border: none;
+  padding: 6px 12px;
+  margin-top: 8px;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+}
+
+.notification-reply-button:hover {
+  background: @success-color;
+}
+
+/* Centro de Control */
+.control-center {
+  background: @bg-main;
+  border: 1px solid @border-color;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  color: @text-color;
+  padding: 12px;
+}
+
+.control-center-list {
+  background: transparent;
+}
+
+/* Widget: Título */
+.widget-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px;
+  color: @accent-color;
+}
+
+.widget-title > button {
+  background: @bg-selected;
+  color: @text-color;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid @border-color;
+  font-size: 12px;
+  transition: all 0.2s ease-in-out;
+}
+
+.widget-title > button:hover {
+  background: @error-color;
+  color: @bg-selected;
+  border-color: @error-color;
+}
+
+/* Widget: No Molestar (DND) */
+.widget-dnd {
+  margin: 10px;
+  font-size: 14px;
+}
+
+.widget-dnd > switch {
+  font-size: 12px;
+  border-radius: 12px;
+  background: @bg-selected;
+  border: 1px solid @border-color;
+  transition: all 0.2s ease-in-out;
+}
+
+.widget-dnd > switch:checked {
+  background: @accent-color;
+  border-color: @accent-color;
+}
+
+/* Widget: Reproductor Multimedia (MPRIS) */
+.widget-mpris {
+  background: @bg-selected;
+  border-radius: 12px;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid @border-color;
+}
+
+.widget-mpris-player {
+  padding: 4px;
+}
+
+.widget-mpris-title {
+  font-weight: bold;
+  font-size: 14px;
+  color: @text-color;
+}
+
+.widget-mpris-subtitle {
+  font-size: 12px;
+  color: @text-muted;
+}
+
+.widget-mpris-buttons {
+  margin-top: 8px;
+}
+
+.widget-mpris-buttons > button {
+  background: transparent;
+  color: @text-color;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  margin: 0 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+.widget-mpris-buttons > button:hover {
+  background: @bg-hover;
+  color: @accent-color;
+}
+

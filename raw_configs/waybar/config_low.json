@@ -1,0 +1,93 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 2,
+    "margin-top": 4,
+    "margin-left": 6,
+    "margin-right": 6,
+    "modules-left": [
+        "custom/launcher",
+        "hyprland/workspaces"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        "network",
+        "pulseaudio",
+        "battery",
+        "custom/notification",
+        "custom/terminal",
+        "custom/session"
+    ],
+    "custom/launcher": {
+        "format": "󰍉",
+        "on-click": "pkill -x rofi 2>/dev/null; rofi -show drun",
+        "tooltip": "Lanzador"
+    },
+    "hyprland/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}",
+        "on-click": "activate"
+    },
+    "clock": {
+        "interval": 10,
+        "format": "󰥔 {:%H:%M  |  %d %b}",
+        "tooltip": false
+    },
+    "network": {
+        "format-wifi": "󰤨 {ssid}",
+        "format-ethernet": "󰈀 Conectado",
+        "format-disconnected": "󰤮 Desconectado",
+        "tooltip": false
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 Mudo",
+        "format-icons": {
+            "default": ["󰕾"]
+        },
+        "on-click": "pavucontrol"
+    },
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"]
+    },
+    "custom/notification": {
+        "tooltip": false,
+        "format": "{icon}",
+        "format-icons": {
+            "notification": "<span foreground='red'><sup></sup></span>",
+            "none": "",
+            "dnd-notification": "<span foreground='red'><sup></sup></span>",
+            "dnd-none": "",
+            "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+            "inhibited-none": "",
+            "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+            "dnd-inhibited-none": ""
+        },
+        "return-type": "json",
+        "exec-if": "which swaync-client",
+        "exec": "swaync-client -swb",
+        "on-click": "swaync-client -t -sw",
+        "on-click-right": "swaync-client -d -sw",
+        "escape": true
+    },
+    "custom/terminal": {
+        "format": "󰆍",
+        "on-click": "alacritty",
+        "tooltip": "Terminal"
+    },
+    "custom/session": {
+        "format": "󰐥",
+        "on-click": "~/.config/hypr/scripts/logoutlaunch.sh",
+        "tooltip": "Sesión"
+    }
+}
