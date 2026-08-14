@@ -1,16 +1,19 @@
 /*
- * SwayNC macOS Dark Monochrome Theme
+ * SwayNC macOS Dark Monochrome Theme (100% Blanco / Gris / Negro)
  */
 
-@define-color bg-main rgba(28, 28, 30, 0.85);
-@define-color bg-selected rgba(44, 44, 46, 0.90);
-@define-color bg-hover rgba(58, 58, 60, 0.90);
+* {
+  font-family: "JetBrainsMono Nerd Font", "Inter", sans-serif;
+  color: #f5f5f7;
+}
+
+@define-color bg-main rgba(28, 28, 30, 0.90);
+@define-color bg-selected rgba(44, 44, 46, 0.95);
+@define-color bg-hover rgba(58, 58, 60, 0.95);
 @define-color border-color rgba(255, 255, 255, 0.15);
 @define-color text-color #f5f5f7;
 @define-color text-muted #8e8e93;
-@define-color accent-color #ffffff; /* Blanco puro para acentos */
-@define-color error-color #ff453a;  /* Red Apple */
-@define-color success-color #30d158;/* Green Apple */
+@define-color accent-color #ffffff;
 
 .notification-row {
   outline: none;
@@ -26,7 +29,7 @@
 .notification {
   border-radius: 14px;
   margin: 6px 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
   padding: 12px;
   border: 1px solid @border-color;
   background: @bg-main;
@@ -43,12 +46,12 @@
 }
 
 .notification.critical {
-  border: 1px solid @error-color;
-  background: rgba(255, 69, 58, 0.12);
+  border: 1px solid #ff453a;
+  background: rgba(255, 69, 58, 0.15);
 }
 
 .notification.critical .summary {
-  color: @error-color;
+  color: #ff453a;
 }
 
 .notification-content {
@@ -58,7 +61,7 @@
 .summary {
   font-weight: bold;
   font-size: 14px;
-  color: @text-color;
+  color: #ffffff;
 }
 
 .body {
@@ -67,7 +70,7 @@
   margin-top: 4px;
 }
 
-/* Botón de cerrar de las notificaciones */
+/* Botón de cerrar */
 .close-button {
   background: transparent;
   border: none;
@@ -79,14 +82,14 @@
 }
 
 .close-button:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: @error-color;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ff453a;
 }
 
-/* Botones de acción de las notificaciones (ej. 2FA, Aceptar) */
+/* Botones de acción */
 .notification-action-button {
   background: @bg-selected;
-  color: @text-color;
+  color: #ffffff;
   border-radius: 8px;
   border: 1px solid @border-color;
   margin: 6px 4px 2px 4px;
@@ -97,66 +100,36 @@
 }
 
 .notification-action-button:hover {
-  background: @accent-color;
+  background: #ffffff;
   color: #000000;
-  border-color: @accent-color;
+  border-color: #ffffff;
 }
 
-/* Respuestas rápidas en línea */
-.notification-reply-entry {
-  background: @bg-selected;
-  border: 1px solid @border-color;
-  border-radius: 8px;
-  color: @text-color;
-  padding: 6px 10px;
-  margin-top: 8px;
-}
-
-.notification-reply-entry:focus {
-  border-color: @accent-color;
-}
-
-.notification-reply-button {
-  background: @accent-color;
-  color: #000000;
-  border-radius: 8px;
-  border: none;
-  padding: 6px 12px;
-  margin-top: 8px;
-  font-weight: bold;
-  transition: all 0.2s ease-in-out;
-}
-
-.notification-reply-button:hover {
-  background: @success-color;
-  color: #ffffff;
-}
-
-/* Centro de Control */
+/* Centro de Control Panel */
 .control-center {
   background: @bg-main;
   border: 1px solid @border-color;
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
-  color: @text-color;
-  padding: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8);
+  color: #ffffff;
+  padding: 14px;
 }
 
 .control-center-list {
   background: transparent;
 }
 
-/* Widget: Título */
+/* Header / Título */
 .widget-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: bold;
-  margin: 10px;
-  color: @text-color;
+  margin: 8px;
+  color: #ffffff;
 }
 
 .widget-title > button {
   background: @bg-selected;
-  color: @text-color;
+  color: #ffffff;
   padding: 6px 12px;
   border-radius: 8px;
   border: 1px solid @border-color;
@@ -165,15 +138,16 @@
 }
 
 .widget-title > button:hover {
-  background: @error-color;
+  background: #ff453a;
   color: #ffffff;
-  border-color: @error-color;
+  border-color: #ff453a;
 }
 
-/* Widget: No Molestar (DND) */
+/* Interruptor No Molestar (DND) */
 .widget-dnd {
-  margin: 10px;
+  margin: 8px;
   font-size: 14px;
+  color: #ffffff;
 }
 
 .widget-dnd > switch {
@@ -185,16 +159,25 @@
 }
 
 .widget-dnd > switch:checked {
-  background: @accent-color;
-  border-color: @accent-color;
+  background: #ffffff;
+  border-color: #ffffff;
 }
 
-/* Widget: Reproductor Multimedia (MPRIS) */
+.widget-dnd > switch slider {
+  background: #1c1c1e;
+  border-radius: 12px;
+}
+
+.widget-dnd > switch:checked slider {
+  background: #000000;
+}
+
+/* Reproductor Multimedia (MPRIS) */
 .widget-mpris {
   background: @bg-selected;
-  border-radius: 12px;
-  padding: 10px;
-  margin: 10px;
+  border-radius: 14px;
+  padding: 12px;
+  margin: 8px;
   border: 1px solid @border-color;
 }
 
@@ -205,7 +188,7 @@
 .widget-mpris-title {
   font-weight: bold;
   font-size: 14px;
-  color: @text-color;
+  color: #ffffff;
 }
 
 .widget-mpris-subtitle {
@@ -213,13 +196,9 @@
   color: @text-muted;
 }
 
-.widget-mpris-buttons {
-  margin-top: 8px;
-}
-
 .widget-mpris-buttons > button {
   background: transparent;
-  color: @text-color;
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   padding: 6px 12px;
@@ -229,5 +208,15 @@
 
 .widget-mpris-buttons > button:hover {
   background: @bg-hover;
-  color: @accent-color;
+  color: #ffffff;
+}
+
+/* Sliders y Barras de progreso */
+progressbar, progress, trough {
+  border-radius: 8px;
+  background-color: @bg-selected;
+}
+
+highlight {
+  background-color: #ffffff;
 }
