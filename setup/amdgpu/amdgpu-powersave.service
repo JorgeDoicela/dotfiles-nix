@@ -1,0 +1,11 @@
+[Unit]
+Description=AMD GPU low-power profile (hybrid laptop)
+After=multi-user.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/amdgpu-powersave
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,3 @@
+# Cambiar perfil de energía de la GPU AMD según cargador (batería=low, corriente=auto)
+SUBSYSTEM=="power_supply", ATTR{online}=="0", RUN+="/usr/local/sbin/amdgpu-powersave"
+SUBSYSTEM=="power_supply", ATTR{online}=="1", RUN+="/usr/local/sbin/amdgpu-performance"

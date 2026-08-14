@@ -1,0 +1,11 @@
+# Configuración de GRUB — Dell Inspiron 5570 (Debian Trixie)
+# Después de editar este archivo, ejecutar: sudo update-grub
+
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=2
+GRUB_TIMEOUT_STYLE=menu
+GRUB_DISTRIBUTOR="Debian"
+GRUB_CMDLINE_LINUX_DEFAULT="quiet splash loglevel=2 systemd.show_status=false rd.udev.log_priority=3 vt.global_cursor_default=0 resume=UUID=b59e25db-7fae-4153-aaec-697bc96e14c1 nowatchdog"
+GRUB_CMDLINE_LINUX=""
+GRUB_DISABLE_OS_PROBER=true
+GRUB_DISABLE_RECOVERY=true

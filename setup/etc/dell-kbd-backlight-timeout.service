@@ -1,0 +1,12 @@
+[Unit]
+Description=Configurar timeout del teclado retroiluminado Dell a 5 minutos
+After=local-fs.target systemd-udev-settle.service
+ConditionPathExists=/sys/class/leds/dell::kbd_backlight/stop_timeout
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sh -c 'echo 5m > /sys/class/leds/dell::kbd_backlight/stop_timeout'
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

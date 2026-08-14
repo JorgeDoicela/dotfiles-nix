@@ -1,0 +1,16 @@
+#!/bin/bash
+# ==============================================================================
+# SCRIPT PARA ACTIVAR MODO RENDIMIENTO AUTO EN LA GPU AMD
+# ==============================================================================
+# Compatible con card0, card1 u otras variantes de forma dinámica.
+
+for card in /sys/class/drm/card*/device; do
+    if [ -f "$card/power_dpm_force_performance_level" ]; then
+        echo "auto" > "$card/power_dpm_force_performance_level" 2>/dev/null || true
+        echo "AMD GPU configurada en modo dinámico (auto)"
+        exit 0
+    fi
+done
+
+echo "Error: No se encontró una GPU AMD compatible en /sys/class/drm/" >&2
+exit 1
