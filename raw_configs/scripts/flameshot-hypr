@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-export XDG_CURRENT_DESKTOP=Hyprland
-killall flameshot 2>/dev/null
+# Script de integración Flameshot para Hyprland (Wayland)
+# Causa raíz del error: Flameshot no tiene backend para 'Hyprland', requiere 'sway' para activar el motor wlroots/grim.
+
+export XDG_CURRENT_DESKTOP=sway
+export QT_QPA_PLATFORM=wayland
+export QT_AUTO_SCREEN_SCALE_FACTOR=1
+
+killall -9 flameshot 2>/dev/null
 exec /usr/bin/flameshot "$@"
 
