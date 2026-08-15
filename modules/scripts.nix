@@ -21,4 +21,9 @@
     source = ../raw_configs/scripts/sincro;
     executable = true;
   };
+
+  home.file.".local/bin/selector-libros.sh" = {
+    source = ../raw_configs/scripts/selector-libros.sh;
+    executable = true;
+  };
 }

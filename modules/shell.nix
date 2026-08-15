@@ -49,6 +49,25 @@
     syntaxHighlighting.enable = true;
     shellAliases = {
       sincro = "sincro";
+      ls = "lsd";
+      ll = "lsd -l";
+      la = "lsd -a";
+      lla = "lsd -la";
+      lt = "lsd --tree";
+      Hyprland = "start-hyprland";
+      hyprland = "start-hyprland";
+      esword = "env WINEPREFIX=\"$HOME/.wine-esword\" wine \"C:\\Program Files\\e-Sword\\e-Sword.exe\" > /dev/null 2>&1 &";
     };
+    initExtra = ''
+      # Función wrapper de Yazi para cambiar de directorio al salir
+      function y() {
+        local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+        yazi "$@" --cwd-file="$tmp"
+        if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+          builtin cd -- "$cwd"
+        fi
+        rm -f -- "$tmp"
+      }
+    '';
   };
 }

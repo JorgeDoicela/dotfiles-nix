@@ -1,0 +1,10 @@
+[status]
+separator_open  = ""
+separator_close = ""
+
+[filetype]
+rules = [
+	{ mime = "text/*", fg = "#89b4fa" }, # Archivos de texto en azul (estilo DevOps)
+	{ mime = "application/json", fg = "#f9e2af" }, # JSON en amarillo
+	{ url = "*.sh", fg = "#a6e3a1" }, # Scripts en verde
+]

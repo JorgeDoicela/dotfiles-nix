@@ -13,4 +13,16 @@
 
   # LSD (Ls mejorado)
   xdg.configFile."lsd".source = ../raw_configs/lsd;
+
+  # Fastfetch
+  xdg.configFile."fastfetch".source = ../raw_configs/fastfetch;
+
+  # Neovim (LazyVim / Lua Config)
+  xdg.configFile."nvim".source = ../raw_configs/nvim;
+
+  # Yazi (Navegador de archivos terminal)
+  xdg.configFile."yazi".source = ../raw_configs/yazi;
+
+  # Sioyek (Visor PDF de estudio)
+  xdg.configFile."sioyek".source = ../raw_configs/sioyek;
 }
