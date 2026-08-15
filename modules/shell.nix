@@ -24,7 +24,7 @@
     enableZshIntegration = true;
     enableBashIntegration = true;
   };
-  xdg.configFile."starship/starship.toml".source = ../raw_configs/starship/starship.toml;
+  xdg.configFile."starship.toml".source = ../raw_configs/starship/starship.toml;
 
   # FZF con paleta Monocromática Blanco / Gris Espacial declarativa
   programs.fzf = {

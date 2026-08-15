@@ -1,5 +1,7 @@
 # Configuración Monocromática Blanco / Gris Espacial para Starship
 add_newline = false
+scan_timeout = 1000
+command_timeout = 1000
 
 format = """
 [\ue0b6](fg:#2c2c2e)\
