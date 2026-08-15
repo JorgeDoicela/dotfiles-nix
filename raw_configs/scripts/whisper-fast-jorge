@@ -1,0 +1,53 @@
+#!/opt/voxd/.venv/bin/python
+"""
+faster-whisper drop-in: interfaz compatible con whisper-cli para voxd.
+Acepta: -m model -f audio -l lang -of prefix -otxt
+"""
+import sys
+import argparse
+from pathlib import Path
+from faster_whisper import WhisperModel
+
+MODEL_DIR = "/opt/voxd/models/fw-small"
+
+def parse_args():
+    p = argparse.ArgumentParser(add_help=False)
+    p.add_argument("-m", dest="model", default=MODEL_DIR)
+    p.add_argument("-f", dest="audio")
+    p.add_argument("-l", dest="language", default="es")
+    p.add_argument("-of", dest="output_prefix")
+    p.add_argument("-otxt", action="store_true")
+    args, _ = p.parse_known_args()
+    return args
+
+def main():
+    args = parse_args()
+
+    if not args.audio:
+        sys.exit("[fw] Error: -f <audio> requerido")
+    if not args.output_prefix:
+        sys.exit("[fw] Error: -of <prefix> requerido")
+
+    model = WhisperModel(
+        MODEL_DIR,
+        device="cpu",
+        compute_type="int8",
+        num_workers=1,
+        cpu_threads=8,
+    )
+
+    segments, _ = model.transcribe(
+        args.audio,
+        language=args.language,
+        beam_size=1,
+        vad_filter=True,
+        vad_parameters=dict(min_silence_duration_ms=300),
+    )
+
+    text = " ".join(seg.text.strip() for seg in segments).strip()
+
+    out = Path(args.output_prefix).with_suffix(".txt")
+    out.write_text(text + "\n", encoding="utf-8")
+
+if __name__ == "__main__":
+    main()

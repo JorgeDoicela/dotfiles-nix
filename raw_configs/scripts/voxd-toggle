@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+export YDOTOOL_SOCKET="${YDOTOOL_SOCKET:-$HOME/.ydotool_socket}"
+SOCK="$HOME/.config/voxd/voxd.sock"
+STATE="${XDG_CACHE_HOME:-$HOME/.cache}/voxd-recording"
+
+if ! systemctl --user is-active --quiet voxd-daemon || [[ ! -S "$SOCK" ]]; then
+  notify-send -a VOXD "VOXD" "Reiniciando…" -t 1500
+  systemctl --user restart voxd-daemon ydotoold
+  sleep 1
+fi
+
+if [[ -f "$STATE" ]]; then
+  rm -f "$STATE"
+  notify-send -a VOXD "VOXD" "Transcribiendo…" -t 2500
+else
+  : > "$STATE"
+  notify-send -a VOXD "VOXD" "Grabando — pulsa Super+D otra vez" -t 5000
+  (sleep 120 && rm -f "$STATE") &
+fi
+
+voxd --trigger-record || {
+  rm -f "$STATE"
+  systemctl --user restart voxd-daemon
+}
