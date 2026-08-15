@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# Script de sincronización bidireccional con Google Drive mediante Rclone
+
+VAULT_PATH="$HOME/Documentos/Vida de Jorge"
+REMOTE_NAME="gdrive:Vida de Jorge"
+
+echo "🔄 Iniciando sincronización de Obsidian ('Vida de Jorge') con Google Drive..."
+
+if command -v rclone &>/dev/null; then
+    rclone bisync "$REMOTE_NAME" "$VAULT_PATH" --verbose "$@"
+    echo "✅ Sincronización finalizada correctamente."
+else
+    echo "❌ Error: rclone no está instalado o no se encuentra en el PATH." >&2
+    exit 1
+fi

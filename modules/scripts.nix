@@ -16,4 +16,9 @@
     source = ../raw_configs/scripts/hypr-window-mosaic.sh;
     executable = true;
   };
+
+  home.file.".local/bin/sincro" = {
+    source = ../raw_configs/scripts/sincro;
+    executable = true;
+  };
 }
