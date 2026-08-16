@@ -1,23 +1,24 @@
 #!/usr/bin/env bash
-# Script para iniciar Waybar de forma dinámica según el hardware disponible
+# Script para iniciar Waybar de forma dinámica según la orientación y hardware disponible
 
-# Matar cualquier instancia previa para garantizar exactamente 1 única barra
-killall -9 waybar 2>/dev/null
-sleep 0.2
+# Matar cualquier instancia previa de forma limpia
+killall -q waybar 2>/dev/null
+while pgrep -x waybar >/dev/null 2>&1; do sleep 0.05; done
+
+# Detectar orientación actual del monitor principal
+TRANSFORM=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0].transform // 0' 2>/dev/null || echo 0)
 
 # Detectar memoria RAM en MB
 TOTAL_RAM=$(free -m | awk '/^Mem:/{print $2}')
 
-# Seleccionar archivo de configuración según RAM
-if [ "$TOTAL_RAM" -lt 5000 ]; then
-    echo "[Waybar] Perfil de bajo rendimiento (low)"
+# Seleccionar archivo de configuración según orientación y hardware
+if [ "$TRANSFORM" -eq 1 ] || [ "$TRANSFORM" -eq 3 ]; then
+    CONFIG_FILE="$HOME/.config/waybar/config_vertical.json"
+elif [ "$TOTAL_RAM" -lt 5000 ]; then
     CONFIG_FILE="$HOME/.config/waybar/config_low.json"
 else
-    echo "[Waybar] Perfil estándar (high)"
     CONFIG_FILE="$HOME/.config/waybar/config.json"
 fi
 
-# Iniciar Waybar desacoplado por completo de la sesión de terminal
-nohup waybar -c "$CONFIG_FILE" -s "$HOME/.config/waybar/style.css" >/dev/null 2>&1 &
-
-
+# Iniciar Waybar delegado al compositor de Hyprland de forma permanente
+hyprctl dispatch exec "waybar -c $CONFIG_FILE -s $HOME/.config/waybar/style.css" >/dev/null 2>&1

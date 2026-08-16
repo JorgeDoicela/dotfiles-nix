@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Script: hypr-rotate
-# Descripción: Cambia dinámicamente la orientación de la pantalla en Hyprland respetando la escala y el nombre del monitor.
+# Descripción: Cambia dinámicamente la orientación de la pantalla en Hyprland y adapta el diseño de Waybar.
 # Uso: hypr-rotate {normal|left|right|inverted|toggle}
 
 command -v hyprctl >/dev/null 2>&1 || { echo "Error: hyprctl no está instalado" >&2; exit 1; }
@@ -58,10 +58,15 @@ case "${1:-toggle}" in
         ;;
 esac
 
-# Aplicar rotación dinámicamente manteniendo la escala del monitor
+# 1. Aplicar rotación dinámicamente manteniendo la escala del monitor
 hyprctl keyword monitor "${MONITOR_NAME},preferred,auto,${CURRENT_SCALE},transform,${TARGET_TRANSFORM}"
 
-# Enviar notificación de estado si notify-send está disponible
+# 2. Recargar Waybar para adaptar el diseño de la barra a la orientación actual
+if [ -f "$HOME/.config/hypr/start_waybar.sh" ]; then
+    bash "$HOME/.config/hypr/start_waybar.sh" >/dev/null 2>&1 &
+fi
+
+# 3. Enviar notificación de estado si notify-send está disponible
 if command -v notify-send >/dev/null 2>&1; then
     notify-send "Orientación de Pantalla" "$ORIENTATION_LABEL" -i display-symbolic -t 2000 -h string:x-canonical-private-synchronous:screen-orientation
 fi
