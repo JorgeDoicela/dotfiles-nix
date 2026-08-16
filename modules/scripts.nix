@@ -66,4 +66,9 @@
     source = ../raw_configs/scripts/whisper-fast-jorge;
     executable = true;
   };
+
+  home.file.".local/bin/hypr-rotate" = {
+    source = ../raw_configs/scripts/hypr-rotate;
+    executable = true;
+  };
 }

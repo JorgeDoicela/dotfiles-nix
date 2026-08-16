@@ -1,6 +1,8 @@
-# JorgeDoicela's Nix Flakes & Home Manager Dotfiles
+# JorgeDoicela's Nix Flakes & Home Manager Dotfiles (Desktop Infrastructure as Code)
 
-Configuración declarativa modular, ultralimpia y estática para Debian + Hyprland, gestionada con Nix Flakes y Home Manager.
+Configuración declarativa modular, ultralimpia y reproducible para Debian + Hyprland, gestionada profesionalmente con **Nix Flakes**, **Home Manager** y conceptos de **Infrastructure as Code (IaC)**.
+
+> **Desktop IaC / Systems Engineering Highlight**: Este repositorio demuestra el control declarativo completo de un entorno de trabajo Linux (*Desktop Infrastructure as Code*), garantizando reproducibilidad total en minutos, cero desvío de configuración (*configuration drift*), inmutabilidad gestionada por el Nix Store y control de versiones profesional.
 
 ---
 
@@ -8,16 +10,16 @@ Configuración declarativa modular, ultralimpia y estática para Debian + Hyprla
 
 ```text
 dotfiles-nix/
-├── flake.nix              # Entrada principal de Nix Flakes
+├── flake.nix              # Entrada principal de Nix Flakes (Entorno reproducible)
 ├── home.nix               # Configuración central de Home Manager
-├── modules/               # Módulos declarativos organizados por tecnología
+├── modules/               # Módulos declarativos organizados por responsabilidad
 │   ├── style.nix          # GTK3/GTK4 (Catppuccin Mocha), Qt (Fusion), Iconos (Tela) y Cursores (Bibata)
 │   ├── desktop.nix        # Hyprland, Waybar (estilo macOS), Rofi (Catppuccin Mocha) y SwayNC
 │   ├── apps.nix           # Alacritty (Tokyo Night), VS Code, Flameshot y LSD
 │   ├── shell.nix          # Zsh, Starship Prompt y FZF
-│   └── scripts.nix        # Ejecutables de usuario (~/.local/bin)
+│   └── scripts.nix        # Ejecutables de usuario (~/.local/bin/hypr-rotate, voxd, etc.)
 ├── setup/                 # Aprovisionamiento del sistema base Debian (/etc/, TLP, sysctl, AMDGPU)
-└── raw_configs/           # Archivos de configuración origen
+└── raw_configs/           # Archivos de configuración fuente (Hyprland, Scripts, Rofi, Waybar)
 ```
 
 ---
