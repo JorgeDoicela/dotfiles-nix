@@ -23,14 +23,16 @@
           inherit pkgs;
           modules = [
             ./home.nix
+            ./hosts/jorge-terciaria
           ];
         };
 
-        # Configuración para la máquina: jorge-secundaria
+        # Configuración para la máquina: jorge-secundaria (Dual Display)
         "jorge@jorge-secundaria" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
             ./home.nix
+            ./hosts/jorge-secundaria
           ];
         };
 
@@ -39,6 +41,7 @@
           inherit pkgs;
           modules = [
             ./home.nix
+            ./hosts/jorge-terciaria
           ];
         };
       };

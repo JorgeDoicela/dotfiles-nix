@@ -31,11 +31,27 @@
     enable = true;
   };
 
-  # Enlace declarativo de configuraciones de Hyprland
-  xdg.configFile."hypr".source = ../raw_configs/hypr;
+  # Enlaces declarativos comunes de Hyprland
+  xdg.configFile."hypr/hyprland.conf".source = ../raw_configs/hypr/hyprland.conf;
+  xdg.configFile."hypr/hypridle.conf".source = ../raw_configs/hypr/hypridle.conf;
+  xdg.configFile."hypr/hyprlock.conf".source = ../raw_configs/hypr/hyprlock.conf;
+  xdg.configFile."hypr/hyprpaper.conf".source = ../raw_configs/hypr/hyprpaper.conf;
+  xdg.configFile."hypr/keybindings.conf".source = ../raw_configs/hypr/keybindings.conf;
+  xdg.configFile."hypr/performance.conf".source = ../raw_configs/hypr/performance.conf;
+  xdg.configFile."hypr/userprefs.conf".source = ../raw_configs/hypr/userprefs.conf;
+  xdg.configFile."hypr/windowrules.conf".source = ../raw_configs/hypr/windowrules.conf;
+  xdg.configFile."hypr/wallpaper.png".source = ../raw_configs/hypr/wallpaper.png;
+  xdg.configFile."hypr/wallpaper_real.png".source = ../raw_configs/hypr/wallpaper_real.png;
+  xdg.configFile."hypr/start_waybar.sh".source = ../raw_configs/hypr/start_waybar.sh;
+  xdg.configFile."hypr/start_nwg_dock.sh".source = ../raw_configs/hypr/start_nwg_dock.sh;
+  xdg.configFile."hypr/toggle_sunset.sh".source = ../raw_configs/hypr/toggle_sunset.sh;
+  xdg.configFile."hypr/scripts".source = ../raw_configs/hypr/scripts;
 
-  # Enlace declarativo de Waybar
-  xdg.configFile."waybar".source = ../raw_configs/waybar;
+  # Enlaces declarativos comunes de Waybar (Estilos y perfiles auxiliares)
+  xdg.configFile."waybar/style.css".source = ../raw_configs/waybar/style.css;
+  xdg.configFile."waybar/theme.css".source = ../raw_configs/waybar/theme.css;
+  xdg.configFile."waybar/config_low.json".source = ../raw_configs/waybar/config_low.json;
+  xdg.configFile."waybar/config_vertical.json".source = ../raw_configs/waybar/config_vertical.json;
 
   # Enlace declarativo de Rofi
   xdg.configFile."rofi".source = ../raw_configs/rofi;
