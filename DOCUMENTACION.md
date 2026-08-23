@@ -68,26 +68,55 @@ options.mySystem = {
     default = 11;
     description = "Tamaño base de tipografía del sistema (GTK, Terminal, DConf)";
   };
+  cursorSize = lib.mkOption {
+    type = lib.types.int;
+    default = 24;
+    description = "Tamaño del cursor del ratón (XCursor / Hyprcursor)";
+  };
   waybarFontSize = lib.mkOption {
     type = lib.types.str;
     default = "13px";
     description = "Tamaño tipográfico para Waybar";
+  };
+  vscodeZoomLevel = lib.mkOption {
+    type = lib.types.number;
+    default = 0.0;
+    description = "Nivel de zoom de la UI de VS Code (-0.6 en 768p, 0 en 1080p)";
+  };
+  rofiFontSize = lib.mkOption {
+    type = lib.types.str;
+    default = "10";
+    description = "Tamaño de fuente para el lanzador Rofi";
+  };
+  rofiWidth = lib.mkOption {
+    type = lib.types.str;
+    default = "600px";
+    description = "Ancho de la ventana de Rofi";
+  };
+  rofiHeight = lib.mkOption {
+    type = lib.types.str;
+    default = "350px";
+    description = "Altura de la ventana de Rofi";
+  };
+  browserScale = lib.mkOption {
+    type = lib.types.str;
+    default = "1";
+    description = "Factor de escala para navegadores basados en Chromium/Brave";
   };
 };
 ```
 
 ### Cómo se propaga a las aplicaciones:
 
-1. **GTK3 y GTK4:**
+1. **GTK3, GTK4 y Cursor:**
    ```nix
-   gtk.font = {
-     name = "JetBrainsMono Nerd Font";
-     size = config.mySystem.fontSize;
-   };
+   gtk.font = { name = "JetBrainsMono Nerd Font"; size = config.mySystem.fontSize; };
+   gtk.cursorTheme.size = config.mySystem.cursorSize;
    ```
 2. **DConf / GNOME / Portales XDG:**
    ```nix
    dconf.settings."org/gnome/desktop/interface" = {
+     cursor-size = config.mySystem.cursorSize;
      document-font-name = "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}";
      monospace-font-name = "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}";
    };
@@ -95,27 +124,21 @@ options.mySystem = {
 3. **X11 / XWayland (`xsettingsd`):**
    ```nix
    xdg.configFile."xsettingsd/xsettingsd.conf".text = ''
+     Gtk/CursorThemeSize ${toString config.mySystem.cursorSize}
      Gtk/FontName "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}"
      ...
    '';
    ```
 4. **Terminal Alacritty (`modules/apps.nix`):**
-   ```nix
-   programs.alacritty.settings = {
-     font.size = config.mySystem.fontSize;
-     window.padding = {
-       x = if config.mySystem.fontSize < 10 then 10 else 14;
-       y = if config.mySystem.fontSize < 10 then 10 else 14;
-     };
-     ...
-   };
-   ```
+   Inyecta dinámicamente `size = config.mySystem.fontSize` y `padding = 10` conservando compatibilidad nativa con drivers GPU de la distribución.
 5. **Waybar CSS Dinámico (`modules/desktop.nix`):**
-   ```nix
-   xdg.configFile."waybar/style.css".text =
-     builtins.replaceStrings [ "font-size: 13px;" ] [ "font-size: ${config.mySystem.waybarFontSize};" ]
-       (builtins.readFile ../raw_configs/waybar/style.css);
-   ```
+   Inyecta dinámicamente `config.mySystem.waybarFontSize` en `waybar/style.css`.
+6. **Editor VS Code / Antigravity IDE (`modules/apps.nix`):**
+   Inyecta dinámicamente `"window.zoomLevel": config.mySystem.vscodeZoomLevel` en `settings.json`.
+7. **Lanzador Rofi (`modules/desktop.nix`):**
+   Inyecta `rofiFontSize`, `rofiWidth` y `rofiHeight` en `rofi/config.rasi`.
+8. **Navegador Brave / Chromium (`modules/apps.nix` y `modules/scripts.nix`):**
+   Inyecta `--force-device-scale-factor=${config.mySystem.browserScale}` en `brave-flags.conf` y se ejecuta mediante el wrapper universal `~/.local/bin/brave-browser`.
 
 ---
 
