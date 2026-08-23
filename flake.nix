@@ -26,6 +26,14 @@
           ];
         };
 
+        # Configuración para la máquina: jorge-secundaria
+        "jorge@jorge-secundaria" = home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          modules = [
+            ./home.nix
+          ];
+        };
+
         # Alias por defecto para compatibilidad directa
         "jorge" = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;

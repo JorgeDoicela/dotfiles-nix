@@ -24,29 +24,59 @@ dotfiles-nix/
 
 ---
 
+## Perfiles Multi-Host Disponibles
+
+Este repositorio implementa una arquitectura **Multi-Host limpia**, soportando diferentes máquinas con configuraciones compartidas:
+
+| Hostname | Perfil Flake | Propósito / Características |
+| :--- | :--- | :--- |
+| **`jorge-terciaria`** | `.#jorge@jorge-terciaria` | Laptop actual (Panel único `eDP-1`, optimizaciones AMD) |
+| **`jorge-secundaria`** | `.#jorge@jorge-secundaria` | Segunda laptop (Configuración de doble pantalla / monitor externo) |
+| *(Default)* | `.#jorge` | Alias universal de compatibilidad directa |
+
+---
+
 ## Cómo aplicar cambios en tu máquina actual
 
 Si realizas alguna modificación dentro de `~/dotfiles-nix/`, aplica los cambios ejecutando:
 
 ```bash
-home-manager switch --flake ~/dotfiles-nix#jorge
+# Aplica automáticamente según el hostname de la máquina
+home-manager switch --flake ~/dotfiles-nix
+
+# O especificando el perfil explícito:
+home-manager switch --flake ~/dotfiles-nix#jorge@jorge-terciaria
 ```
 
 ---
 
 ## Despliegue en una máquina nueva (2 Pasos)
 
-### 1. Aprovisionar el Sistema Base (Debian)
-Clona este repositorio y ejecuta el script de aprovisionamiento de sistema:
-```bash
-sudo bash ~/dotfiles-nix/setup/instalar.sh
-```
+### Paso 1: Configurar Hostname y Aprovisionar Sistema Base (Debian)
 
-### 2. Restaurar el Entorno de Usuario con Nix
+1. Establece el nombre de la máquina (por ejemplo, en la segunda laptop):
+   ```bash
+   sudo hostnamectl set-hostname jorge-secundaria
+   sudo sed -i 's/127.0.1.1.*/127.0.1.1\tjorge-secundaria/' /etc/hosts
+   ```
+
+2. Clona este repositorio y ejecuta el script de aprovisionamiento de sistema:
+   ```bash
+   git clone https://github.com/JorgeDoicela/dotfiles-nix.git ~/dotfiles-nix
+   sudo bash ~/dotfiles-nix/setup/instalar.sh
+   ```
+
+### Paso 2: Restaurar el Entorno de Usuario con Nix
+
 ```bash
-# 1. Instalar Nix (si no está instalado)
+# 1. Instalar Nix (instalador oficial moderno de Determinate Systems)
 sh <(curl -L https://install.determinate.systems/nix) install
 
-# 2. Desplegar tu entorno completo de forma automática
-nix run github:nix-community/home-manager -- switch --flake github:JorgeDoicela/dotfiles-nix#jorge
+# 2. Desplegar tu entorno completo de forma automática según la máquina:
+# Para jorge-secundaria:
+nix run github:nix-community/home-manager -- switch --flake ~/dotfiles-nix#jorge@jorge-secundaria
+
+# O para jorge-terciaria:
+nix run github:nix-community/home-manager -- switch --flake ~/dotfiles-nix#jorge@jorge-terciaria
 ```
+
