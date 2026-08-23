@@ -110,6 +110,9 @@ apt-get install -y --no-install-recommends \
     xdg-desktop-portal-hyprland \
     mesa-vulkan-drivers \
     libgl1-mesa-dri \
+    hyprpaper \
+    hyprlock \
+    hypridle \
     pipewire \
     wireplumber \
     pipewire-audio \
