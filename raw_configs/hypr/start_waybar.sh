@@ -2,7 +2,7 @@
 # Script para iniciar Waybar de forma dinámica según la orientación y hardware disponible
 
 # Matar cualquier instancia previa de forma limpia
-killall -q waybar 2>/dev/null
+pkill -x waybar 2>/dev/null || true
 while pgrep -x waybar >/dev/null 2>&1; do sleep 0.05; done
 
 # Detectar orientación actual del monitor principal
@@ -20,5 +20,5 @@ else
     CONFIG_FILE="$HOME/.config/waybar/config.json"
 fi
 
-# Iniciar Waybar delegado al compositor de Hyprland de forma permanente
-hyprctl dispatch exec "waybar -c $CONFIG_FILE -s $HOME/.config/waybar/style.css" >/dev/null 2>&1
+# Iniciar Waybar de forma permanente
+exec waybar -c "$CONFIG_FILE" -s "$HOME/.config/waybar/style.css"

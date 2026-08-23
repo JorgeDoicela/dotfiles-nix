@@ -5,7 +5,6 @@
   home.packages = with pkgs; [
     neovim
     yazi
-    sioyek
     fastfetch
     lsd
     rclone

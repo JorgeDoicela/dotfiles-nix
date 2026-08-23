@@ -10,7 +10,7 @@
     rofiFontSize = "8.5";
     rofiWidth = "440px";
     rofiHeight = "270px";
-    browserScale = "0.85";
+    browserScale = "0.8";
   };
 
   # Configuración declarativa de hardware específica para jorge-secundaria (Dual Display)

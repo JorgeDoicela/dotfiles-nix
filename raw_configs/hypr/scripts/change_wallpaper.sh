@@ -43,7 +43,7 @@ fi
 ln -sf "$NEXT_WALLPAPER" "$SYM_LINK"
 
 # Reiniciar hyprpaper para aplicar los cambios de inmediato
-killall hyprpaper 2>/dev/null
+pkill -x hyprpaper 2>/dev/null
 hyprpaper >/dev/null 2>&1 &
 
 # Notificar el cambio

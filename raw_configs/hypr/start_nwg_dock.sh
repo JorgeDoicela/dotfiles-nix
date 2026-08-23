@@ -3,7 +3,7 @@
 # Usa setsid para crear una sesión de proceso completamente independiente del shell padre.
 
 # Matar instancias previas
-killall nwg-dock-hyprland 2>/dev/null
+pkill -x nwg-dock-hyprland 2>/dev/null
 sleep 0.2
 
 # Iniciar en una sesión de proceso propia, desacoplado de cualquier terminal

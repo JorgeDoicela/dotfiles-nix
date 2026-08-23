@@ -232,14 +232,15 @@ Este repositorio está diseñado para operar en modo **Standalone Home Manager**
 
 1. **Capa del Sistema Operativo Base (Debian `apt` / Arch `pacman`):**
    * **Controladores Gráficos y Kernel:** Mesa, Vulkan, ACO, DRM y drivers de GPU (AMD Radeon / Intel / Nvidia).
-   * **Compositor y Binarios Gráficos Críticos:** Hyprland, Alacritty, Brave, VS Code.
+   * **Compositor y Binarios Gráficos Críticos:** Hyprland, Alacritty, Brave, VS Code, Sioyek.
    * *Razón técnica:* Al ser instalados por la distribución base, estos ejecutables se enlazan de forma 100% nativa con las librerías dinámicas de OpenGL/EGL del sistema operativo (`radeonsi_dri.so`), garantizando aceleración por hardware completa, fluidez máxima y cero errores de *display handle* en Wayland.
 
 2. **Capa Declarativa de Home Manager (Nix Flakes):**
    * **Herramientas CLI y Desarrollo:** Neovim, Yazi, Fastfetch, LSD, Rclone, JQ, Socat.
    * **Entorno Visual de Escritorio:** Waybar, Rofi, SwayNC, Wlogout, Hyprlock, Grim, Slurp, Swappy.
    * **Activos de Diseño:** Temas GTK (WhiteSur-Dark), Iconos (Tela-circle-dracula), Cursores (Bibata-Modern-Ice), Fuentes (JetBrainsMono Nerd Font).
-   * **Gestión Inmutable de Dotfiles:** Todos los archivos de configuración (`~/.config/alacritty/alacritty.toml`, `~/.config/hypr/`, `~/.config/waybar/`, `~/.config/Code/User/settings.json`, variables de sesión de Wayland y atajos de teclado).
+   * **Gestión Inmutable de Dotfiles:** Todos los archivos de configuración (`~/.config/alacritty/alacritty.toml`, `~/.config/hypr/`, `~/.config/waybar/`, `~/.config/Code/User/settings.json`, `~/.config/sioyek/`, variables de sesión de Wayland y atajos de teclado).
+   * **Visor de Estudio (Sioyek):** Navegación ergonómica configurada de forma compartida para ambas laptops (`Espacio` para avanzar salto, `Borrar / Backspace` o `Shift + Espacio` para retroceder).
 
 ### Procedimiento de Instalación en Arch Linux:
 
