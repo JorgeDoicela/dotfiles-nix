@@ -11,15 +11,15 @@ Configuración declarativa modular, ultralimpia y reproducible para Debian + Hyp
 ```text
 dotfiles-nix/
 ├── flake.nix              # Entrada principal de Nix Flakes (Entorno reproducible)
-├── home.nix               # Configuración central de Home Manager
+├── home.nix               # Configuración central de Home Manager (Variables globales, PATH, paquetes base)
 ├── modules/               # Módulos declarativos organizados por responsabilidad
-│   ├── style.nix          # GTK3/GTK4 (Catppuccin Mocha), Qt (Fusion), Iconos (Tela) y Cursores (Bibata)
-│   ├── desktop.nix        # Hyprland, Waybar (estilo macOS), Rofi (Catppuccin Mocha) y SwayNC
-│   ├── apps.nix           # Alacritty (Tokyo Night), VS Code, Flameshot y LSD
-│   ├── shell.nix          # Zsh, Starship Prompt y FZF
-│   └── scripts.nix        # Ejecutables de usuario (~/.local/bin/hypr-rotate, voxd, etc.)
-├── setup/                 # Aprovisionamiento del sistema base Debian (/etc/, TLP, sysctl, AMDGPU)
-└── raw_configs/           # Archivos de configuración fuente (Hyprland, Scripts, Rofi, Waybar)
+│   ├── style.nix          # GTK3/GTK4 (WhiteSur-Dark), Qt (Fusion/Qt6ct), Iconos (Tela), Cursores (Bibata) y Fuentes
+│   ├── desktop.nix        # Waybar, Rofi, SwayNC, Wlogout, Hyprpaper, Hypridle, Hyprlock, nwg-dock y utilidades
+│   ├── apps.nix           # Alacritty, Neovim, Yazi, Sioyek, VS Code, Fastfetch, LSD, Rclone y flags Wayland
+│   ├── shell.nix          # Zsh, Starship Prompt, FZF y Git
+│   └── scripts.nix        # Ejecutables de usuario (~/.local/bin/hypr-rotate, voxd, sincro, etc.)
+├── setup/                 # Aprovisionamiento del sistema base Debian (/etc/, TLP, sysctl, AMDGPU, apt)
+└── raw_configs/           # Archivos de configuración fuente (Hyprland, Waybar, Rofi, Wlogout, Scripts)
 ```
 
 ---

@@ -8,7 +8,10 @@
   # Habilitar la gestión propia de Home Manager
   programs.home-manager.enable = true;
 
-  home.sessionPath = [ "$HOME/.local/bin" ];
+  home.sessionPath = [
+    "$HOME/.local/bin"
+    "$HOME/.nix-profile/bin"
+  ];
 
   # Variables de entorno globales del sistema de usuario (Wayland / GTK Dark / Qt / Electron)
   home.sessionVariables = {
@@ -32,16 +35,17 @@
     ./modules/scripts.nix
   ];
 
-  # Paquetes útiles de sistema instalados de forma declarativa mediante Nix
+  # Paquetes base y fuentes globales del sistema
   home.packages = with pkgs; [
-    flameshot
-    grim
-    slurp
     whitesur-gtk-theme
     tela-circle-icon-theme
     bibata-cursors
     font-awesome
     nerd-fonts.jetbrains-mono
     nixfmt
+    tree
+    which
+    htop
+    btop
   ];
 }

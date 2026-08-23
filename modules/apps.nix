@@ -1,6 +1,20 @@
 { config, pkgs, ... }:
 
 {
+  # Paquetes declarativos de aplicaciones de usuario
+  home.packages = with pkgs; [
+    alacritty
+    neovim
+    yazi
+    sioyek
+    fastfetch
+    lsd
+    rclone
+    jq
+    socat
+    flameshot
+  ];
+
   # Alacritty (Terminal con Tokyo Night)
   xdg.configFile."alacritty/alacritty.toml".source = ../raw_configs/alacritty/alacritty.toml;
 

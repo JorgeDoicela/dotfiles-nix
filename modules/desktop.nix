@@ -1,6 +1,31 @@
 { config, pkgs, ... }:
 
 {
+  # Paquetes declarativos del entorno de escritorio Hyprland
+  home.packages = with pkgs; [
+    waybar
+    rofi
+    swaynotificationcenter
+    wlogout
+    hyprpaper
+    hypridle
+    hyprlock
+    nwg-dock-hyprland
+    grim
+    slurp
+    swappy
+    wl-clipboard
+    cliphist
+    brightnessctl
+    playerctl
+    pamixer
+    pavucontrol
+    libnotify
+    gsimplecal
+    networkmanagerapplet
+    libinput-gestures
+  ];
+
   # Servicio de usuario Systemd para garantizar que SwayNC siempre esté activo en DBus
   services.swaync = {
     enable = true;

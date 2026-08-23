@@ -98,5 +98,30 @@ else
     sed -i 's/^USERGROUPS_ENAB yes/USERGROUPS_ENAB yes\nUMASK\t\t022/' /etc/login.defs
 fi
 
+# 6. Actualizar repositorios e instalar paquetes base de Debian (Kernel/Drivers/Hyprland)
+echo "=> Actualizando fuentes de apt e instalando paquetes base del sistema..."
+apt-get update
+apt-get install -y --no-install-recommends \
+    curl \
+    git \
+    hyprland \
+    hyprland-guiutils \
+    hyprpolkitagent \
+    xdg-desktop-portal-hyprland \
+    mesa-vulkan-drivers \
+    libgl1-mesa-dri \
+    pipewire \
+    wireplumber \
+    pipewire-audio \
+    pipewire-pulse \
+    tlp \
+    tlp-rdw \
+    plymouth \
+    plymouth-themes \
+    brave-browser || true
+
 echo "=== MIGRACIÓN Y RÉPLICA COMPLETADA CON ÉXITO ==="
-echo "Los paquetes de Hyprland, Brave, Node.js y utilidades se instalarán al ejecutar el comando habitual."
+echo "Ahora instala Nix y ejecuta Home Manager para restaurar todo el entorno de usuario:"
+echo "  1. sh <(curl -L https://install.determinate.systems/nix) install"
+echo "  2. nix run github:nix-community/home-manager -- switch --flake ~/dotfiles-nix#jorge"
+
