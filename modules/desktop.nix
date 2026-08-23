@@ -23,4 +23,13 @@
 
   # Enlace declarativo de gsimplecal
   xdg.configFile."gsimplecal".source = ../raw_configs/gsimplecal;
+
+  # Enlace declarativo de wlogout
+  xdg.configFile."wlogout".source = ../raw_configs/wlogout;
+
+  # Enlace declarativo de libinput-gestures
+  xdg.configFile."libinput-gestures.conf".source = ../raw_configs/libinput-gestures.conf;
+
+  # Enlace declarativo de portales XDG
+  xdg.configFile."xdg-desktop-portal/portals.conf".source = ../raw_configs/xdg-desktop-portal/portals.conf;
 }

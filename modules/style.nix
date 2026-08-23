@@ -71,4 +71,8 @@
     [Icon Theme]
     Inherits=Bibata-Modern-Ice
   '';
+
+  # Configuraciones declarativas de qt5ct y qt6ct
+  xdg.configFile."qt5ct/qt5ct.conf".source = ../raw_configs/qt5ct/qt5ct.conf;
+  xdg.configFile."qt6ct/qt6ct.conf".source = ../raw_configs/qt6ct/qt6ct.conf;
 }

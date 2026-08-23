@@ -25,4 +25,12 @@
 
   # Sioyek (Visor PDF de estudio)
   xdg.configFile."sioyek".source = ../raw_configs/sioyek;
+
+  # Flags de Aceleración Gráfica y Wayland
+  xdg.configFile."brave-flags.conf".source = ../raw_configs/brave-flags.conf;
+  xdg.configFile."electron-flags.conf".source = ../raw_configs/electron-flags.conf;
+  xdg.configFile."code-flags.conf".source = ../raw_configs/code-flags.conf;
+
+  # Asociaciones de archivos por defecto
+  xdg.configFile."mimeapps.list".source = ../raw_configs/mimeapps.list;
 }
