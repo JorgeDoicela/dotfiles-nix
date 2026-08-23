@@ -55,8 +55,19 @@
   xdg.configFile."waybar/config_low.json".source = ../raw_configs/waybar/config_low.json;
   xdg.configFile."waybar/config_vertical.json".source = ../raw_configs/waybar/config_vertical.json;
 
-  # Enlace declarativo de Rofi
-  xdg.configFile."rofi".source = ../raw_configs/rofi;
+  # Enlace declarativo de Rofi parametrizado por host
+  xdg.configFile."rofi/theme.rasi".source = ../raw_configs/rofi/theme.rasi;
+  xdg.configFile."rofi/config.rasi".text =
+    builtins.replaceStrings
+      [ "font:                       \"JetBrainsMono Nerd Font 10\";"
+        "width:                       600px;"
+        "height:                      350px;"
+      ]
+      [ "font:                       \"JetBrainsMono Nerd Font ${config.mySystem.rofiFontSize}\";"
+        "width:                       ${config.mySystem.rofiWidth};"
+        "height:                      ${config.mySystem.rofiHeight};"
+      ]
+      (builtins.readFile ../raw_configs/rofi/config.rasi);
 
   # Enlace declarativo de nwg-dock-hyprland
   xdg.configFile."nwg-dock-hyprland".source = ../raw_configs/nwg-dock-hyprland;

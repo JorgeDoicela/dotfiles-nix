@@ -71,4 +71,21 @@
     source = ../raw_configs/scripts/hypr-rotate;
     executable = true;
   };
+
+  # Wrapper universal para Brave en Linux (lee automáticamente ~/.config/brave-flags.conf)
+  home.file.".local/bin/brave-browser" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      FLAGS=()
+      if [ -f "$HOME/.config/brave-flags.conf" ]; then
+          while IFS= read -r line || [ -n "$line" ]; do
+              [[ "$line" =~ ^[[:space:]]*# ]] && continue
+              [[ -z "$line" ]] && continue
+              FLAGS+=("$line")
+          done < "$HOME/.config/brave-flags.conf"
+      fi
+      exec /usr/bin/brave-browser-stable "''${FLAGS[@]}" "$@"
+    '';
+  };
 }

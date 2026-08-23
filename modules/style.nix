@@ -7,14 +7,50 @@
       default = 11;
       description = "Tamaño base de tipografía del sistema (GTK, Terminal, DConf)";
     };
+    cursorSize = lib.mkOption {
+      type = lib.types.int;
+      default = 24;
+      description = "Tamaño del cursor del ratón (XCursor / Hyprcursor)";
+    };
     waybarFontSize = lib.mkOption {
       type = lib.types.str;
       default = "13px";
       description = "Tamaño tipográfico para Waybar";
     };
+    vscodeZoomLevel = lib.mkOption {
+      type = lib.types.number;
+      default = 0.0;
+      description = "Nivel de zoom de la UI de VS Code (-0.6 para pantallas 768p, 0 para 1080p)";
+    };
+    rofiFontSize = lib.mkOption {
+      type = lib.types.str;
+      default = "10";
+      description = "Tamaño de fuente para el lanzador Rofi";
+    };
+    rofiWidth = lib.mkOption {
+      type = lib.types.str;
+      default = "600px";
+      description = "Ancho de la ventana de Rofi";
+    };
+    rofiHeight = lib.mkOption {
+      type = lib.types.str;
+      default = "350px";
+      description = "Altura de la ventana de Rofi";
+    };
+    browserScale = lib.mkOption {
+      type = lib.types.str;
+      default = "1";
+      description = "Factor de escala para navegadores basados en Chromium/Brave";
+    };
   };
 
   config = {
+    # Variables de entorno para tamaño de cursor en Wayland
+    home.sessionVariables = {
+      XCURSOR_SIZE = "${toString config.mySystem.cursorSize}";
+      HYPRCURSOR_SIZE = "${toString config.mySystem.cursorSize}";
+    };
+
     # Configuración Declarativa de GTK con tema oficial macOS WhiteSur
     gtk = {
       enable = true;
@@ -29,7 +65,7 @@
       cursorTheme = {
         name = "Bibata-Modern-Ice";
         package = pkgs.bibata-cursors;
-        size = 24;
+        size = config.mySystem.cursorSize;
       };
       font = {
         name = "JetBrainsMono Nerd Font";
@@ -68,6 +104,7 @@
         gtk-theme = "WhiteSur-Dark";
         icon-theme = "Tela-circle-dracula";
         cursor-theme = "Bibata-Modern-Ice";
+        cursor-size = config.mySystem.cursorSize;
         document-font-name = "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}";
         monospace-font-name = "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}";
       };
@@ -78,6 +115,7 @@
       Net/ThemeName "WhiteSur-Dark"
       Net/IconThemeName "Tela-circle-dracula"
       Gtk/CursorThemeName "Bibata-Modern-Ice"
+      Gtk/CursorThemeSize ${toString config.mySystem.cursorSize}
       Gtk/FontName "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}"
       Net/EnableEventSounds 1
       EnableInputFeedbackSounds 0

@@ -1,5 +1,6 @@
 {
     // --- APARIENCIA Y ESTILO ---
+    "window.zoomLevel": 0,
     "workbench.colorTheme": "One Dark Pro Night Flat", // Iconos claros para identificar archivos rápido
     // --- TIPOGRAFÍA TÉCNICA (JETBRAINS MONO) ---
     "editor.fontFamily": "'JetBrains Mono', Consolas, monospace", // Fuente diseñada para programadores
