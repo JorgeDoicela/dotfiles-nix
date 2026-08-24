@@ -7,7 +7,6 @@
     rofi
     swaynotificationcenter
     wlogout
-    hyprpaper
     hypridle
     hyprlock
     nwg-dock-hyprland
