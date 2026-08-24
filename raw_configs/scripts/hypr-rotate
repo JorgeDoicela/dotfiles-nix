@@ -63,7 +63,7 @@ hyprctl keyword monitor "${MONITOR_NAME},preferred,auto,${CURRENT_SCALE},transfo
 
 # 2. Recargar Waybar para adaptar el diseño de la barra a la orientación actual
 if [ -f "$HOME/.config/hypr/start_waybar.sh" ]; then
-    bash "$HOME/.config/hypr/start_waybar.sh" >/dev/null 2>&1 &
+    hyprctl dispatch exec "$HOME/.config/hypr/start_waybar.sh" >/dev/null 2>&1
 fi
 
 # 3. Enviar notificación de estado si notify-send está disponible
