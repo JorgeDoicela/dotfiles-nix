@@ -1,8 +1,13 @@
+/*
+ * WhiteSur Dark Theme for Rofi (ChromeOS Fullscreen Launcher)
+ */
+
 * {
-    main-bg:            rgba(28, 28, 30, 0.75);
+    main-bg:            rgba(15, 15, 18, 0.78);
     main-fg:            #f5f5f7FF;
     main-br:            rgba(255, 255, 255, 0.15);
     main-ex:            rgba(255, 255, 255, 0.08);
-    select-bg:          rgba(10, 132, 255, 0.85);
+    select-bg:          rgba(255, 255, 255, 0.14);
     select-fg:          #ffffffFF;
+    accent:             #0a84ffFF;
 }

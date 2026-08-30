@@ -61,14 +61,8 @@
   xdg.configFile."rofi/theme.rasi".source = ../raw_configs/rofi/theme.rasi;
   xdg.configFile."rofi/config.rasi".text =
     builtins.replaceStrings
-      [ "font:                       \"JetBrainsMono Nerd Font 10\";"
-        "width:                       600px;"
-        "height:                      350px;"
-      ]
-      [ "font:                       \"JetBrainsMono Nerd Font ${config.mySystem.rofiFontSize}\";"
-        "width:                       ${config.mySystem.rofiWidth};"
-        "height:                      ${config.mySystem.rofiHeight};"
-      ]
+      [ "font:                       \"JetBrainsMono Nerd Font 11\";" ]
+      [ "font:                       \"JetBrainsMono Nerd Font ${config.mySystem.rofiFontSize}\";" ]
       (builtins.readFile ../raw_configs/rofi/config.rasi);
 
   # Enlace declarativo de SwayNC

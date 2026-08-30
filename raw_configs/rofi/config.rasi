@@ -1,3 +1,8 @@
+/**
+ * Rofi Configuration — Fullscreen ChromeOS / Launchpad Grid Style
+ * Standards-compliant, modular Rasi configuration.
+ */
+
 configuration {
     modi:                       "drun,run,filebrowser,window";
     show-icons:                 true;
@@ -7,40 +12,39 @@ configuration {
     display-window:             " ";
     drun-display-format:        "{name}";
     window-display-format:      "{title}";
-    font:                       "JetBrainsMono Nerd Font 10";
+    font:                       "JetBrainsMono Nerd Font 11";
 }
 
 @theme "~/.config/rofi/theme.rasi"
 
 window {
-    height:                      350px;
-    width:                       600px;
     transparency:                "real";
-    fullscreen:                  false;
+    fullscreen:                  true;
     enabled:                     true;
     cursor:                      "default";
     background-color:            @main-bg;
-    border:                      2px;
-    border-color:                @main-br;
-    border-radius:               16px;
+    padding:                     0px;
+    margin:                      0px;
+    border:                      0px;
 }
 
 mainbox {
     enabled:                     true;
-    spacing:                     10px;
-    padding:                     20px;
+    spacing:                     40px;
+    margin:                      0px;
+    padding:                     60px 120px 40px 120px;
     background-color:            transparent;
     children:                    [ "inputbar", "listview" ];
 }
 
 inputbar {
     enabled:                     true;
-    spacing:                     10px;
-    margin:                      0px;
-    padding:                     10px 14px;
+    spacing:                     12px;
+    margin:                      0px calc( 50% - 275px );
+    padding:                     12px 24px;
     border:                      1px;
     border-color:                @main-br;
-    border-radius:               8px;
+    border-radius:               999px;
     background-color:            @main-ex;
     text-color:                  @main-fg;
     children:                    [ "prompt", "entry" ];
@@ -50,6 +54,7 @@ prompt {
     enabled:                     true;
     background-color:            transparent;
     text-color:                  inherit;
+    font:                        "JetBrainsMono Nerd Font 13";
 }
 
 entry {
@@ -57,24 +62,25 @@ entry {
     background-color:            transparent;
     text-color:                  inherit;
     cursor:                      "text";
-    placeholder:                 "Buscar...";
-    placeholder-color:           inherit;
+    placeholder:                 "Buscar aplicaciones...";
+    placeholder-color:           rgba(245, 245, 247, 0.4);
+    font:                        "JetBrainsMono Nerd Font 11";
 }
 
 listview {
     enabled:                     true;
-    columns:                     1;
-    lines:                       6;
+    columns:                     6;
+    lines:                       4;
     cycle:                       true;
     dynamic:                     true;
     scrollbar:                   false;
     layout:                      vertical;
     reverse:                     false;
-    fixed-height:                true;
+    fixed-height:                false;
     fixed-columns:               true;
-    spacing:                     5px;
+    spacing:                     20px;
     margin:                      0px;
-    padding:                     0px;
+    padding:                     20px 0px;
     background-color:            transparent;
     text-color:                  @main-fg;
     cursor:                      "default";
@@ -82,10 +88,13 @@ listview {
 
 element {
     enabled:                     true;
-    spacing:                     10px;
+    orientation:                 vertical;
+    spacing:                     12px;
     margin:                      0px;
-    padding:                     6px 10px;
-    border-radius:               6px;
+    padding:                     20px 10px;
+    border:                      1px;
+    border-color:                transparent;
+    border-radius:               18px;
     background-color:            transparent;
     text-color:                  @main-fg;
     cursor:                      "pointer";
@@ -98,21 +107,22 @@ element normal.normal {
 
 element selected.normal {
     background-color:            @select-bg;
+    border-color:                @main-br;
     text-color:                  @select-fg;
 }
 
 element-icon {
     background-color:            transparent;
     text-color:                  inherit;
-    size:                        24px;
+    size:                        64px;
     cursor:                      inherit;
+    horizontal-align:            0.5;
 }
 
 element-text {
     background-color:            transparent;
     text-color:                  inherit;
-    highlight:                   inherit;
     cursor:                      inherit;
     vertical-align:              0.5;
-    horizontal-align:            0.0;
+    horizontal-align:            0.5;
 }
