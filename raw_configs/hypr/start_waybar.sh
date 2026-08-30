@@ -4,7 +4,6 @@
 # Matar cualquier instancia previa de forma limpia (soporta binarios nativos y Nix wrappers .waybar-wrapped)
 pkill -x waybar 2>/dev/null || true
 pkill -x ".waybar-wrapped" 2>/dev/null || true
-killall -q waybar .waybar-wrapped 2>/dev/null || true
 while pgrep -x waybar >/dev/null 2>&1 || pgrep -x ".waybar-wrapped" >/dev/null 2>&1; do
     sleep 0.05
 done
