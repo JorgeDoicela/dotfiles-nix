@@ -9,7 +9,6 @@
     wlogout
     hypridle
     hyprlock
-    nwg-dock-hyprland
     grim
     slurp
     swappy
@@ -42,7 +41,6 @@
   xdg.configFile."hypr/wallpaper.png".source = ../raw_configs/hypr/wallpaper.png;
   xdg.configFile."hypr/wallpaper_real.png".source = ../raw_configs/hypr/wallpaper_real.png;
   xdg.configFile."hypr/start_waybar.sh".source = ../raw_configs/hypr/start_waybar.sh;
-  xdg.configFile."hypr/start_nwg_dock.sh".source = ../raw_configs/hypr/start_nwg_dock.sh;
   xdg.configFile."hypr/toggle_sunset.sh".source = ../raw_configs/hypr/toggle_sunset.sh;
   xdg.configFile."hypr/scripts".source = ../raw_configs/hypr/scripts;
 
@@ -67,9 +65,6 @@
         "height:                      ${config.mySystem.rofiHeight};"
       ]
       (builtins.readFile ../raw_configs/rofi/config.rasi);
-
-  # Enlace declarativo de nwg-dock-hyprland
-  xdg.configFile."nwg-dock-hyprland".source = ../raw_configs/nwg-dock-hyprland;
 
   # Enlace declarativo de SwayNC
   xdg.configFile."swaync".source = ../raw_configs/swaync;
