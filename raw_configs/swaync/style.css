@@ -172,6 +172,78 @@
   background: #000000;
 }
 
+/* Rejilla de Botones Rápidos (Quick Toggles) */
+.widget-buttons-grid {
+  padding: 4px;
+  margin: 4px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild {
+  padding: 2px;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button {
+  background: @bg-selected;
+  border: 1px solid @border-color;
+  border-radius: 12px;
+  color: #ffffff;
+  padding: 10px 16px;
+  min-width: 145px;
+  font-weight: 500;
+  font-size: 13px;
+  transition: all 0.2s ease-in-out;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:hover {
+  background: @bg-hover;
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+}
+
+.widget-buttons-grid > flowbox > flowboxchild > button:active {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Sliders de Volumen y Brillo */
+.widget-volume, .widget-backlight {
+  background: @bg-selected;
+  border: 1px solid @border-color;
+  border-radius: 14px;
+  padding: 10px 14px;
+  margin: 6px 8px;
+}
+
+.widget-volume label, .widget-backlight label {
+  font-size: 16px;
+  color: #ffffff;
+  margin-right: 10px;
+}
+
+.widget-volume scale, .widget-backlight scale {
+  margin: 4px 0;
+}
+
+.widget-volume scale trough, .widget-backlight scale trough {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  min-height: 8px;
+}
+
+.widget-volume scale highlight, .widget-backlight scale highlight {
+  background-color: #ffffff;
+  border-radius: 8px;
+  min-height: 8px;
+}
+
+.widget-volume scale slider, .widget-backlight scale slider {
+  background-color: #ffffff;
+  border-radius: 100%;
+  min-height: 14px;
+  min-width: 14px;
+  margin: -3px;
+}
+
 /* Reproductor Multimedia (MPRIS) */
 .widget-mpris {
   background: @bg-selected;

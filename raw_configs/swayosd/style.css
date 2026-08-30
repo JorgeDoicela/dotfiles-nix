@@ -1,0 +1,52 @@
+/*
+ * SwayOSD Theme — WhiteSur Dark Monochrome (Píldora Compacta y Fina)
+ */
+
+window#osd {
+  background-color: rgba(28, 28, 30, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  padding: 6px 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+}
+
+window#osd #container {
+  margin: 6px 8px;
+}
+
+window#osd image,
+window#osd label {
+  color: #ffffff;
+  font-family: "JetBrainsMono Nerd Font", "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+window#osd progressbar:disabled,
+window#osd image:disabled {
+  opacity: 0.4;
+}
+
+window#osd progressbar,
+window#osd segmentedprogress {
+  min-height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+}
+
+window#osd trough,
+window#osd segment {
+  min-height: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+}
+
+window#osd progress,
+window#osd segment.active {
+  min-height: 5px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: none;
+}

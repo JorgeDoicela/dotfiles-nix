@@ -29,6 +29,11 @@
     enable = true;
   };
 
+  # Servicio de usuario Systemd para OSD moderno de volumen y brillo
+  services.swayosd = {
+    enable = true;
+  };
+
   # Enlaces declarativos comunes de Hyprland
   xdg.configFile."hypr/hyprland.conf".source = ../raw_configs/hypr/hyprland.conf;
   xdg.configFile."hypr/hypridle.conf".source = ../raw_configs/hypr/hypridle.conf;
@@ -80,4 +85,7 @@
 
   # Enlace declarativo de portales XDG
   xdg.configFile."xdg-desktop-portal/portals.conf".source = ../raw_configs/xdg-desktop-portal/portals.conf;
+
+  # Enlace declarativo de SwayOSD
+  xdg.configFile."swayosd/style.css".source = ../raw_configs/swayosd/style.css;
 }

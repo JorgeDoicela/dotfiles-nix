@@ -9,33 +9,20 @@
     "modules-left": [
         "custom/launcher",
         "hyprland/workspaces",
-        "custom/layout",
         "hyprland/window"
     ],
     "modules-center": [
-        "cpu",
-        "memory",
-        "disk",
-        "mpris"
+        "clock"
     ],
     "modules-right": [
-        "custom/keybinds",
-        "custom/screenshot",
-        "custom/audio",
-        "custom/theme",
-        "custom/wallpaper",
-        "custom/emoji",
-        "custom/terminal",
-        "custom/files",
-        "custom/clipboard",
-        "custom/look",
+        "mpris",
+        "cpu",
+        "memory",
         "network",
         "bluetooth",
         "pulseaudio",
         "battery",
         "custom/notification",
-        "clock",
-        "custom/lock",
         "custom/session"
     ],
     "hyprland/workspaces": {
@@ -145,64 +132,9 @@
         "on-click": "pkill -x rofi 2>/dev/null; rofi -show drun",
         "tooltip": "Menú de Aplicaciones"
     },
-    "custom/keybinds": {
-        "format": "󰘥",
-        "on-click": "pkill -x rofi 2>/dev/null; ~/.config/hypr/scripts/keybinds_hint.sh c",
-        "tooltip": "Atajos"
-    },
-    "custom/screenshot": {
-        "format": "󰈙",
-        "on-click": "~/.local/bin/flameshot-hypr gui",
-        "tooltip": "Captura"
-    },
-    "custom/audio": {
-        "format": "󰝳",
-        "on-click": "pavucontrol",
-        "tooltip": "Control de Audio"
-    },
-    "custom/theme": {
-        "format": "󰉼",
-        "on-click": "notify-send 'Apariencia' 'Tu tema actual está configurado de forma estática en ~/.config/' -i dialog-information",
-        "tooltip": "Tema"
-    },
-    "custom/wallpaper": {
-        "format": "󰆼",
-        "on-click": "~/.config/hypr/scripts/change_wallpaper.sh",
-        "tooltip": "Cambiar Fondo de Pantalla"
-    },
-    "custom/emoji": {
-        "format": "󰀻",
-        "on-click": "pkill -x rofi 2>/dev/null; ~/.config/hypr/scripts/emoji-picker.sh",
-        "tooltip": "Emojis"
-    },
-    "custom/terminal": {
-        "format": "󰆍",
-        "on-click": "alacritty",
-        "tooltip": "Terminal"
-    },
-    "custom/files": {
-        "format": "󰝰",
-        "on-click": "thunar",
-        "tooltip": "Archivos"
-    },
-    "custom/clipboard": {
-        "format": "󰋊",
-        "on-click": "pkill -x rofi 2>/dev/null; ~/.config/hypr/scripts/cliphist-rofi.sh",
-        "tooltip": "Portapapeles"
-    },
-    "custom/look": {
-        "format": "󰖪",
-        "on-click": "nwg-look",
-        "tooltip": "Apariencia"
-    },
-    "custom/lock": {
-        "format": "󰌾",
-        "on-click": "hyprlock",
-        "tooltip": "Bloquear"
-    },
     "custom/session": {
         "format": "󰐥",
         "on-click": "~/.config/hypr/scripts/logoutlaunch.sh",
-        "tooltip": "Sesión"
+        "tooltip": "Menú de Apagado / Sesión"
     }
 }

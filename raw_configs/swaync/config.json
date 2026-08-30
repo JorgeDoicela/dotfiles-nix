@@ -4,10 +4,10 @@
   "positionY": "top",
   "layer": "overlay",
   "control-center-layer": "overlay",
-  "control-center-margin-top": 10,
-  "control-center-margin-bottom": 10,
-  "control-center-margin-right": 10,
-  "control-center-margin-left": 10,
+  "control-center-margin-top": 8,
+  "control-center-margin-bottom": 8,
+  "control-center-margin-right": 8,
+  "control-center-margin-left": 8,
   "notification-icon-size": 64,
   "notification-body-image-height": 100,
   "notification-body-image-width": 200,
@@ -16,7 +16,7 @@
   "timeout-critical": 0,
   "fit-to-screen": true,
   "control-center-width": 380,
-  "control-center-height": 650,
+  "control-center-height": 860,
   "notification-window-width": 350,
   "keyboard-shortcuts": true,
   "image-visibility": "when-available",
@@ -29,16 +29,39 @@
   "widgets": [
     "title",
     "dnd",
-    "notifications"
+    "notifications",
+    "volume",
+    "backlight",
+    "buttons-grid"
   ],
   "widget-config": {
     "title": {
-      "text": "Notificaciones",
+      "text": "Centro de Control",
       "clear-all-button": true,
-      "button-text": "Limpiar todo"
+      "button-text": "Limpiar"
     },
     "dnd": {
       "text": "No Molestar"
+    },
+    "volume": {
+      "label": "󰕾",
+      "show-per-app": false,
+      "show-per-app-icon": false
+    },
+    "backlight": {
+      "label": "󰃠"
+    },
+    "buttons-grid": {
+      "actions": [
+        {
+          "label": "󰖔 Modo Noche",
+          "command": "bash -c ~/.config/hypr/toggle_sunset.sh"
+        },
+        {
+          "label": "󰌾 Bloquear",
+          "command": "hyprlock"
+        }
+      ]
     }
   }
 }
