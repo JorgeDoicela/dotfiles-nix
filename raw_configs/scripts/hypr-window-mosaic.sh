@@ -4,28 +4,29 @@ set -euo pipefail
 
 pos="${1:-center}"
 
+# Obtener dimensiones del monitor actualmente enfocado
 read -r MX MY MW MH < <(
-	hyprctl monitors -j | jq -r '.[0] | "\(.x) \(.y) \(.width) \(.height)"'
+	hyprctl monitors -j | jq -r '(.[] | select(.focused == true) // .[0]) | "\(.x) \(.y) \(.width) \(.height)"'
 )
 
-G=10
+G=16
 
 case "$pos" in
 left)
 	X=$((MX + G))
-	Y=$((MY + G))
+	Y=$((MY + G + 36))
 	W=$(((MW - G * 3) / 2))
-	H=$((MH - G * 2))
+	H=$((MH - G * 2 - 40))
 	;;
 right)
 	X=$((MX + (MW + G) / 2))
-	Y=$((MY + G))
+	Y=$((MY + G + 36))
 	W=$(((MW - G * 3) / 2))
-	H=$((MH - G * 2))
+	H=$((MH - G * 2 - 40))
 	;;
 top)
 	X=$((MX + G))
-	Y=$((MY + G))
+	Y=$((MY + G + 36))
 	W=$((MW - G * 2))
 	H=$(((MH - G * 3) / 2))
 	;;
@@ -36,16 +37,18 @@ bottom)
 	H=$(((MH - G * 3) / 2))
 	;;
 br)
-	X=$((MX + MW * 2 / 3))
-	Y=$((MY + MH * 2 / 3))
-	W=$((MW / 3 - G))
-	H=$((MH / 3 - G))
+	# Esquinita inferior derecha (Picture in Picture)
+	W=$((MW * 35 / 100))
+	H=$((MH * 35 / 100))
+	X=$((MX + MW - W - G))
+	Y=$((MY + MH - H - G))
 	;;
 center)
-	X=$((MX + MW / 4))
-	Y=$((MY + MH / 4))
-	W=$((MW / 2))
-	H=$((MH / 2))
+	# Centro de la pantalla (60% x 60%)
+	W=$((MW * 60 / 100))
+	H=$((MH * 60 / 100))
+	X=$((MX + (MW - W) / 2))
+	Y=$((MY + (MH - H) / 2))
 	;;
 tile)
 	hyprctl dispatch togglefloating
@@ -62,5 +65,6 @@ if [[ "$floating" != "true" ]]; then
 	hyprctl dispatch togglefloating
 fi
 
-hyprctl dispatch resizewindow "exact $W $H"
-hyprctl dispatch movewindow "exact $X $Y"
+# Aplicar redimensionado y movimiento exacto con los dispatchers nativos de Hyprland
+hyprctl dispatch resizeactive exact "$W" "$H"
+hyprctl dispatch moveactive exact "$X" "$Y"
