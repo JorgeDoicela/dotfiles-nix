@@ -11,6 +11,10 @@
     jq
     socat
     flameshot
+
+    # Entorno de desarrollo JavaScript / TypeScript declarativo
+    nodejs_22
+    pnpm
   ];
 
   # Alacritty (Terminal declarativo parametrizado por host)
