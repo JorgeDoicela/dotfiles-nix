@@ -26,7 +26,6 @@
   # Flameshot (Capturas de pantalla)
   xdg.configFile."flameshot/flameshot.ini".source = ../raw_configs/flameshot/flameshot.ini;
 
-
   # LSD (Ls mejorado)
   xdg.configFile."lsd".source = ../raw_configs/lsd;
 
