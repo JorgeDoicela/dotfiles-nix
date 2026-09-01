@@ -26,11 +26,6 @@
   # Flameshot (Capturas de pantalla)
   xdg.configFile."flameshot/flameshot.ini".source = ../raw_configs/flameshot/flameshot.ini;
 
-  # VS Code (Settings dinámicos parametrizados por host y Keybindings)
-  xdg.configFile."Code/User/settings.json".text =
-    builtins.replaceStrings [ "\"window.zoomLevel\": 0" ] [ "\"window.zoomLevel\": ${toString config.mySystem.vscodeZoomLevel}" ]
-      (builtins.readFile ../raw_configs/vscode/settings.json);
-  xdg.configFile."Code/User/keybindings.json".source = ../raw_configs/vscode/keybindings.json;
 
   # LSD (Ls mejorado)
   xdg.configFile."lsd".source = ../raw_configs/lsd;
@@ -54,7 +49,6 @@
   xdg.configFile."brave-browser-flags.conf".text = config.xdg.configFile."brave-flags.conf".text;
   xdg.configFile."chromium-flags.conf".text = config.xdg.configFile."brave-flags.conf".text;
   xdg.configFile."electron-flags.conf".source = ../raw_configs/electron-flags.conf;
-  xdg.configFile."code-flags.conf".source = ../raw_configs/code-flags.conf;
 
   # Asociaciones de archivos por defecto
   xdg.configFile."mimeapps.list".source = ../raw_configs/mimeapps.list;

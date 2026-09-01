@@ -6,7 +6,6 @@
     fontSize = 9;
     cursorSize = 20;
     waybarFontSize = "11px";
-    vscodeZoomLevel = -0.6;
     rofiFontSize = "8.5";
     rofiWidth = "440px";
     rofiHeight = "270px";

@@ -17,11 +17,6 @@
       default = "13px";
       description = "Tamaño tipográfico para Waybar";
     };
-    vscodeZoomLevel = lib.mkOption {
-      type = lib.types.number;
-      default = 0.0;
-      description = "Nivel de zoom de la UI de VS Code (-0.6 para pantallas 768p, 0 para 1080p)";
-    };
     rofiFontSize = lib.mkOption {
       type = lib.types.str;
       default = "10";
