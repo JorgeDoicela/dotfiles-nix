@@ -78,11 +78,6 @@ options.mySystem = {
     default = "13px";
     description = "Tamaño tipográfico para Waybar";
   };
-  vscodeZoomLevel = lib.mkOption {
-    type = lib.types.number;
-    default = 0.0;
-    description = "Nivel de zoom de la UI de VS Code (-0.6 en 768p, 0 en 1080p)";
-  };
   rofiFontSize = lib.mkOption {
     type = lib.types.str;
     default = "10";
@@ -130,14 +125,12 @@ options.mySystem = {
    '';
    ```
 4. **Terminal Alacritty (`modules/apps.nix`):**
-   Inyecta dinámicamente `size = config.mySystem.fontSize` y `padding = 10` conservando compatibilidad nativa con drivers GPU de la distribución.
-5. **Waybar CSS Dinámico (`modules/desktop.nix`):**
-   Inyecta dinámicamente `config.mySystem.waybarFontSize` en `waybar/style.css`.
-6. **Editor VS Code / Antigravity IDE (`modules/apps.nix`):**
-   Inyecta dinámicamente `"window.zoomLevel": config.mySystem.vscodeZoomLevel` en `settings.json`.
-7. **Lanzador Rofi (`modules/desktop.nix`):**
-   Inyecta `rofiFontSize`, `rofiWidth` y `rofiHeight` en `rofi/config.rasi`.
-8. **Navegador Brave / Chromium (`modules/apps.nix` y `modules/scripts.nix`):**
+   Configurado mediante el módulo nativo fuertemente tipado `programs.alacritty` de Home Manager, inyectando `font.size = config.mySystem.fontSize` y paddings dinámicos sin manipular texto plano.
+5. **Waybar CSS (`modules/desktop.nix`):**
+   Inyecta dinámicamente `config.mySystem.waybarFontSize` mediante el token explícito `@WAYBAR_FONT_SIZE@` en `waybar/style.css`.
+6. **Lanzador Rofi (`modules/desktop.nix`):**
+   Inyecta `rofiFontSize`, `rofiWidth` y `rofiHeight` mediante los tokens explícitos `@ROFI_FONT@`, `@ROFI_WIDTH@` y `@ROFI_HEIGHT@` en `rofi/config.rasi`.
+7. **Navegador Brave / Chromium (`modules/apps.nix` y `modules/scripts.nix`):**
    Inyecta `--force-device-scale-factor=${config.mySystem.browserScale}` en `brave-flags.conf` y se ejecuta mediante el wrapper universal `~/.local/bin/brave-browser`.
 
 ---

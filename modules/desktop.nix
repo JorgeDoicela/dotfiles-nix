@@ -34,6 +34,17 @@
     enable = true;
   };
 
+  # Unidad Systemd de sesión para Hyprland (eleva graphical-session.target por dependencia respetando el estándar systemd)
+  systemd.user.targets.hyprland-session = {
+    Unit = {
+      Description = "Hyprland compositor session";
+      Documentation = [ "man:systemd.special(7)" ];
+      BindsTo = [ "graphical-session.target" ];
+      Wants = [ "graphical-session-pre.target" ];
+      After = [ "graphical-session-pre.target" ];
+    };
+  };
+
   # Enlaces declarativos comunes de Hyprland
   xdg.configFile."hypr/hyprland.conf".source = ../raw_configs/hypr/hyprland.conf;
   xdg.configFile."hypr/hypridle.conf".source = ../raw_configs/hypr/hypridle.conf;
@@ -51,24 +62,24 @@
 
   # Enlaces declarativos comunes de Waybar (Estilos parametrizados y perfiles auxiliares)
   xdg.configFile."waybar/style.css".text =
-    builtins.replaceStrings [ "font-size: 13px;" ] [ "font-size: ${config.mySystem.waybarFontSize};" ]
+    builtins.replaceStrings [ "@WAYBAR_FONT_SIZE@" ] [ config.mySystem.waybarFontSize ]
       (builtins.readFile ../raw_configs/waybar/style.css);
   xdg.configFile."waybar/theme.css".source = ../raw_configs/waybar/theme.css;
   xdg.configFile."waybar/config_low.json".source = ../raw_configs/waybar/config_low.json;
   xdg.configFile."waybar/config_vertical.json".source = ../raw_configs/waybar/config_vertical.json;
 
-  # Enlaces declarativos de Rofi parametrizados por host
+  # Enlaces declarativos de Rofi parametrizados por host mediante contrato explícito de plantilla
   xdg.configFile."rofi/theme.rasi".source = ../raw_configs/rofi/theme.rasi;
   xdg.configFile."rofi/launcher.rasi".source = ../raw_configs/rofi/launcher.rasi;
   xdg.configFile."rofi/config.rasi".text =
     builtins.replaceStrings
-      [ "font:                       \"JetBrainsMono Nerd Font 10\";"
-        "width:                       600px;"
-        "height:                      350px;"
+      [ "@ROFI_FONT@"
+        "@ROFI_WIDTH@"
+        "@ROFI_HEIGHT@"
       ]
-      [ "font:                       \"JetBrainsMono Nerd Font ${config.mySystem.rofiFontSize}\";"
-        "width:                       ${config.mySystem.rofiWidth};"
-        "height:                      ${config.mySystem.rofiHeight};"
+      [ "JetBrainsMono Nerd Font ${config.mySystem.rofiFontSize}"
+        config.mySystem.rofiWidth
+        config.mySystem.rofiHeight
       ]
       (builtins.readFile ../raw_configs/rofi/config.rasi);
 

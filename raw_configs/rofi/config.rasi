@@ -7,14 +7,14 @@ configuration {
     display-window:             " ";
     drun-display-format:        "{name}";
     window-display-format:      "{title}";
-    font:                       "JetBrainsMono Nerd Font 10";
+    font:                       "@ROFI_FONT@";
 }
 
 @theme "~/.config/rofi/theme.rasi"
 
 window {
-    height:                      350px;
-    width:                       600px;
+    height:                      @ROFI_HEIGHT@;
+    width:                       @ROFI_WIDTH@;
     transparency:                "real";
     fullscreen:                  false;
     enabled:                     true;
