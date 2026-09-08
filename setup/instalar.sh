@@ -57,10 +57,10 @@ safe_copy "$CURRENT_DIR/etc/tlp.conf" /etc/tlp.conf
 safe_copy "$CURRENT_DIR/etc/plymouthd.conf" /etc/plymouth/plymouthd.conf
 safe_copy "$CURRENT_DIR/etc/system.conf" /etc/systemd/system.conf
 
-# Configurar bluetooth autoenable
+# Configurar bluetooth: deshabilitar autoenable forzado para respetar la persistencia de estado
 if [ -f /etc/bluetooth/main.conf ]; then
-    sed -i 's/^#AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf
-    sed -i 's/^AutoEnable=false/AutoEnable=true/' /etc/bluetooth/main.conf
+    sed -i 's/^AutoEnable=true/AutoEnable=false/' /etc/bluetooth/main.conf
+    sed -i 's/^#AutoEnable=false/AutoEnable=false/' /etc/bluetooth/main.conf
 fi
 
 # Copiar y habilitar el servicio de retroiluminación de teclado Dell
