@@ -72,6 +72,17 @@
     executable = true;
   };
 
+  # Control de energía y rendimiento GPU AMD (declarativo para atajos de teclado)
+  home.file.".local/bin/gpu-performance" = {
+    source = ../setup/amdgpu/amdgpu-performance;
+    executable = true;
+  };
+
+  home.file.".local/bin/gpu-powersave" = {
+    source = ../setup/amdgpu/amdgpu-powersave;
+    executable = true;
+  };
+
   # Wrapper universal para Brave en Linux (lee automáticamente ~/.config/brave-flags.conf)
   home.file.".local/bin/brave-browser" = {
     executable = true;

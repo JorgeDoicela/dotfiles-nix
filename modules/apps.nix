@@ -20,6 +20,7 @@
   # Alacritty (Terminal declarativo tipado nativo de Home Manager)
   programs.alacritty = {
     enable = true;
+    package = null; # Delega al binario nativo de Debian para compatibilidad con Mesa/EGL en Wayland
     settings = {
       general.live_config_reload = true;
       scrolling = {

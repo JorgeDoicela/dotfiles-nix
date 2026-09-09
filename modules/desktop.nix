@@ -52,7 +52,15 @@
   xdg.configFile."hypr/hyprpaper.conf".source = ../raw_configs/hypr/hyprpaper.conf;
   xdg.configFile."hypr/keybindings.conf".source = ../raw_configs/hypr/keybindings.conf;
   xdg.configFile."hypr/performance.conf".source = ../raw_configs/hypr/performance.conf;
-  xdg.configFile."hypr/userprefs.conf".source = ../raw_configs/hypr/userprefs.conf;
+  xdg.configFile."hypr/userprefs.conf".text =
+    builtins.replaceStrings
+      [ "@CURSOR_SENSITIVITY@"
+        "@SCROLL_FACTOR@"
+      ]
+      [ config.mySystem.cursorSensitivity
+        config.mySystem.scrollFactor
+      ]
+      (builtins.readFile ../raw_configs/hypr/userprefs.conf);
   xdg.configFile."hypr/windowrules.conf".source = ../raw_configs/hypr/windowrules.conf;
   xdg.configFile."hypr/wallpaper.png".source = ../raw_configs/hypr/wallpaper.png;
   xdg.configFile."hypr/wallpaper_real.png".source = ../raw_configs/hypr/wallpaper_real.png;

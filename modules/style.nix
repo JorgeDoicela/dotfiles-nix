@@ -37,6 +37,16 @@
       default = "1";
       description = "Factor de escala para navegadores basados en Chromium/Brave";
     };
+    cursorSensitivity = lib.mkOption {
+      type = lib.types.str;
+      default = "0.2";
+      description = "Sensibilidad del cursor en Hyprland (-1.0 a 1.0)";
+    };
+    scrollFactor = lib.mkOption {
+      type = lib.types.str;
+      default = "0.75";
+      description = "Factor de desplazamiento vertical (scroll arriba/abajo) en Hyprland";
+    };
   };
 
   config = {

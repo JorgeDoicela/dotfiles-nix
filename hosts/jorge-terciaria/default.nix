@@ -10,6 +10,8 @@
     rofiWidth = "600px";
     rofiHeight = "350px";
     browserScale = "1";
+    cursorSensitivity = "0.35"; # Ligero incremento de respuesta (+0.10) para un movimiento sutilmente más ágil
+    scrollFactor = "0.27";      # Punto medio fino calibrado para el touchpad
   };
 
   # Configuración declarativa de hardware específica para jorge-terciaria
