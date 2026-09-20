@@ -10,7 +10,6 @@
     rclone
     jq
     socat
-    flameshot
 
     # Entorno de desarrollo JavaScript / TypeScript declarativo
     nodejs_22
@@ -83,8 +82,6 @@
     };
   };
 
-  # Flameshot (Capturas de pantalla)
-  xdg.configFile."flameshot/flameshot.ini".source = ../raw_configs/flameshot/flameshot.ini;
 
   # LSD (Ls mejorado)
   xdg.configFile."lsd".source = ../raw_configs/lsd;
