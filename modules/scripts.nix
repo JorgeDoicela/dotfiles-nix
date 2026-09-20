@@ -1,6 +1,11 @@
 { config, pkgs, ... }:
 
 {
+  # Orquestador nativo de capturas de pantalla (Wayland / Hyprland)
+  home.file.".local/bin/screenshot" = {
+    source = ../raw_configs/hypr/scripts/screenshot.sh;
+    executable = true;
+  };
 
   home.file.".local/bin/lockscreen-splash.sh" = {
     source = ../raw_configs/scripts/lockscreen-splash.sh;

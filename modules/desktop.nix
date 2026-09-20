@@ -130,4 +130,18 @@
   # Enlaces declarativos de Hyprshell (Selector de ventanas Alt+Tab)
   xdg.configFile."hyprshell/config.toml".source = ../raw_configs/hyprshell/config.toml;
   xdg.configFile."hyprshell/styles.css".source = ../raw_configs/hyprshell/styles.css;
+
+  # Configuración declarativa de Swappy (Anotador Wayland)
+  xdg.configFile."swappy/config".text = ''
+    [Default]
+    save_dir=${config.home.homeDirectory}/Imágenes/Capturas
+    save_filename_format=Captura_%Y-%m-%d_%H-%M-%S.png
+    show_panel=false
+    line_size=4
+    text_size=18
+    text_font=JetBrainsMono Nerd Font
+    paint_mode=brush
+    early_exit=true
+    fill_shape=false
+  '';
 }
