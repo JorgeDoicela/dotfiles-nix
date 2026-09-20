@@ -43,7 +43,7 @@
       };
       colors = {
         primary = {
-          background = "#1a1b26";
+          background = "#1c1c1e";
           foreground = "#f5f5f7";
         };
         normal = {
@@ -51,9 +51,9 @@
           red     = "#ff453a";
           green   = "#30d158";
           yellow  = "#ff9f0a";
-          blue    = "#ffffff";
-          magenta = "#e5e5ea";
-          cyan    = "#8e8e93";
+          blue    = "#0a84ff";
+          magenta = "#bf5af2";
+          cyan    = "#64d2ff";
           white   = "#e5e5ea";
         };
         bright = {
@@ -61,18 +61,18 @@
           red     = "#ff6961";
           green   = "#32d74b";
           yellow  = "#ffd60a";
-          blue    = "#ffffff";
-          magenta = "#ffffff";
-          cyan    = "#ffffff";
+          blue    = "#409cff";
+          magenta = "#da8fff";
+          cyan    = "#70d7ff";
           white   = "#ffffff";
         };
         selection = {
-          background = "#ffffff";
-          foreground = "#000000";
+          background = "#0a84ff";
+          foreground = "#ffffff";
         };
         cursor = {
-          cursor = "#ffffff";
-          text   = "#000000";
+          cursor = "#0a84ff";
+          text   = "#ffffff";
         };
       };
       cursor = {

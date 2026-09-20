@@ -231,7 +231,7 @@ Este repositorio está diseñado para operar en modo **Standalone Home Manager**
 2. **Capa Declarativa de Home Manager (Nix Flakes):**
    * **Herramientas CLI y Desarrollo:** Neovim, Yazi, Fastfetch, LSD, Rclone, JQ, Socat.
    * **Entorno Visual de Escritorio:** Waybar, Rofi, SwayNC, Wlogout, Hyprlock, Grim, Slurp, Swappy.
-   * **Activos de Diseño:** Temas GTK (WhiteSur-Dark), Iconos (Tela-circle-dracula), Cursores (Bibata-Modern-Ice), Fuentes (JetBrainsMono Nerd Font).
+   * **Activos de Diseño:** Temas GTK (WhiteSur-Dark), Iconos (Tela-circle-dark), Cursores (Bibata-Modern-Ice), Fuentes (JetBrainsMono Nerd Font).
    * **Gestión Inmutable de Dotfiles:** Todos los archivos de configuración (`~/.config/alacritty/alacritty.toml`, `~/.config/hypr/`, `~/.config/waybar/`, `~/.config/Code/User/settings.json`, `~/.config/sioyek/`, variables de sesión de Wayland y atajos de teclado).
    * **Visor de Estudio (Sioyek):** Navegación ergonómica configurada de forma compartida para ambas laptops (`Espacio` para avanzar salto, `Borrar / Backspace` o `Shift + Espacio` para retroceder).
 

@@ -42,8 +42,8 @@ OUTPUT_TARGET=""
 
 case "$MODE" in
     area)
-        # Selección interactiva de área con colores acordes al tema WhiteSur / Dark
-        GEOM=$(slurp -b "#1a1b2680" -c "#ffffff" -s "#ffffff15" -w 2 2>/dev/null) || exit 0
+        # Selección interactiva de área con colores acordes al tema Apple macOS Dark
+        GEOM=$(slurp -b "#16161880" -c "#0a84ff" -s "#0a84ff20" -w 2 2>/dev/null) || exit 0
         if [ -z "$GEOM" ]; then
             exit 0
         fi
@@ -62,7 +62,7 @@ case "$MODE" in
             GEOM="${X},${Y} ${W}x${H}"
         else
             # Si no hay ventana enfocada, fallback a selección manual
-            GEOM=$(slurp -b "#1a1b2680" -c "#ffffff" -s "#ffffff15" -w 2 2>/dev/null) || exit 0
+            GEOM=$(slurp -b "#16161880" -c "#0a84ff" -s "#0a84ff20" -w 2 2>/dev/null) || exit 0
             if [ -z "$GEOM" ]; then
                 exit 0
             fi

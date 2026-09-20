@@ -43,11 +43,15 @@ safe_copy "$CURRENT_DIR/etc/hashicorp.list" /etc/apt/sources.list.d/hashicorp.li
 
 # 2. Copiar archivos de configuración de etc
 echo "=> Copiando archivos de optimización y arranque silencioso..."
-mkdir -p /etc/sysctl.d /etc/ssh/sshd_config.d /etc/default/grub.d /etc/systemd/system/systemd-fsck@.service.d /etc/systemd/system/systemd-fsck-root.service.d /etc/plymouth /etc/systemd /etc/bluetooth
+mkdir -p /etc/sysctl.d /etc/ssh/sshd_config.d /etc/default/grub.d /etc/systemd/system/systemd-fsck@.service.d /etc/systemd/system/systemd-fsck-root.service.d /etc/plymouth /etc/systemd /etc/bluetooth /boot/grub/themes
 
 safe_copy "$CURRENT_DIR/etc/sysctl-optimization.conf" /etc/sysctl.d/99-sysctl-optimization.conf
 safe_copy "$CURRENT_DIR/etc/ssh-hardening.conf" /etc/ssh/sshd_config.d/99-hardening.conf
 safe_copy "$CURRENT_DIR/etc/clean-boot.cfg" /etc/default/grub.d/99-clean-boot.cfg
+if [ -d "$CURRENT_DIR/themes/apple-dark" ]; then
+    cp -r "$CURRENT_DIR/themes/apple-dark" /boot/grub/themes/
+    safe_copy "$CURRENT_DIR/etc/grub-theme.cfg" /etc/default/grub.d/50-grub-theme.cfg
+fi
 safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck@.service.d/silent.conf
 safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck-root.service.d/silent.conf
 safe_copy "$CURRENT_DIR/etc/apt-no-recommends.conf" /etc/apt/apt.conf.d/99no-recommends

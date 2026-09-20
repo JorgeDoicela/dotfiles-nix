@@ -3,22 +3,22 @@
 -- =============================================================
 return {
 
-  -- ── Colorscheme ─────────────────────────────────────────────
+  -- ── Colorscheme Apple macOS / Xcode Dark ───────────────────
   {
-    "folke/tokyonight.nvim",
+    "projekt0n/github-nvim-theme",
     lazy     = false,
     priority = 1000,
     config = function()
-      require("tokyonight").setup({
-        style           = "moon",
-        transparent     = false,
-        terminal_colors = true,
-        styles = {
-          comments = { italic = true },
-          keywords = { italic = true },
+      require("github-theme").setup({
+        options = {
+          styles = {
+            comments = "italic",
+            keywords = "bold",
+            types = "italic,bold",
+          },
         },
       })
-      vim.cmd("colorscheme tokyonight-moon")
+      vim.cmd("colorscheme github_dark_default")
     end,
   },
 
@@ -28,7 +28,7 @@ return {
     event = "VeryLazy",
     opts = {
       options = {
-        theme           = "tokyonight",
+        theme           = "auto",
         globalstatus    = true,
         disabled_filetypes = { statusline = { "dashboard", "lazy", "alpha" } },
       },

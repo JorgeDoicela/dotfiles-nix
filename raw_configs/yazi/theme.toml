@@ -4,7 +4,7 @@ separator_close = ""
 
 [filetype]
 rules = [
-	{ mime = "text/*", fg = "#89b4fa" }, # Archivos de texto en azul (estilo DevOps)
-	{ mime = "application/json", fg = "#f9e2af" }, # JSON en amarillo
-	{ url = "*.sh", fg = "#a6e3a1" }, # Scripts en verde
+	{ mime = "text/*", fg = "#0a84ff" }, # Archivos de texto en azul Apple
+	{ mime = "application/json", fg = "#ffd60a" }, # JSON en amarillo Apple
+	{ url = "*.sh", fg = "#30d158" }, # Scripts en verde Apple
 ]

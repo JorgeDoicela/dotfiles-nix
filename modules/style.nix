@@ -64,7 +64,7 @@
         package = pkgs.whitesur-gtk-theme;
       };
       iconTheme = {
-        name = "Tela-circle-dracula";
+        name = "Tela-circle-dark";
         package = pkgs.tela-circle-icon-theme;
       };
       cursorTheme = {
@@ -89,8 +89,8 @@
     home.file.".local/share/themes/WhiteSur-Dark".source = "${pkgs.whitesur-gtk-theme}/share/themes/WhiteSur-Dark";
     home.file.".themes/WhiteSur-Dark".source = "${pkgs.whitesur-gtk-theme}/share/themes/WhiteSur-Dark";
 
-    home.file.".local/share/icons/Tela-circle-dracula".source = "${pkgs.tela-circle-icon-theme}/share/icons/Tela-circle-dracula";
-    home.file.".icons/Tela-circle-dracula".source = "${pkgs.tela-circle-icon-theme}/share/icons/Tela-circle-dracula";
+    home.file.".local/share/icons/Tela-circle-dark".source = "${pkgs.tela-circle-icon-theme}/share/icons/Tela-circle-dark";
+    home.file.".icons/Tela-circle-dark".source = "${pkgs.tela-circle-icon-theme}/share/icons/Tela-circle-dark";
 
     home.file.".local/share/icons/Bibata-Modern-Ice".source = "${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice";
     home.file.".icons/Bibata-Modern-Ice".source = "${pkgs.bibata-cursors}/share/icons/Bibata-Modern-Ice";
@@ -107,7 +107,7 @@
       "org/gnome/desktop/interface" = {
         color-scheme = "prefer-dark";
         gtk-theme = "WhiteSur-Dark";
-        icon-theme = "Tela-circle-dracula";
+        icon-theme = "Tela-circle-dark";
         cursor-theme = "Bibata-Modern-Ice";
         cursor-size = config.mySystem.cursorSize;
         document-font-name = "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}";
@@ -118,7 +118,7 @@
     # Enlace declarativo de xsettingsd.conf para compatibilidad con X11 / XWayland
     xdg.configFile."xsettingsd/xsettingsd.conf".text = ''
       Net/ThemeName "WhiteSur-Dark"
-      Net/IconThemeName "Tela-circle-dracula"
+      Net/IconThemeName "Tela-circle-dark"
       Gtk/CursorThemeName "Bibata-Modern-Ice"
       Gtk/CursorThemeSize ${toString config.mySystem.cursorSize}
       Gtk/FontName "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}"

@@ -1,29 +1,29 @@
-/* Tema Tokyo Night profesional y limpio para Hyprshell */
+/* Tema Apple macOS Dark (Frosted Glass / Space Gray) para Hyprshell */
 window {
     background-color: transparent;
-    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-family: "JetBrainsMono Nerd Font", -apple-system, "SF Pro", monospace;
     font-size: 13px;
 }
 
 .main-container {
-    background-color: rgba(26, 27, 38, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 12px;
+    background-color: rgba(28, 28, 30, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
     padding: 14px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
 }
 
 .item {
-    border-radius: 8px;
+    border-radius: 10px;
     padding: 8px 14px;
     margin: 4px;
-    transition: all 150ms ease-in-out;
-    color: #c0caf5;
+    transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    color: #8e8e93;
 }
 
 .item:selected {
     background-color: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(122, 162, 247, 0.4);
+    border: 1px solid rgba(10, 132, 255, 0.75);
     color: #ffffff;
 }
 

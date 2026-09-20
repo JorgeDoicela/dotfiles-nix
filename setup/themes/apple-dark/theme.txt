@@ -1,0 +1,54 @@
+# ==============================================================================
+# GRUB2 THEME - APPLE MACOS DARK (SPACE GRAY / 1080P)
+# ==============================================================================
+# Diseño profesional, tipografía nítida y selector de píldora Apple Blue
+# ==============================================================================
+
+# Propiedades Globales
+title-text: ""
+desktop-image: "background.png"
+desktop-image-scale-method: "stretch"
+desktop-color: "#161618"
+terminal-font: "Unifont Regular 16"
+terminal-left: "0"
+terminal-top: "0"
+terminal-width: "100%"
+terminal-height: "100%"
+terminal-border: "0"
+
+# Logo central superior
++ image {
+    left = 50%-50
+    top = 18%
+    file = "logo.png"
+}
+
+# Menú de selección de arranque estilo macOS
++ boot_menu {
+    left = 50%-260
+    top = 38%
+    width = 520
+    height = 36%
+    item_font = "Unifont Regular 16"
+    item_color = "#8E8E93"
+    selected_item_color = "#FFFFFF"
+    icon_width = 32
+    icon_height = 32
+    item_icon_space = 18
+    item_height = 42
+    item_padding = 6
+    item_spacing = 8
+    selected_item_pixmap_style = "select_*.png"
+}
+
+# Etiqueta de cuenta regresiva
++ label {
+    top = 78%
+    left = 30%
+    width = 40%
+    align = "center"
+    id = "__timeout__"
+    text = "Iniciando automáticamente en %d segundos"
+    color = "#8E8E93"
+    font = "Unifont Regular 16"
+}
