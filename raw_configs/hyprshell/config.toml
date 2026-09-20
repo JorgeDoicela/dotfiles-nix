@@ -1,0 +1,9 @@
+# Configuración declarativa de Hyprshell v4
+# Selector de ventanas Alt+Tab estilo Windows nativo
+
+version = 4
+
+[windows.switch]
+key = "Tab"
+modifier = "alt"
+filter_by = []

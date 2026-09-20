@@ -22,6 +22,7 @@
     gsimplecal
     networkmanagerapplet
     libinput-gestures
+    hyprshell
   ];
 
   # Servicio de usuario Systemd para garantizar que SwayNC siempre esté activo en DBus
@@ -32,6 +33,23 @@
   # Servicio de usuario Systemd para OSD moderno de volumen y brillo
   services.swayosd = {
     enable = true;
+  };
+
+  # Servicio de usuario Systemd para selector de ventanas Alt+Tab Hyprshell
+  systemd.user.services.hyprshell = {
+    Unit = {
+      Description = "Hyprshell window switcher daemon";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.hyprshell}/bin/hyprshell run";
+      Restart = "on-failure";
+      RestartSec = 2;
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
   };
 
   # Unidad Systemd de sesión para Hyprland (eleva graphical-session.target por dependencia respetando el estándar systemd)
@@ -108,4 +126,8 @@
 
   # Enlace declarativo de SwayOSD
   xdg.configFile."swayosd/style.css".source = ../raw_configs/swayosd/style.css;
+
+  # Enlaces declarativos de Hyprshell (Selector de ventanas Alt+Tab)
+  xdg.configFile."hyprshell/config.toml".source = ../raw_configs/hyprshell/config.toml;
+  xdg.configFile."hyprshell/styles.css".source = ../raw_configs/hyprshell/styles.css;
 }
