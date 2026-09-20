@@ -35,6 +35,18 @@
     enable = true;
   };
 
+  # Servicio de usuario Systemd para filtro de luz azul nativo (transición suave y programada)
+  services.wlsunset = {
+    enable = true;
+    sunset = "18:30";
+    sunrise = "01:45";
+    temperature = {
+      day = 6500;
+      night = 3500;
+    };
+    gamma = "0.9";
+  };
+
   # Servicio de usuario Systemd para selector de ventanas Alt+Tab Hyprshell
   systemd.user.services.hyprshell = {
     Unit = {
