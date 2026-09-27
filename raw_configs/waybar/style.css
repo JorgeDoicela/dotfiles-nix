@@ -44,7 +44,7 @@ window#waybar {
 #custom-terminal,
 #custom-session {
     padding: 0 10px;
-    margin: 3px 2px;
+    margin: 2px 2px;
     border-radius: 6px;
     background-color: transparent;
     transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);

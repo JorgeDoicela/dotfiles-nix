@@ -130,12 +130,12 @@ Cualquier mejora en iconos, intervalos o atajos se realiza **en este único arch
 Los perfiles de máquina ya no definen módulos a mano, sino que importan `modules.json` mediante `"include": ["~/.config/waybar/modules.json"]` y se limitan a orquestar el layout:
 
 * **Laptop Principal ([hosts/jorge-terciaria/config.json](../hosts/jorge-terciaria/config.json)):**
-  * Barra única de `34px` adaptada a 1080p con workspaces globales (`all-outputs: true`).
+  * Barra única de `30px` adaptada a 1080p con workspaces globales (`all-outputs: true`).
 * **Laptop Secundaria ([hosts/jorge-secundaria/config.json](../hosts/jorge-secundaria/config.json)):**
-  * Barra 1 (`HDMI-A-1` / `DP-1`): Altura de `28px` con suite completa y workspaces asignados al monitor externo.
-  * Barra 2 (`eDP-1`): Altura de `28px` compacta (omite telemetría pesada para respetar el panel de 768p y la franja de 228px reservada por hardware).
+  * Barra 1 (`HDMI-A-1` / `DP-1`): Altura de `26px` con suite completa y workspaces asignados al monitor externo.
+  * Barra 2 (`eDP-1`): Altura de `26px` compacta (omite telemetría pesada para respetar el panel de 768p y la franja de 228px reservada por hardware).
 * **Rotación Vertical ([raw_configs/waybar/config_vertical.json](../raw_configs/waybar/config_vertical.json)):**
-  * Perfil auto-cargado por [start_waybar.sh](../raw_configs/hypr/start_waybar.sh) cuando [hypr-rotate](../raw_configs/scripts/hypr-rotate) cambia la orientación a 90° o 270°.
+  * Altura de `28px` auto-cargada por [start_waybar.sh](../raw_configs/hypr/start_waybar.sh) cuando [hypr-rotate](../raw_configs/scripts/hypr-rotate) cambia la orientación a 90° o 270°.
 
 ### 3. Integración con el Centro de Control (SwayNC)
 Siguiendo los estándares de experiencia de usuario en Wayland (macOS/GNOME), el clic sobre la batería o las notificaciones despliega el Centro de Control unificado [swaync](../raw_configs/swaync), donde coexisten los widgets de energía, volumen, brillo y alertas sin necesidad de scripts externos redundantes.
