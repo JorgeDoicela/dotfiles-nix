@@ -18,10 +18,24 @@ El entorno implementa un **modelo híbrido de dos capas** para gestionar Google 
 ### Capa 2: Gestor Modular de Sincronización Offline (`sincro`)
 * **Ubicación del Script:** [raw_configs/scripts/sincro](../raw_configs/scripts/sincro).
 * **Definición Declarativa de Carpetas:** [raw_configs/rclone/sincro-targets.conf](../raw_configs/rclone/sincro-targets.conf) (enlazado a `~/.config/rclone/sincro-targets.conf`).
+* **Filtros Antiduplicados y Exclusiones:** [raw_configs/rclone/sincro-filters.txt](../raw_configs/rclone/sincro-filters.txt) (enlazado a `~/.config/rclone/sincro-filters.txt`).
 * **Objetivo:** Sincronización bidireccional fiable para carpetas que requieres 100% disponibles en disco sin conexión a internet (ej. Obsidian).
 * **Mecanismos de Resiliencia:**
   * Bloqueo contra concurrencia con `flock` para evitar colisiones de base de datos entre procesos.
   * Formato de targets modular: `ALIAS|REMOTO_DRIVE|RUTA_LOCAL`.
+  * Filtros automáticos mediante `--filter-from sincro-filters.txt`.
+
+### Prevención de Conflictos y Duplicados Multidispositivo (Obsidian + Linux / Windows / Android)
+Cuando sincronizas una bóveda de Obsidian entre **Linux** (con `sincro`), **Windows** (con Google Drive oficial) y **Android** (con FolderSync), el origen clásico de duplicados y archivos `.conflict` **nunca son las notas Markdown**, sino el archivo de estado de interfaz `.obsidian/workspace.json`.
+
+Cada sistema operativo tiene dimensiones de pantalla, ventanas abiertas y posiciones de cursor incompatibles. Si este archivo se sincroniza entre dispositivos al mismo tiempo, los clientes detectan modificaciones concurrentes y generan copias redundantes (`workspace.json.conflict1`, etc.).
+
+Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas estándar de la industria:
+1. `- .obsidian/workspace*.json`: Cada máquina mantiene su propia disposición de pestañas local sin sobreescribir la de las demás.
+2. `- .obsidian/cache/**`: Excluye cachés volátiles de indexación.
+3. `- .trash/**`: Evita sincronizar archivos borrados localmente.
+4. `- *.conflict*`: Pasa por alto copias residuales de conflictos antiguos generados por clientes externos.
+
 * **Comandos Operativos:**
   ```bash
   # Sincronizar todos los targets configurados:

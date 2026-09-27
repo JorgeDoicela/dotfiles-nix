@@ -123,6 +123,15 @@ sequenceDiagram
    git pull origin main
    home-manager switch --flake .
    ```
+   *Home Manager recargará automáticamente los servicios de usuario de systemd (como `rclone-gdrive.service`). Para verificar el estado:*
+   ```bash
+   systemctl --user status rclone-gdrive.service
+   ls -la ~/Drive
+   ```
+   *Si deseas sincronizar tus carpetas locales offline (ej. Obsidian):*
+   ```bash
+   sincro
+   ```
 
 ---
 
