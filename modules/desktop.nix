@@ -98,12 +98,12 @@
   xdg.configFile."hypr/toggle_sunset.sh".source = ../raw_configs/hypr/toggle_sunset.sh;
   xdg.configFile."hypr/scripts".source = ../raw_configs/hypr/scripts;
 
-  # Enlaces declarativos comunes de Waybar (Estilos parametrizados y perfiles auxiliares)
+  # Enlaces declarativos comunes de Waybar (Módulos centralizados, estilos y perfiles)
+  xdg.configFile."waybar/modules.json".source = ../raw_configs/waybar/modules.json;
   xdg.configFile."waybar/style.css".text =
     builtins.replaceStrings [ "@WAYBAR_FONT_SIZE@" ] [ config.mySystem.waybarFontSize ]
       (builtins.readFile ../raw_configs/waybar/style.css);
   xdg.configFile."waybar/theme.css".source = ../raw_configs/waybar/theme.css;
-  xdg.configFile."waybar/config_low.json".source = ../raw_configs/waybar/config_low.json;
   xdg.configFile."waybar/config_vertical.json".source = ../raw_configs/waybar/config_vertical.json;
 
   # Enlaces declarativos de Rofi parametrizados por host mediante contrato explícito de plantilla

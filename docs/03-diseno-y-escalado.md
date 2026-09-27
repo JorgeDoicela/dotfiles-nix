@@ -108,34 +108,35 @@ Para pantallas pequeñas (como en `jorge-secundaria`), se inyecta el flag `--for
 
 ---
 
-## 4. Arquitectura de la Barra de Estado (Waybar) Multi-Host
+## 4. Arquitectura Modular de la Barra de Estado (Waybar)
 
-La barra superior sigue un esquema estrictamente adaptado al hardware de cada equipo:
+Para erradicar la duplicación de código y garantizar consistencia absoluta entre laptops, Waybar adopta un **patrón modular desacoplado**:
 
-### Perfil 1: `jorge-terciaria` (Panel 1080p Único)
-* **Archivo de Configuración:** [hosts/jorge-terciaria/config.json](../hosts/jorge-terciaria/config.json)
-* **Altura:** `34px`
-* **Módulos Izquierda:** Lanzador Tux (`custom/launcher`), espacios de trabajo (`hyprland/workspaces`), título de ventana activa (`hyprland/window`).
-* **Módulos Centro:** Reloj con fecha y hora (`clock`), sondeo térmico cada 30s sin segundos.
-* **Módulos Derecha:** MPRIS (reproductor de medios), uso de CPU, uso de RAM, estado Wi-Fi/Ethernet, Bluetooth, control de volumen PipeWire/PulseAudio, batería inteligente, centro de notificaciones SwayNC con Do-Not-Disturb y botón de sesión wlogout.
-* **Telemetría de Batería:** Clic en el icono de batería invoca [raw_configs/hypr/scripts/battery-info.sh](../raw_configs/hypr/scripts/battery-info.sh) para emitir una notificación OSD detallada con porcentaje, estado, tiempo estimado restante, salud y consumo en Watts vía `upower`.
+### 1. Única Fuente de Verdad: `modules.json`
+* **Ubicación:** [raw_configs/waybar/modules.json](../raw_configs/waybar/modules.json) (enlazado a `~/.config/waybar/modules.json`).
+* **Propósito:** Centraliza la definición exhaustiva de todos los módulos del sistema:
+  * `hyprland/workspaces` y `hyprland/window`
+  * `clock` y `clock#compact` (intervalo de 30s sin segundos para eficiencia energética)
+  * `cpu`, `memory` y `disk` (telemetría de rendimiento)
+  * `network` y `bluetooth` (gestión de conexiones con click a herramientas nativas)
+  * `pulseaudio` (control de volumen PipeWire)
+  * `battery` (integración nativa C++ con UPower DBus, tooltips de consumo en Watts `{power}W` y clic al Centro de Control)
+  * `custom/notification` (SwayNC con soporte completo de DND e inhibición de alertas)
+  * `custom/launcher` (menú Rofi) y `custom/session` (menú de energía wlogout)
 
-### Perfil 2: `jorge-secundaria` (Dual Display + Panel Dañado)
-* **Archivo de Configuración:** [hosts/jorge-secundaria/config.json](../hosts/jorge-secundaria/config.json)
-* **Altura:** `28px` (compactado para pantallas de resolución 768p).
-* **Barra 1 (`HDMI-A-1` / `DP-1` - Monitor Externo Principal):**
-  * Incluye la suite completa de telemetría (CPU, RAM, red, bluetooth, mpris, audio, batería, notificaciones y reloj).
-  * Workspaces desacoplados mediante `"all-outputs": false` para respetar la partición intercalada de pantallas.
-* **Barra 2 (`eDP-1` - Pantalla Compacta de Laptop):**
-  * Optimización de espacio horizontal: Omite CPU, memoria, red y bluetooth para no saturar el panel y convivir con la franja de 228px reservada por hardware.
-  * Reloj optimizado a 30s sin segundos para eliminar despertares innecesarios del procesador a batería.
-  * Centro de notificaciones completo con soporte para DND (`swaync-client -d`) e inhibición de alertas.
+Cualquier mejora en iconos, intervalos o atajos se realiza **en este único archivo** y se propaga automáticamente a todos los hosts y monitores.
 
-### Perfil de Rotación Vertical Dinámica (`config_vertical.json`)
-* **Archivo:** [raw_configs/waybar/config_vertical.json](../raw_configs/waybar/config_vertical.json)
-* **Activación:** Se activa de forma automática cuando el script [hypr-rotate](../raw_configs/scripts/hypr-rotate) cambia la matriz de pantalla a 90° o 270°.
-* **Distribución:** Minimiza el ancho de los módulos utilizando exclusivamente iconografía compacta en red y bluetooth.
+### 2. Archivos de Host Exclusivos para Maquetación (`include`)
+Los perfiles de máquina ya no definen módulos a mano, sino que importan `modules.json` mediante `"include": ["~/.config/waybar/modules.json"]` y se limitan a orquestar el layout:
 
-### Principio de Invocación Declarativa (`start_waybar.sh`)
-El lanzador [raw_configs/hypr/start_waybar.sh](../raw_configs/hypr/start_waybar.sh) respeta de manera prioritaria el archivo `config.json` enlazado por Home Manager para cada máquina. La selección del perfil se rige exclusivamente por la orientación de pantalla detectada mediante `hyprctl monitors -j`, eliminando bypasses frágiles basados en memoria RAM que rompían la paridad multi-monitor.
+* **Laptop Principal ([hosts/jorge-terciaria/config.json](../hosts/jorge-terciaria/config.json)):**
+  * Barra única de `34px` adaptada a 1080p con workspaces globales (`all-outputs: true`).
+* **Laptop Secundaria ([hosts/jorge-secundaria/config.json](../hosts/jorge-secundaria/config.json)):**
+  * Barra 1 (`HDMI-A-1` / `DP-1`): Altura de `28px` con suite completa y workspaces asignados al monitor externo.
+  * Barra 2 (`eDP-1`): Altura de `28px` compacta (omite telemetría pesada para respetar el panel de 768p y la franja de 228px reservada por hardware).
+* **Rotación Vertical ([raw_configs/waybar/config_vertical.json](../raw_configs/waybar/config_vertical.json)):**
+  * Perfil auto-cargado por [start_waybar.sh](../raw_configs/hypr/start_waybar.sh) cuando [hypr-rotate](../raw_configs/scripts/hypr-rotate) cambia la orientación a 90° o 270°.
+
+### 3. Integración con el Centro de Control (SwayNC)
+Siguiendo los estándares de experiencia de usuario en Wayland (macOS/GNOME), el clic sobre la batería o las notificaciones despliega el Centro de Control unificado [swaync](../raw_configs/swaync), donde coexisten los widgets de energía, volumen, brillo y alertas sin necesidad de scripts externos redundantes.
 

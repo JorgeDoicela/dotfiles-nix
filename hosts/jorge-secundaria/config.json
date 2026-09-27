@@ -1,5 +1,6 @@
 [
     {
+        "include": ["~/.config/waybar/modules.json"],
         "output": ["HDMI-A-1", "DP-1"],
         "layer": "top",
         "position": "top",
@@ -28,121 +29,11 @@
             "custom/session"
         ],
         "hyprland/workspaces": {
-            "disable-scroll": true,
-            "all-outputs": false,
-            "format": "{name}",
-            "on-click": "activate"
-        },
-        "custom/layout": {
-            "exec": "hyprctl getoption general:layout | awk '/str:/{print $2}' | sed 's/dwindle/󰖲/;s/master/󰓩/'",
-            "interval": 2,
-            "on-click": "cur=$(hyprctl getoption general:layout 2>/dev/null | awk '{print $2}'); hyprctl keyword general:layout $([ \"$cur\" = \"dwindle\" ] && echo master || echo dwindle)",
-            "tooltip": "Alternar Layout (dwindle/master)"
-        },
-        "hyprland/window": {
-            "format": "󰉋 {title}",
-            "max-length": 30,
-            "separate-outputs": true
-        },
-        "cpu": {
-            "interval": 5,
-            "format": "󰻠 {usage}%",
-            "on-click": "alacritty -e btop",
-            "tooltip": false
-        },
-        "memory": {
-            "interval": 5,
-            "format": "󰍛 {percentage}%",
-            "on-click": "alacritty -e btop",
-            "tooltip": true,
-            "tooltip-format": "RAM utilizada: {used:0.1f}G / {total:0.1f}G"
-        },
-        "disk": {
-            "interval": 60,
-            "format": "󰋊 {percentage_used}%",
-            "on-click": "alacritty -e btop",
-            "path": "/"
-        },
-        "mpris": {
-            "format": "󰎈 {title}",
-            "format-paused": "󰏤 <i>{title}</i>",
-            "max-length": 36,
-            "tooltip": true,
-            "tooltip-format": "{artist} - {album}"
-        },
-        "clock": {
-            "interval": 30,
-            "format": "{:%a %d %b  %H:%M}",
-            "tooltip": false,
-            "on-click": "gsimplecal"
-        },
-        "network": {
-            "format-wifi": "󰤨",
-            "format-ethernet": "󰈀",
-            "format-disconnected": "󰤮",
-            "tooltip-format": "{ifname}",
-            "on-click": "nm-connection-editor"
-        },
-        "bluetooth": {
-            "format": "󰂯 Listo",
-            "format-connected": "󰂱 {device_alias}",
-            "format-disabled": "󰂲 Apagado",
-            "on-click": "blueman-manager"
-        },
-        "pulseaudio": {
-            "format": "{icon} {volume}%",
-            "format-muted": "󰝟 {volume}%",
-            "format-icons": {
-                "headphone": "󰋋",
-                "default": ["󰕿", "󰖀", "󰕾"]
-            },
-            "on-click": "pavucontrol"
-        },
-        "battery": {
-            "states": {
-                "warning": 30,
-                "critical": 15
-            },
-            "format": "{icon} {capacity}%",
-            "format-charging": "󰂄 {capacity}%",
-            "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"],
-            "tooltip": true,
-            "tooltip-format": "{timeTo}, {capacity}%\nConsumo: {power}W",
-            "tooltip-format-charging": "Cargando: {timeTo} ({capacity}%)\nPotencia: {power}W",
-            "on-click": "~/.config/hypr/scripts/battery-info.sh"
-        },
-        "custom/notification": {
-            "tooltip": false,
-            "format": "{icon}",
-            "format-icons": {
-                "notification": "<span foreground='red'><sup></sup></span>",
-                "none": "",
-                "dnd-notification": "<span foreground='red'><sup></sup></span>",
-                "dnd-none": "",
-                "inhibited-notification": "<span foreground='red'><sup></sup></span>",
-                "inhibited-none": "",
-                "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
-                "dnd-inhibited-none": ""
-            },
-            "return-type": "json",
-            "exec-if": "which swaync-client",
-            "exec": "swaync-client -swb",
-            "on-click": "swaync-client -t",
-            "on-click-right": "swaync-client -d",
-            "escape": true
-        },
-        "custom/launcher": {
-            "format": "",
-            "on-click": "pkill -x rofi 2>/dev/null; rofi -show drun",
-            "tooltip": "Menú de Aplicaciones"
-        },
-        "custom/session": {
-            "format": "󰐥",
-            "on-click": "~/.config/hypr/scripts/logoutlaunch.sh",
-            "tooltip": "Sesión"
+            "all-outputs": false
         }
     },
     {
+        "include": ["~/.config/waybar/modules.json"],
         "output": ["eDP-1"],
         "layer": "top",
         "position": "top",
@@ -163,83 +54,11 @@
             "pulseaudio",
             "battery",
             "custom/notification",
-            "clock",
+            "clock#compact",
             "custom/session"
         ],
         "hyprland/workspaces": {
-            "disable-scroll": true,
-            "all-outputs": false,
-            "format": "{name}",
-            "on-click": "activate"
-        },
-        "hyprland/window": {
-            "format": "󰉋 {title}",
-            "max-length": 30,
-            "separate-outputs": true
-        },
-        "mpris": {
-            "format": "󰎈 {title}",
-            "format-paused": "󰏤 <i>{title}</i>",
-            "max-length": 30,
-            "tooltip": true
-        },
-        "clock": {
-            "interval": 30,
-            "format": "{:%H:%M}",
-            "tooltip": false,
-            "on-click": "gsimplecal"
-        },
-        "pulseaudio": {
-            "format": "{icon} {volume}%",
-            "format-muted": "󰝟",
-            "format-icons": {
-                "headphone": "󰋋",
-                "default": ["󰕿", "󰖀", "󰕾"]
-            },
-            "on-click": "pavucontrol"
-        },
-        "battery": {
-            "states": {
-                "warning": 30,
-                "critical": 15
-            },
-            "format": "{icon} {capacity}%",
-            "format-charging": "󰂄 {capacity}%",
-            "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"],
-            "tooltip": true,
-            "tooltip-format": "{timeTo}, {capacity}%\nConsumo: {power}W",
-            "tooltip-format-charging": "Cargando: {timeTo} ({capacity}%)\nPotencia: {power}W",
-            "on-click": "~/.config/hypr/scripts/battery-info.sh"
-        },
-        "custom/notification": {
-            "tooltip": false,
-            "format": "{icon}",
-            "format-icons": {
-                "notification": "<span foreground='red'><sup></sup></span>",
-                "none": "",
-                "dnd-notification": "<span foreground='red'><sup></sup></span>",
-                "dnd-none": "",
-                "inhibited-notification": "<span foreground='red'><sup></sup></span>",
-                "inhibited-none": "",
-                "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
-                "dnd-inhibited-none": ""
-            },
-            "return-type": "json",
-            "exec-if": "which swaync-client",
-            "exec": "swaync-client -swb",
-            "on-click": "swaync-client -t",
-            "on-click-right": "swaync-client -d",
-            "escape": true
-        },
-        "custom/launcher": {
-            "format": "",
-            "on-click": "pkill -x rofi 2>/dev/null; rofi -show drun",
-            "tooltip": "Menú de Aplicaciones"
-        },
-        "custom/session": {
-            "format": "󰐥",
-            "on-click": "~/.config/hypr/scripts/logoutlaunch.sh",
-            "tooltip": "Sesión"
+            "all-outputs": false
         }
     }
 ]
