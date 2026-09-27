@@ -14,6 +14,10 @@
     # Entorno de desarrollo JavaScript / TypeScript declarativo
     nodejs_22
     pnpm
+
+    # Herramientas de productividad académica y comunicación
+    libreoffice
+    zoom-us
   ];
 
   # Alacritty (Terminal declarativo tipado nativo de Home Manager)
@@ -145,4 +149,41 @@
       WantedBy = [ "default.target" ];
     };
   };
+
+  # Ocultar declarativamente las entradas de escritorio de LibreOffice en lanzadores de aplicaciones (Rofi)
+  # Se utiliza xdg.dataFile para colocar las anulaciones con NoDisplay=true directamente en ~/.local/share/applications/
+  # evitando colisiones en el buildEnv de Nix store y respetando la precedencia de la especificacion XDG.
+  xdg.dataFile =
+    let
+      hiddenOfficeEntries = [
+        "base"
+        "calc"
+        "draw"
+        "impress"
+        "math"
+        "startcenter"
+        "writer"
+        "xsltfilter"
+        "libreoffice-base"
+        "libreoffice-calc"
+        "libreoffice-draw"
+        "libreoffice-impress"
+        "libreoffice-math"
+        "libreoffice-startcenter"
+        "libreoffice-writer"
+        "libreoffice-xsltfilter"
+      ];
+    in
+    builtins.listToAttrs (map (entryName: {
+      name = "applications/${entryName}.desktop";
+      value = {
+        text = ''
+          [Desktop Entry]
+          Type=Application
+          Name=LibreOffice ${entryName}
+          NoDisplay=true
+        '';
+      };
+    }) hiddenOfficeEntries);
 }
+

@@ -8,6 +8,9 @@
   # Habilitar la gestión propia de Home Manager
   programs.home-manager.enable = true;
 
+  # Permitir paquetes con licencia privativa (ej. Zoom)
+  nixpkgs.config.allowUnfree = true;
+
   home.sessionPath = [
     "$HOME/.local/bin"
     "$HOME/.nix-profile/bin"
