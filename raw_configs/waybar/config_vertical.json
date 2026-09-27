@@ -21,10 +21,5 @@
         "battery",
         "custom/notification",
         "custom/session"
-    ],
-    "bluetooth": {
-        "format": "󰂯",
-        "format-connected": "󰂱",
-        "format-disabled": "󰂲"
-    }
+    ]
 }
