@@ -12,6 +12,7 @@ Configuración declarativa modular, ultralimpia y reproducible para Debian + Hyp
 dotfiles-nix/
 ├── flake.nix              # Entrada principal de Nix Flakes (Entorno reproducible)
 ├── home.nix               # Configuración central de Home Manager (Variables globales, PATH, paquetes base)
+├── docs/                  # Manual técnico y operativo completo (Runbooks, hardware, arquitectura)
 ├── modules/               # Módulos declarativos organizados por responsabilidad
 │   ├── style.nix          # GTK3/GTK4 (WhiteSur-Dark), Qt (Fusion/Qt6ct), Iconos (Tela), Cursores (Bibata) y Fuentes
 │   ├── desktop.nix        # Waybar, Rofi, SwayNC, Wlogout, Hyprpaper, Hypridle, Hyprlock, nwg-dock y utilidades
@@ -21,6 +22,23 @@ dotfiles-nix/
 ├── setup/                 # Aprovisionamiento del sistema base Debian (/etc/, TLP, sysctl, AMDGPU, apt)
 └── raw_configs/           # Archivos de configuración fuente (Hyprland, Waybar, Rofi, Wlogout, Scripts)
 ```
+
+---
+
+## Documentación Técnica (`docs/`)
+
+La documentación detallada de arquitectura, hardware y procedimientos operativos se organiza en módulos independientes dentro de `docs/`:
+
+| Documento | Descripción |
+| :--- | :--- |
+| **[01. Arquitectura del Sistema](docs/01-arquitectura-sistema.md)** | Desktop IaC, Flakes, Home Manager Standalone y modelo híbrido con Debian. |
+| **[02. Inventario de Laptops](docs/02-inventario-laptops.md)** | Perfiles de hardware (`jorge-terciaria` y `jorge-secundaria`), resoluciones y workaround de pantalla dañada. |
+| **[03. Diseño y Escalado](docs/03-diseno-y-escalado.md)** | Sistema `mySystem`, solución al escalado fraccional en Wayland y propagación tipográfica. |
+| **[04. Aprovisionamiento Base](docs/04-provisionamiento-base.md)** | Setup de Debian (`setup/instalar.sh`), TLP para batería, GRUB silencioso, llaves GPG y hardening. |
+| **[05. Gestión de GPU AMD](docs/05-gestion-gpu-amdgpu.md)** | Control dinámico de energía en sysfs DRM (`low` vs `auto`), udev, systemd y atajos. |
+| **[06. Ecosistema de Scripts](docs/06-ecosistema-scripts.md)** | Stack de dictado por voz (VOXD/Whisper), sincro Rclone, rotación de pantalla y utilidades. |
+| **[07. Runbooks Operativos](docs/07-runbooks-operaciones.md)** | Despliegue en laptops nuevas, sincronización GitOps, creación de nuevos hosts y recolección de basura. |
+| **[08. Referencia de Atajos](docs/08-referencia-atajos.md)** | Catálogo completo y categorizado de keybindings de Hyprland (ventanas, medios, brillo, captura, etc.). |
 
 ---
 
