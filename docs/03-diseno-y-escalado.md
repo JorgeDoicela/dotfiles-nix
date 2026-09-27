@@ -105,3 +105,37 @@ xdg.configFile."rofi/config.rasi".text =
 
 ### 6. Navegadores Web (Chromium y Brave)
 Para pantallas pequeñas (como en `jorge-secundaria`), se inyecta el flag `--force-device-scale-factor=0.8` en `brave-flags.conf` y se ejecuta mediante el wrapper universal [brave-browser](../modules/scripts.nix).
+
+---
+
+## 4. Arquitectura de la Barra de Estado (Waybar) Multi-Host
+
+La barra superior sigue un esquema estrictamente adaptado al hardware de cada equipo:
+
+### Perfil 1: `jorge-terciaria` (Panel 1080p Único)
+* **Archivo de Configuración:** [hosts/jorge-terciaria/config.json](../hosts/jorge-terciaria/config.json)
+* **Altura:** `34px`
+* **Módulos Izquierda:** Lanzador Tux (`custom/launcher`), espacios de trabajo (`hyprland/workspaces`), título de ventana activa (`hyprland/window`).
+* **Módulos Centro:** Reloj con fecha y hora (`clock`), sondeo térmico cada 30s sin segundos.
+* **Módulos Derecha:** MPRIS (reproductor de medios), uso de CPU, uso de RAM, estado Wi-Fi/Ethernet, Bluetooth, control de volumen PipeWire/PulseAudio, batería inteligente, centro de notificaciones SwayNC con Do-Not-Disturb y botón de sesión wlogout.
+* **Telemetría de Batería:** Clic en el icono de batería invoca [raw_configs/hypr/scripts/battery-info.sh](../raw_configs/hypr/scripts/battery-info.sh) para emitir una notificación OSD detallada con porcentaje, estado, tiempo estimado restante, salud y consumo en Watts vía `upower`.
+
+### Perfil 2: `jorge-secundaria` (Dual Display + Panel Dañado)
+* **Archivo de Configuración:** [hosts/jorge-secundaria/config.json](../hosts/jorge-secundaria/config.json)
+* **Altura:** `28px` (compactado para pantallas de resolución 768p).
+* **Barra 1 (`HDMI-A-1` / `DP-1` - Monitor Externo Principal):**
+  * Incluye la suite completa de telemetría (CPU, RAM, red, bluetooth, mpris, audio, batería, notificaciones y reloj).
+  * Workspaces desacoplados mediante `"all-outputs": false` para respetar la partición intercalada de pantallas.
+* **Barra 2 (`eDP-1` - Pantalla Compacta de Laptop):**
+  * Optimización de espacio horizontal: Omite CPU, memoria, red y bluetooth para no saturar el panel y convivir con la franja de 228px reservada por hardware.
+  * Reloj optimizado a 30s sin segundos para eliminar despertares innecesarios del procesador a batería.
+  * Centro de notificaciones completo con soporte para DND (`swaync-client -d`) e inhibición de alertas.
+
+### Perfil de Rotación Vertical Dinámica (`config_vertical.json`)
+* **Archivo:** [raw_configs/waybar/config_vertical.json](../raw_configs/waybar/config_vertical.json)
+* **Activación:** Se activa de forma automática cuando el script [hypr-rotate](../raw_configs/scripts/hypr-rotate) cambia la matriz de pantalla a 90° o 270°.
+* **Distribución:** Minimiza el ancho de los módulos utilizando exclusivamente iconografía compacta en red y bluetooth.
+
+### Principio de Invocación Declarativa (`start_waybar.sh`)
+El lanzador [raw_configs/hypr/start_waybar.sh](../raw_configs/hypr/start_waybar.sh) respeta de manera prioritaria el archivo `config.json` enlazado por Home Manager para cada máquina. La selección del perfil se rige exclusivamente por la orientación de pantalla detectada mediante `hyprctl monitors -j`, eliminando bypasses frágiles basados en memoria RAM que rompían la paridad multi-monitor.
+

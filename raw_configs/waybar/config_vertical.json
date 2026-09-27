@@ -33,7 +33,7 @@
         "on-click": "activate"
     },
     "clock": {
-        "interval": 1,
+        "interval": 30,
         "format": "{:%a %d %b  %H:%M}",
         "tooltip": false,
         "on-click": "gsimplecal"
@@ -69,7 +69,10 @@
         "format": "{icon} {capacity}%",
         "format-charging": "󰂄 {capacity}%",
         "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"],
-        "on-click": "xfce4-power-manager-settings"
+        "tooltip": true,
+        "tooltip-format": "{timeTo}, {capacity}%\nConsumo: {power}W",
+        "tooltip-format-charging": "Cargando: {timeTo} ({capacity}%)\nPotencia: {power}W",
+        "on-click": "~/.config/hypr/scripts/battery-info.sh"
     },
     "custom/notification": {
         "tooltip": false,

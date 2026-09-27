@@ -106,7 +106,10 @@
             "format": "{icon} {capacity}%",
             "format-charging": "󰂄 {capacity}%",
             "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"],
-            "on-click": "xfce4-power-manager-settings"
+            "tooltip": true,
+            "tooltip-format": "{timeTo}, {capacity}%\nConsumo: {power}W",
+            "tooltip-format-charging": "Cargando: {timeTo} ({capacity}%)\nPotencia: {power}W",
+            "on-click": "~/.config/hypr/scripts/battery-info.sh"
         },
         "custom/notification": {
             "tooltip": false,
@@ -181,8 +184,8 @@
             "tooltip": true
         },
         "clock": {
-            "interval": 1,
-            "format": "{:%H:%M:%S}",
+            "interval": 30,
+            "format": "{:%H:%M}",
             "tooltip": false,
             "on-click": "gsimplecal"
         },
@@ -202,19 +205,31 @@
             },
             "format": "{icon} {capacity}%",
             "format-charging": "󰂄 {capacity}%",
-            "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"]
+            "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"],
+            "tooltip": true,
+            "tooltip-format": "{timeTo}, {capacity}%\nConsumo: {power}W",
+            "tooltip-format-charging": "Cargando: {timeTo} ({capacity}%)\nPotencia: {power}W",
+            "on-click": "~/.config/hypr/scripts/battery-info.sh"
         },
         "custom/notification": {
             "tooltip": false,
             "format": "{icon}",
             "format-icons": {
                 "notification": "<span foreground='red'><sup></sup></span>",
-                "none": ""
+                "none": "",
+                "dnd-notification": "<span foreground='red'><sup></sup></span>",
+                "dnd-none": "",
+                "inhibited-notification": "<span foreground='red'><sup></sup></span>",
+                "inhibited-none": "",
+                "dnd-inhibited-notification": "<span foreground='red'><sup></sup></span>",
+                "dnd-inhibited-none": ""
             },
             "return-type": "json",
             "exec-if": "which swaync-client",
             "exec": "swaync-client -swb",
-            "on-click": "swaync-client -t"
+            "on-click": "swaync-client -t",
+            "on-click-right": "swaync-client -d",
+            "escape": true
         },
         "custom/launcher": {
             "format": "",

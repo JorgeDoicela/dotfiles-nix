@@ -41,17 +41,7 @@ window#waybar {
 #language,
 #custom-notification,
 #custom-launcher,
-#custom-keybinds,
-#custom-screenshot,
-#custom-audio,
-#custom-theme,
-#custom-wallpaper,
-#custom-emoji,
 #custom-terminal,
-#custom-files,
-#custom-clipboard,
-#custom-look,
-#custom-lock,
 #custom-session {
     padding: 0 10px;
     margin: 3px 2px;
@@ -74,23 +64,15 @@ window#waybar {
 #language:hover,
 #custom-notification:hover,
 #clock:hover,
-#custom-keybinds:hover,
-#custom-screenshot:hover,
-#custom-audio:hover,
-#custom-theme:hover,
-#custom-wallpaper:hover,
-#custom-emoji:hover,
 #custom-terminal:hover,
-#custom-files:hover,
-#custom-clipboard:hover,
-#custom-look:hover {
+#custom-session:hover {
     background-color: @hover-bg;
     color: @text-main;
 }
 
-/* ── Lanzador (Manzana de Apple) ──────────────────────────────────── */
+/* ── Lanzador (Tux / Sistema) ────────────────────────────────────── */
 #custom-launcher {
-    font-size: 15px;
+    font-size: 1.15em;
     color: @text-main;
     padding-left: 12px;
     padding-right: 14px;
@@ -125,7 +107,7 @@ window#waybar {
 #window {
     font-weight: 600;
     color: @text-main;
-    font-size: 12px;
+    font-size: 0.95em;
 }
 
 /* ── Módulos del Centro (Limpios y Monocromáticos) ────────────────── */
@@ -172,30 +154,13 @@ window#waybar {
     color: @text-main;
 }
 
-/* ── Accesos Rápidos (Monocromo con Hover de Color) ───────────────── */
-#custom-keybinds,
-#custom-screenshot,
-#custom-audio,
-#custom-theme,
-#custom-wallpaper,
-#custom-emoji,
-#custom-terminal,
-#custom-files,
-#custom-clipboard,
-#custom-look {
+/* ── Accesos Auxiliares ───────────────────────────────────────────── */
+#custom-terminal {
     color: @text-muted;
-    font-size: 13px;
+    font-size: 1.05em;
 }
 
-/* ── Botones de Sesión y Bloqueo (Semáforo Apple) ─────────────────── */
-#custom-lock {
-    color: @apple-orange;
-}
-
-#custom-lock:hover {
-    background-color: alpha(@apple-orange, 0.15);
-}
-
+/* ── Botones de Sesión (Semáforo Apple) ────────────────────────────── */
 #custom-session {
     color: @apple-red;
 }

@@ -22,9 +22,9 @@
         "custom/session"
     ],
     "custom/launcher": {
-        "format": "󰍉",
+        "format": "",
         "on-click": "pkill -x rofi 2>/dev/null; rofi -show drun",
-        "tooltip": "Lanzador"
+        "tooltip": "Menú de Aplicaciones"
     },
     "hyprland/workspaces": {
         "disable-scroll": true,
@@ -33,7 +33,7 @@
         "on-click": "activate"
     },
     "clock": {
-        "interval": 10,
+        "interval": 30,
         "format": "󰥔 {:%H:%M  |  %d %b}",
         "tooltip": false
     },
@@ -58,7 +58,11 @@
         },
         "format": "{icon} {capacity}%",
         "format-charging": "󰂄 {capacity}%",
-        "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"]
+        "format-icons": ["󰁺", "󰁼", "󰁾", "󰁹"],
+        "tooltip": true,
+        "tooltip-format": "{timeTo}, {capacity}%\nConsumo: {power}W",
+        "tooltip-format-charging": "Cargando: {timeTo} ({capacity}%)\nPotencia: {power}W",
+        "on-click": "~/.config/hypr/scripts/battery-info.sh"
     },
     "custom/notification": {
         "tooltip": false,
@@ -76,8 +80,8 @@
         "return-type": "json",
         "exec-if": "which swaync-client",
         "exec": "swaync-client -swb",
-        "on-click": "swaync-client -t -sw",
-        "on-click-right": "swaync-client -d -sw",
+        "on-click": "swaync-client -t",
+        "on-click-right": "swaync-client -d",
         "escape": true
     },
     "custom/terminal": {

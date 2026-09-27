@@ -11,15 +11,11 @@ done
 # Detectar orientación actual del monitor principal
 TRANSFORM=$(hyprctl monitors -j 2>/dev/null | jq -r '.[0].transform // 0' 2>/dev/null || echo 0)
 
-# Detectar memoria RAM en MB
-TOTAL_RAM=$(free -m | awk '/^Mem:/{print $2}')
-
-# Seleccionar archivo de configuración según orientación y hardware
+# Seleccionar archivo de configuración según orientación
 if [ "$TRANSFORM" -eq 1 ] || [ "$TRANSFORM" -eq 3 ]; then
     CONFIG_FILE="$HOME/.config/waybar/config_vertical.json"
-elif [ "$TOTAL_RAM" -lt 5000 ]; then
-    CONFIG_FILE="$HOME/.config/waybar/config_low.json"
 else
+    # Archivo primario gestionado declarativamente por Home Manager para cada host
     CONFIG_FILE="$HOME/.config/waybar/config.json"
 fi
 
