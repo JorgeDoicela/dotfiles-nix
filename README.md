@@ -56,14 +56,14 @@ Este repositorio implementa una arquitectura **Multi-Host limpia**, soportando d
 
 ## Cómo aplicar cambios en tu máquina actual
 
-Si realizas alguna modificación dentro de `~/dotfiles-nix/`, aplica los cambios ejecutando:
+Tras editar archivos en el repositorio, aplica los cambios ejecutando desde la raíz del mismo:
 
 ```bash
 # Aplica automáticamente según el hostname de la máquina
-home-manager switch --flake ~/dotfiles-nix
+home-manager switch --flake .
 
 # O especificando el perfil explícito:
-home-manager switch --flake ~/dotfiles-nix#jorge@jorge-terciaria
+home-manager switch --flake .#jorge@jorge-terciaria
 ```
 
 ---
@@ -80,8 +80,10 @@ home-manager switch --flake ~/dotfiles-nix#jorge@jorge-terciaria
 
 2. Clona este repositorio y ejecuta el script de aprovisionamiento de sistema:
    ```bash
-   git clone https://github.com/JorgeDoicela/dotfiles-nix.git ~/dotfiles-nix
-   sudo bash ~/dotfiles-nix/setup/instalar.sh
+   DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles-nix}"
+   git clone https://github.com/JorgeDoicela/dotfiles-nix.git "$DOTFILES_DIR"
+   cd "$DOTFILES_DIR"
+   sudo bash ./setup/instalar.sh
    ```
 
 ### Paso 2: Restaurar el Entorno de Usuario con Nix
@@ -90,11 +92,11 @@ home-manager switch --flake ~/dotfiles-nix#jorge@jorge-terciaria
 # 1. Instalar Nix (instalador oficial moderno de Determinate Systems)
 sh <(curl -L https://install.determinate.systems/nix) install
 
-# 2. Desplegar tu entorno completo de forma automática según la máquina:
+# 2. Desplegar tu entorno completo de forma automática desde la raíz del repositorio:
 # Para jorge-secundaria:
-nix run github:nix-community/home-manager -- switch --flake ~/dotfiles-nix#jorge@jorge-secundaria
+nix run github:nix-community/home-manager -- switch --flake .#jorge@jorge-secundaria
 
 # O para jorge-terciaria:
-nix run github:nix-community/home-manager -- switch --flake ~/dotfiles-nix#jorge@jorge-terciaria
+nix run github:nix-community/home-manager -- switch --flake .#jorge@jorge-terciaria
 ```
 

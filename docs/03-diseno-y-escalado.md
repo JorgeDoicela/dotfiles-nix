@@ -1,6 +1,6 @@
 # 03 — Sistema de Diseño y Escalado Declarativo
 
-Este documento detalla la solución arquitectónica implementada en [modules/style.nix](file:///home/jorge/dotfiles-nix/modules/style.nix) para gestionar la apariencia visual y resolver el problema del escalado de pantallas en Wayland sin degradar la calidad tipográfica.
+Este documento detalla la solución arquitectónica implementada en [modules/style.nix](../modules/style.nix) para gestionar la apariencia visual y resolver el problema del escalado de pantallas en Wayland sin degradar la calidad tipográfica.
 
 ---
 
@@ -19,7 +19,7 @@ Se mantiene la escala del monitor fija en **`1.0`** y se modulan dinámicamente 
 
 ## 2. Definición del Módulo `mySystem`
 
-En [modules/style.nix](file:///home/jorge/dotfiles-nix/modules/style.nix) se declaran las opciones que cada host puede sobreescribir:
+En [modules/style.nix](../modules/style.nix) se declaran las opciones que cada host puede sobreescribir:
 
 ```nix
 options.mySystem = {
@@ -70,7 +70,7 @@ xdg.configFile."xsettingsd/xsettingsd.conf".text = ''
 '';
 ```
 
-### 3. Terminal Alacritty ([modules/apps.nix](file:///home/jorge/dotfiles-nix/modules/apps.nix))
+### 3. Terminal Alacritty ([modules/apps.nix](../modules/apps.nix))
 Se utiliza el módulo nativo fuertemente tipado de Home Manager para inyectar la tipografía y paddings adaptativos sin manipular strings de archivos de configuración:
 ```nix
 programs.alacritty.settings = {
@@ -82,7 +82,7 @@ programs.alacritty.settings = {
 };
 ```
 
-### 4. Waybar ([modules/desktop.nix](file:///home/jorge/dotfiles-nix/modules/desktop.nix))
+### 4. Waybar ([modules/desktop.nix](../modules/desktop.nix))
 Inyección de token explícito en el archivo CSS de estilos:
 ```nix
 xdg.configFile."waybar/style.css".text =
@@ -90,7 +90,7 @@ xdg.configFile."waybar/style.css".text =
     (builtins.readFile ../raw_configs/waybar/style.css);
 ```
 
-### 5. Lanzador Rofi ([modules/desktop.nix](file:///home/jorge/dotfiles-nix/modules/desktop.nix))
+### 5. Lanzador Rofi ([modules/desktop.nix](../modules/desktop.nix))
 Inyección dinámica de ancho, alto y tamaño de fuente en `config.rasi`:
 ```nix
 xdg.configFile."rofi/config.rasi".text =
@@ -104,4 +104,4 @@ xdg.configFile."rofi/config.rasi".text =
 ```
 
 ### 6. Navegadores Web (Chromium y Brave)
-Para pantallas pequeñas (como en `jorge-secundaria`), se inyecta el flag `--force-device-scale-factor=0.8` en `brave-flags.conf` y se ejecuta mediante el wrapper universal [~/.local/bin/brave-browser](file:///home/jorge/dotfiles-nix/modules/scripts.nix).
+Para pantallas pequeñas (como en `jorge-secundaria`), se inyecta el flag `--force-device-scale-factor=0.8` en `brave-flags.conf` y se ejecuta mediante el wrapper universal [brave-browser](../modules/scripts.nix).

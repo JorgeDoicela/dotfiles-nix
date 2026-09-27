@@ -1,6 +1,6 @@
 # 08 — Catálogo de Referencia de Atajos de Teclado (Hyprland)
 
-Este catálogo resume todos los atajos de teclado configurados en [raw_configs/hypr/keybindings.conf](file:///home/jorge/dotfiles-nix/raw_configs/hypr/keybindings.conf).
+Este catálogo resume todos los atajos de teclado configurados en [raw_configs/hypr/keybindings.conf](../raw_configs/hypr/keybindings.conf).
 
 > **Nota:** La tecla `Super` (`$mainMod`) corresponde a la tecla Windows / Meta del teclado.
 

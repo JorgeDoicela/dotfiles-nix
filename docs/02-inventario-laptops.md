@@ -23,30 +23,30 @@ Este documento especifica los perfiles técnicos de hardware para cada laptop ge
 
 ## 2. Perfil 1: `jorge-terciaria` (Laptop Principal)
 
-* **Ruta de Configuración:** [hosts/jorge-terciaria/](file:///home/jorge/dotfiles-nix/hosts/jorge-terciaria/)
+* **Ruta de Configuración:** [hosts/jorge-terciaria/](../hosts/jorge-terciaria/)
 * **Esquema de Pantallas:** Panel interno único (`eDP-1`).
-* **Archivo de Monitores ([monitors.conf](file:///home/jorge/dotfiles-nix/hosts/jorge-terciaria/monitors.conf)):**
+* **Archivo de Monitores ([monitors.conf](../hosts/jorge-terciaria/monitors.conf)):**
   ```ini
   monitor = eDP-1, preferred, auto, 1
   monitor = , preferred, auto, 1
   ```
 * **Calibración Ergonómica de Touchpad:**
-  Para compensar la tasa de sondeo del touchpad de este equipo y brindar una experiencia de navegación ágil y fluida, se ajustaron valores en [default.nix](file:///home/jorge/dotfiles-nix/hosts/jorge-terciaria/default.nix):
+  Para compensar la tasa de sondeo del touchpad de este equipo y brindar una experiencia de navegación ágil y fluida, se ajustaron valores en [default.nix](../hosts/jorge-terciaria/default.nix):
   * `cursorSensitivity = "0.35"`: respuesta ágil sin sobrepasarse en distancias cortas.
   * `scrollFactor = "0.27"`: factor de reducción de inercia de scroll para evitar saltos violentos al leer documentos o navegar la web.
-* **Waybar:** [hosts/jorge-terciaria/config.json](file:///home/jorge/dotfiles-nix/hosts/jorge-terciaria/config.json) con barra horizontal completa a `34px` de altura.
+* **Waybar:** [hosts/jorge-terciaria/config.json](../hosts/jorge-terciaria/config.json) con barra horizontal completa a `34px` de altura.
 
 ---
 
 ## 3. Perfil 2: `jorge-secundaria` (Dual Display + Compensación de Falla)
 
-* **Ruta de Configuración:** [hosts/jorge-secundaria/](file:///home/jorge/dotfiles-nix/hosts/jorge-secundaria/)
+* **Ruta de Configuración:** [hosts/jorge-secundaria/](../hosts/jorge-secundaria/)
 * **Esquema de Pantallas:**
   * **Monitor Externo (`HDMI-A-1` / `DP-1`):** `1366x768@60Hz` posicionado en `0x0` (a la izquierda).
   * **Panel de Laptop (`eDP-1`):** `1366x768@60Hz` posicionado en `1366x0` (a la derecha).
 
 ### Quirk de Hardware y Solución de Ingeniería:
-La pantalla física de esta laptop presenta una **franja vertical rota / dañada en su lateral izquierdo**. Para rescatar el 100% de la utilidad del panel sin que las ventanas o el contenido queden tapados por los píxeles dañados, se implementó la directiva `addreserved` de Hyprland en [monitors.conf](file:///home/jorge/dotfiles-nix/hosts/jorge-secundaria/monitors.conf):
+La pantalla física de esta laptop presenta una **franja vertical rota / dañada en su lateral izquierdo**. Para rescatar el 100% de la utilidad del panel sin que las ventanas o el contenido queden tapados por los píxeles dañados, se implementó la directiva `addreserved` de Hyprland en [monitors.conf](../hosts/jorge-secundaria/monitors.conf):
 
 ```ini
 # Margen reservado: 228px en el margen izquierdo de eDP-1

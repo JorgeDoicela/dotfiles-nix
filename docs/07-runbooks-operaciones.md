@@ -18,8 +18,10 @@ sudo sed -i 's/127.0.1.1.*/127.0.1.1\tjorge-secundaria/' /etc/hosts
 
 ### Paso 2: Clonar Repositorio y Aprovisionar Sistema Base
 ```bash
-git clone https://github.com/JorgeDoicela/dotfiles-nix.git ~/dotfiles-nix
-sudo bash ~/dotfiles-nix/setup/instalar.sh
+DOTFILES_DIR="${DOTFILES_DIR:-$HOME/dotfiles-nix}"
+git clone https://github.com/JorgeDoicela/dotfiles-nix.git "$DOTFILES_DIR"
+cd "$DOTFILES_DIR"
+sudo bash ./setup/instalar.sh
 ```
 *Este paso configurará repositorios, llaves GPG, TLP para batería, GRUB silencioso, servicios de GPU AMD y paquetes base.*
 
@@ -32,11 +34,12 @@ sh <(curl -L https://install.determinate.systems/nix) install
 
 ### Paso 4: Desplegar el Perfil Declarativo de Home Manager
 ```bash
+# Desde el directorio del repositorio:
 # Para la laptop jorge-secundaria:
-nix run github:nix-community/home-manager -- switch --flake ~/dotfiles-nix#jorge@jorge-secundaria
+nix run github:nix-community/home-manager -- switch --flake .#jorge@jorge-secundaria
 
 # Para la laptop jorge-terciaria:
-nix run github:nix-community/home-manager -- switch --flake ~/dotfiles-nix#jorge@jorge-terciaria
+nix run github:nix-community/home-manager -- switch --flake .#jorge@jorge-terciaria
 ```
 
 ---
@@ -47,9 +50,9 @@ Si incorporas un nuevo equipo (por ejemplo, `jorge-cuarta`):
 
 1. **Crear la estructura del host:**
    ```bash
-   mkdir -p ~/dotfiles-nix/hosts/jorge-cuarta
+   mkdir -p hosts/jorge-cuarta
    ```
-2. **Definir la configuración del host ([hosts/jorge-cuarta/default.nix](file:///home/jorge/dotfiles-nix/hosts)):**
+2. **Definir la configuración del host ([hosts/jorge-cuarta/default.nix](../hosts)):**
    ```nix
    { config, pkgs, ... }:
    {
@@ -69,7 +72,7 @@ Si incorporas un nuevo equipo (por ejemplo, `jorge-cuarta`):
    ```
 3. **Crear `monitors.conf` y `config.json`:**
    Configura la resolución nativa de la pantalla interna y el estilo de la barra Waybar según las características del nuevo equipo.
-4. **Registrar el host en [flake.nix](file:///home/jorge/dotfiles-nix/flake.nix):**
+4. **Registrar el host en [flake.nix](../flake.nix):**
    ```nix
    "jorge@jorge-cuarta" = home-manager.lib.homeManagerConfiguration {
      inherit pkgs;
@@ -81,7 +84,7 @@ Si incorporas un nuevo equipo (por ejemplo, `jorge-cuarta`):
    ```
 5. **Verificar que la sintaxis sea correcta:**
    ```bash
-   nix flake check ~/dotfiles-nix
+   nix flake check .
    ```
 
 ---
@@ -96,18 +99,18 @@ sequenceDiagram
     participant Git as GitHub (Origin)
     participant LaptopB as Laptop B (Destino)
 
-    LaptopA->>LaptopA: Edita dotfiles en ~/dotfiles-nix/
-    LaptopA->>LaptopA: home-manager switch --flake ~/dotfiles-nix
+    LaptopA->>LaptopA: Edita dotfiles en directorio del repo
+    LaptopA->>LaptopA: home-manager switch --flake .
     LaptopA->>Git: git commit && git push origin main
     Note over LaptopB: En la otra laptop
     LaptopB->>Git: git pull origin main
-    LaptopB->>LaptopB: home-manager switch --flake ~/dotfiles-nix
+    LaptopB->>LaptopB: home-manager switch --flake .
 ```
 
 1. Realiza los cambios en tu laptop actual.
-2. Aplica y prueba localmente con:
+2. Aplica y prueba localmente desde el repositorio con:
    ```bash
-   home-manager switch --flake ~/dotfiles-nix
+   home-manager switch --flake .
    ```
 3. Sube los cambios a Git:
    ```bash
@@ -115,10 +118,10 @@ sequenceDiagram
    git commit -m "feat(modulo): descripcion concisa del cambio"
    git push origin main
    ```
-4. En tus demás laptops, simplemente ejecuta:
+4. En tus demás laptops, simplemente ejecuta desde el repositorio:
    ```bash
    git pull origin main
-   home-manager switch --flake ~/dotfiles-nix
+   home-manager switch --flake .
    ```
 
 ---
