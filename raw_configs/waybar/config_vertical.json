@@ -17,9 +17,9 @@
     "modules-right": [
         "network",
         "bluetooth",
+        "custom/notification",
         "pulseaudio",
         "battery",
-        "custom/notification",
         "custom/session"
     ]
 }
