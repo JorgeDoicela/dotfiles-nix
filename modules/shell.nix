@@ -49,6 +49,8 @@
     syntaxHighlighting.enable = true;
     shellAliases = {
       sincro = "sincro";
+      drive = "cd ~/Drive";
+      gdrive = "cd ~/Drive";
       ls = "lsd";
       ll = "lsd -l";
       la = "lsd -a";

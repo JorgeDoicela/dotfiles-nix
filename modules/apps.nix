@@ -108,4 +108,41 @@
 
   # Asociaciones de archivos por defecto
   xdg.configFile."mimeapps.list".source = ../raw_configs/mimeapps.list;
+
+  # Definicion declarativa de targets para el gestor sincro
+  xdg.configFile."rclone/sincro-targets.conf".source = ../raw_configs/rclone/sincro-targets.conf;
+
+  # Reglas declarativas de exclusion de conflictos para sincro (Obsidian / Windows / Android)
+  xdg.configFile."rclone/sincro-filters.txt".source = ../raw_configs/rclone/sincro-filters.txt;
+
+  # Servicio de usuario Systemd para montaje FUSE de Google Drive bajo demanda (~/Drive)
+  systemd.user.services.rclone-gdrive = {
+    Unit = {
+      Description = "Montaje virtual de Google Drive con Rclone (FUSE)";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
+    };
+    Service = {
+      Type = "simple";
+      ExecCondition = "${pkgs.bash}/bin/bash -c '${pkgs.rclone}/bin/rclone listremotes 2>/dev/null | grep -q \"^gdrive:\"'";
+      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/Drive";
+      ExecStart = ''
+        ${pkgs.rclone}/bin/rclone mount gdrive: %h/Drive \
+          --vfs-cache-mode full \
+          --vfs-cache-max-size 15G \
+          --vfs-cache-max-age 72h \
+          --dir-cache-time 1h \
+          --vfs-read-chunk-size 32M \
+          --vfs-read-chunk-size-limit 2G \
+          --buffer-size 32M \
+          --umask 022
+      '';
+      ExecStop = "/usr/bin/fusermount3 -u -z %h/Drive";
+      Restart = "on-failure";
+      RestartSec = "10s";
+    };
+    Install = {
+      WantedBy = [ "default.target" ];
+    };
+  };
 }

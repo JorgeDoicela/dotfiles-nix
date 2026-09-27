@@ -4,20 +4,47 @@ Este documento describe la arquitectura, dependencias y uso operativo de los scr
 
 ---
 
-## 1. Sincronización de Obsidian con Rclone (`sincro`)
+## 1. Integración Profesional con Google Drive (Rclone)
 
-* **Ubicación:** [raw_configs/scripts/sincro](../raw_configs/scripts/sincro)
-* **Objetivo:** Sincronización bidireccional fiable de la bóveda de notas personales y académicas de Obsidian con Google Drive.
-* **Ruta Local:** `~/Documentos/Vida de Jorge`
-* **Remoto Rclone:** `gdrive:Vida de Jorge`
-* **Mecanismo:** Utiliza `rclone bisync` con flags verbose para mantener coherencia de timestamps y resolución de conflictos entre diferentes laptops.
-* **Uso:**
+El entorno implementa un **modelo híbrido de dos capas** para gestionar Google Drive de manera ágil entre múltiples laptops:
+
+### Capa 1: Disco Virtual On-Demand (`~/Drive` vía FUSE)
+* **Servicio:** `rclone-gdrive.service` (Systemd de usuario en [modules/apps.nix](../modules/apps.nix)).
+* **Punto de Montaje:** `$HOME/Drive`.
+* **Caché VFS:** `--vfs-cache-mode full` con límite de 15 GB y expiración de 72h.
+* **Operación:** Permite explorar, abrir, mover, subir y eliminar cualquier archivo o carpeta de tu cuenta de Google Drive directamente desde la terminal, Yazi o Thunar sin tener que clonar gigabytes al disco local.
+* **Aliases rápidos en Zsh:** `drive` o `gdrive` para navegar directamente a `$HOME/Drive`.
+
+### Capa 2: Gestor Modular de Sincronización Offline (`sincro`)
+* **Ubicación del Script:** [raw_configs/scripts/sincro](../raw_configs/scripts/sincro).
+* **Definición Declarativa de Carpetas:** [raw_configs/rclone/sincro-targets.conf](../raw_configs/rclone/sincro-targets.conf) (enlazado a `~/.config/rclone/sincro-targets.conf`).
+* **Objetivo:** Sincronización bidireccional fiable para carpetas que requieres 100% disponibles en disco sin conexión a internet (ej. Obsidian).
+* **Mecanismos de Resiliencia:**
+  * Bloqueo contra concurrencia con `flock` para evitar colisiones de base de datos entre procesos.
+  * Formato de targets modular: `ALIAS|REMOTO_DRIVE|RUTA_LOCAL`.
+* **Comandos Operativos:**
   ```bash
-  # Ejecución interactiva directa o desde alias zsh:
+  # Sincronizar todos los targets configurados:
   sincro
 
-  # Modo de re-sincronización forzada en caso de conflicto estructural:
-  sincro --resync
+  # Sincronizar un target especifico (ej. obsidian):
+  sincro obsidian
+
+  # Listar targets configurados y rutas locales:
+  sincro --list
+
+  # Consultar estado de conectividad y montaje de Drive:
+  sincro --status
+
+  # Forzar resincronizacion en caso de conflicto estructural:
+  sincro obsidian --resync
+  ```
+
+* **Cómo agregar nuevas carpetas a sincronizar:**
+  Basta con añadir una nueva línea a `raw_configs/rclone/sincro-targets.conf`:
+  ```text
+  libros|gdrive:Biblioteca/Libros|$HOME/Documentos/Libros
+  proyectos|gdrive:Workspace/Dev|$HOME/Proyectos
   ```
 
 ---

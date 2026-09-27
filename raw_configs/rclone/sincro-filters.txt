@@ -1,0 +1,27 @@
+# ==============================================================================
+# REGLAS DE FILTRADO Y EXCLUSION PARA SINCRO (RCLONE BISYNC)
+# ==============================================================================
+# Previene duplicaciones y conflictos entre Linux, Windows y Android.
+# Sintaxis de Rclone filter:
+#   - patron  (excluir)
+#   + patron  (incluir)
+# ==============================================================================
+
+# 1. Estados de sesion efimeros de Obsidian (disposicion de ventanas y cursor)
+- .obsidian/workspace*.json
+- .obsidian/workspace-mobile.json
+- .obsidian/cache/**
+
+# 2. Papelera local de Obsidian
+- .trash/**
+
+# 3. Archivos temporales de conflicto residuales
+- *.conflict*
+- *.conflict[0-9]*
+- *.sync-conflict-*
+
+# 4. Archivos de sistema y metadatos de Windows / macOS
+- Thumbs.db
+- desktop.ini
+- .DS_Store
+- ._*

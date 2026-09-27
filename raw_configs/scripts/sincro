@@ -1,15 +1,187 @@
 #!/usr/bin/env bash
-# Script de sincronización bidireccional con Google Drive mediante Rclone
+# ==============================================================================
+# SINCRO: Gestor profesional de sincronizacion bidireccional con Google Drive
+# ==============================================================================
+# Soporta perfiles modulares, prevencion de concurrencia (flock) y parametros dinamicos.
+# Configuracion declarativa de targets en: ~/.config/rclone/sincro-targets.conf
+# Formato de targets: ALIAS|REMOTO|RUTA_LOCAL
+# ==============================================================================
 
-VAULT_PATH="$HOME/Documentos/Vida de Jorge"
-REMOTE_NAME="gdrive:Vida de Jorge"
+set -euo pipefail
+IFS=$'\n\t'
 
-echo "🔄 Iniciando sincronización de Obsidian ('Vida de Jorge') con Google Drive..."
+LOCK_FILE="/run/user/${UID:-1000}/sincro.lock"
+CONFIG_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/rclone/sincro-targets.conf"
+FILTERS_FILE="${XDG_CONFIG_HOME:-$HOME/.config}/rclone/sincro-filters.txt"
+MOUNT_POINT="$HOME/Drive"
 
-if command -v rclone &>/dev/null; then
-    rclone bisync "$REMOTE_NAME" "$VAULT_PATH" --verbose "$@"
-    echo "✅ Sincronización finalizada correctamente."
-else
-    echo "❌ Error: rclone no está instalado o no se encuentra en el PATH." >&2
-    exit 1
-fi
+log()   { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [INFO] $*"; }
+warn()  { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [WARN] $*" >&2; }
+die()   { echo "[$(date '+%Y-%m-%d %H:%M:%S')] [ERROR] $*" >&2; exit 1; }
+
+check_deps() {
+    command -v rclone >/dev/null 2>&1 || die "rclone no esta instalado en el sistema."
+}
+
+# Obtiene la lista de targets (archivo de configuracion o valores por defecto)
+get_targets() {
+    if [[ -f "$CONFIG_FILE" ]]; then
+        grep -v '^[[:space:]]*#' "$CONFIG_FILE" | grep -v '^[[:space:]]*$'
+    else
+        # Target predeterminado si no existe archivo de configuracion
+        echo "obsidian|gdrive:Vida de Jorge|$HOME/Documentos/Vida de Jorge"
+    fi
+}
+
+show_help() {
+    cat <<EOF
+Uso: sincro [OPCIONES] [ALIAS] [FLAGS_RCLONE]
+
+Opciones principales:
+  sincro                   Sincroniza todos los targets configurados.
+  sincro <alias>           Sincroniza un target especifico (ej: sincro obsidian).
+  sincro <alias> --resync  Fuerza resincronizacion en caso de conflicto estructural.
+  sincro --list            Lista todos los targets configurados y sus rutas.
+  sincro --status          Muestra el estado de conectividad y montaje de Google Drive.
+  sincro --help            Muestra esta ayuda.
+
+Configuracion de nuevos targets:
+  Crea o edita: $CONFIG_FILE
+  Formato (una linea por target):
+    ALIAS|REMOTO_DRIVE|RUTA_LOCAL
+  Ejemplo:
+    obsidian|gdrive:Vida de Jorge|$HOME/Documentos/Vida de Jorge
+    libros|gdrive:Biblioteca/Libros|$HOME/Documentos/Libros
+    proyectos|gdrive:Workspace/Dev|$HOME/Proyectos
+EOF
+}
+
+show_list() {
+    echo "Targets configurados para sincronizacion:"
+    echo "--------------------------------------------------------------------------------"
+    printf "%-15s %-30s %-35s\n" "ALIAS" "REMOTO EN DRIVE" "RUTA LOCAL"
+    echo "--------------------------------------------------------------------------------"
+    while IFS='|' read -r alias remote local_path || [[ -n "$alias" ]]; do
+        local expanded_path
+        expanded_path=$(eval echo "$local_path")
+        printf "%-15s %-30s %-35s\n" "$alias" "$remote" "$expanded_path"
+    done < <(get_targets)
+    echo "--------------------------------------------------------------------------------"
+    echo "Archivo de definicion: $CONFIG_FILE"
+}
+
+show_status() {
+    echo "=== ESTADO DE INTEGRACION CON GOOGLE DRIVE ==="
+    echo "1. Remoto Rclone (gdrive:):"
+    if rclone listremotes 2>/dev/null | grep -q '^gdrive:'; then
+        echo "   [OK] Remoto 'gdrive:' configurado y autenticado."
+    else
+        echo "   [FALLO] Remoto 'gdrive:' no configurado en rclone. Ejecuta: rclone config"
+    fi
+
+    echo "2. Montaje Virtual FUSE ($MOUNT_POINT):"
+    if mountpoint -q "$MOUNT_POINT" 2>/dev/null; then
+        echo "   [OK] Drive virtual montado y activo en: $MOUNT_POINT"
+        echo "   Uso de disco virtual:"
+        df -h "$MOUNT_POINT" | tail -n 1 | awk '{print "   Total: " $2 " | Usado: " $3 " | Disponible: " $4}'
+    else
+        echo "   [AVISO] Drive virtual no montado actualmente."
+        echo "   Puedes levantarlo con: systemctl --user start rclone-gdrive.service"
+    fi
+
+    echo "3. Servicio Systemd (rclone-gdrive.service):"
+    systemctl --user is-active rclone-gdrive.service 2>/dev/null | sed 's/^/   Estado: /' || echo "   Estado: inactivo"
+    echo "=============================================="
+}
+
+sync_target() {
+    local target_alias="$1"
+    local remote="$2"
+    local local_path="$3"
+    shift 3
+    local extra_flags=("$@")
+
+    local resolved_local
+    resolved_local=$(eval echo "$local_path")
+
+    log "Iniciando sincronizacion [$target_alias] -> Remoto: $remote | Local: $resolved_local"
+
+    if [[ ! -d "$resolved_local" ]]; then
+        log "Creando directorio local: $resolved_local"
+        mkdir -p "$resolved_local"
+    fi
+
+    local filter_args=()
+    if [[ -f "$FILTERS_FILE" ]]; then
+        filter_args+=("--filter-from" "$FILTERS_FILE")
+    fi
+
+    if rclone bisync "$remote" "$resolved_local" --verbose "${filter_args[@]}" "${extra_flags[@]}"; then
+        log "Sincronizacion completada con exito [$target_alias]."
+    else
+        warn "Fallo en la sincronizacion de [$target_alias]."
+        warn "Si existieron cambios concurrentes no resueltos, ejecuta: sincro $target_alias --resync"
+        return 1
+    fi
+}
+
+main() {
+    check_deps
+
+    local target_arg="${1:-all}"
+
+    case "$target_arg" in
+        --help|-h)
+            show_help
+            exit 0
+            ;;
+        --list|-l)
+            show_list
+            exit 0
+            ;;
+        --status|-s)
+            show_status
+            exit 0
+            ;;
+    esac
+
+    # Gestion de concurrencia mediante flock para evitar colisiones
+    exec 200>"$LOCK_FILE"
+    if ! flock -n 200; then
+        die "Otra instancia de sincronizacion ya se encuentra en ejecucion."
+    fi
+
+    shift || true
+    local extra_args=("$@")
+
+    # Verificar que el remoto responda
+    if ! rclone listremotes | grep -q '^gdrive:'; then
+        die "El remoto 'gdrive:' no existe en la configuracion de rclone. Ejecuta: rclone config"
+    fi
+
+    local found=false
+    local failed=0
+
+    while IFS='|' read -r alias remote local_path || [[ -n "$alias" ]]; do
+        [[ -z "$alias" || "$alias" =~ ^[[:space:]]*# ]] && continue
+
+        if [[ "$target_arg" == "all" || "$target_arg" == "$alias" ]]; then
+            found=true
+            if ! sync_target "$alias" "$remote" "$local_path" "${extra_args[@]}"; then
+                ((failed++))
+            fi
+        fi
+    done < <(get_targets)
+
+    if [[ "$found" == false ]]; then
+        die "Target '$target_arg' no encontrado en la configuracion. Usa 'sincro --list' para ver disponibles."
+    fi
+
+    if [[ "$failed" -gt 0 ]]; then
+        die "Sincronizacion finalizada con $failed errores."
+    fi
+
+    log "Todas las operaciones solicitadas finalizaron correctamente."
+}
+
+main "$@"
