@@ -18,6 +18,7 @@
     # Herramientas de productividad académica y comunicación
     libreoffice
     zoom-us
+    typst
   ];
 
   # Alacritty (Terminal declarativo tipado nativo de Home Manager)

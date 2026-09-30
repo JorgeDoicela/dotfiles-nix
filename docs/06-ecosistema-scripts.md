@@ -35,14 +35,17 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
 2. `- .obsidian/cache/**`: Excluye cachés volátiles de indexación.
 3. `- .trash/**`: Evita sincronizar archivos borrados localmente.
 4. `- *.conflict*`: Pasa por alto copias residuales de conflictos antiguos generados por clientes externos.
+5. `- ~$*.docx / ~$*.pptx / ~$*.xlsx`: Excluye archivos de bloqueo temporal de suites ofimáticas (Word, Excel, PowerPoint) para no generar colisiones en la nube.
+6. `- __pycache__/** / .venv/**`: Evita sincronizar entornos y cachés de ejecución locales.
 
 * **Comandos Operativos:**
   ```bash
   # Sincronizar todos los targets configurados:
   sincro
 
-  # Sincronizar un target especifico (ej. obsidian):
+  # Sincronizar un target especifico (ej. obsidian o ube):
   sincro obsidian
+  sincro ube
 
   # Listar targets configurados y rutas locales:
   sincro --list
@@ -55,10 +58,9 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
   ```
 
 * **Cómo agregar nuevas carpetas a sincronizar:**
-  Basta con añadir una nueva línea a `raw_configs/rclone/sincro-targets.conf`:
+  Basta con añadir una nueva línea a `raw_configs/rclone/sincro-targets.conf` (ej. target académico UBE):
   ```text
-  libros|gdrive:Biblioteca/Libros|$HOME/Documentos/Libros
-  proyectos|gdrive:Workspace/Dev|$HOME/Proyectos
+  ube|gdrive:Academico/UBE|$HOME/Escritorio/UBE
   ```
 
 ---

@@ -25,3 +25,12 @@
 - desktop.ini
 - .DS_Store
 - ._*
+
+# 5. Archivos de bloqueo temporal de ofimática (Word / Excel / PowerPoint)
+- ~$*.docx
+- ~$*.pptx
+- ~$*.xlsx
+
+# 6. Cachés y entornos efímeros
+- __pycache__/**
+- .venv/**
