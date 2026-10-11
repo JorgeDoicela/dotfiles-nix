@@ -95,10 +95,13 @@ elif command -v grub-mkconfig &>/dev/null; then
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
+log "4. Desactivando servicios de pantalla de carga de Plymouth en systemd..."
+systemctl mask plymouth-start.service plymouth-poweroff.service plymouth-reboot.service plymouth-halt.service 2>/dev/null || true
+
 # ------------------------------------------------------------------------------
 # 3. CONFIGURACIÓN MODULAR DE SDDM (/etc/sddm.conf.d/)
 # ------------------------------------------------------------------------------
-log "4. Configurando SDDM bajo arquitectura modular (/etc/sddm.conf.d/)..."
+log "5. Configurando SDDM bajo arquitectura modular (/etc/sddm.conf.d/)..."
 mkdir -p /etc/sddm.conf.d
 
 # Eliminar archivo monolítico legacy y configuraciones sueltas
