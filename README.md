@@ -16,7 +16,7 @@ dotfiles-nix/
 ├── modules/               # Módulos declarativos organizados por responsabilidad
 │   ├── style.nix          # GTK3/GTK4 (WhiteSur-Dark), Qt (Fusion/Qt6ct), Iconos (Tela), Cursores (Bibata) y Fuentes
 │   ├── desktop.nix        # Waybar, Rofi, SwayNC, Wlogout, Hyprpaper, Hypridle, Hyprlock, nwg-dock y utilidades
-│   ├── apps.nix           # Alacritty, Neovim, Yazi, Sioyek, VS Code, Fastfetch, LSD, Rclone y flags Wayland
+│   ├── apps.nix           # Alacritty, Neovim, Yazi, Sioyek, Typst, LibreOffice, Zoom, Fastfetch, LSD, Rclone y flags Wayland
 │   ├── shell.nix          # Zsh, Starship Prompt, FZF y Git
 │   └── scripts.nix        # Ejecutables de usuario (~/.local/bin/hypr-rotate, voxd, sincro, etc.)
 ├── setup/                 # Aprovisionamiento del sistema base Debian (/etc/, TLP, sysctl, AMDGPU, apt)
@@ -39,6 +39,7 @@ La documentación detallada de arquitectura, hardware y procedimientos operativo
 | **[06. Ecosistema de Scripts](docs/06-ecosistema-scripts.md)** | Stack de dictado por voz (VOXD/Whisper), sincro Rclone, rotación de pantalla y utilidades. |
 | **[07. Runbooks Operativos](docs/07-runbooks-operaciones.md)** | Despliegue en laptops nuevas, sincronización GitOps, creación de nuevos hosts y recolección de basura. |
 | **[08. Referencia de Atajos](docs/08-referencia-atajos.md)** | Catálogo completo y categorizado de keybindings de Hyprland (ventanas, medios, brillo, captura, etc.). |
+| **[09. Pipeline Documental Académico](docs/09-pipeline-documental-academico.md)** | Modelo bicanal (rubric-driven APA 7 y Typst para ingeniería), Obsidian RAG y almacenamiento UBE. |
 
 ---
 
