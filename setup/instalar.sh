@@ -51,9 +51,8 @@ safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck@.
 safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck-root.service.d/silent.conf
 safe_copy "$CURRENT_DIR/etc/apt-no-recommends.conf" /etc/apt/apt.conf.d/99no-recommends
 
-# Configurar TLP, Plymouth, System.conf y Bluetooth
+# Configurar TLP, System.conf y Bluetooth
 safe_copy "$CURRENT_DIR/etc/tlp.conf" /etc/tlp.conf
-safe_copy "$CURRENT_DIR/etc/plymouthd.conf" /etc/plymouth/plymouthd.conf
 safe_copy "$CURRENT_DIR/etc/system.conf" /etc/systemd/system.conf
 
 # Configurar bluetooth: deshabilitar autoenable forzado para que arranque siempre apagado
@@ -125,8 +124,6 @@ apt-get install -y --no-install-recommends \
     pipewire-pulse \
     tlp \
     tlp-rdw \
-    plymouth \
-    plymouth-themes \
     brave-browser || true
 
 echo "=== MIGRACIÓN Y RÉPLICA COMPLETADA CON ÉXITO ==="
