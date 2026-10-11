@@ -108,6 +108,9 @@ apt-get install -y --no-install-recommends \
     sddm \
     qml6-module-qtquick-layouts \
     qml6-module-qtquick-controls \
+    qml6-module-qtquick-effects \
+    qml6-module-qtmultimedia \
+    qml6-module-qtquick-virtualkeyboard \
     libqt6svg6 \
     hyprland \
     hyprland-guiutils \

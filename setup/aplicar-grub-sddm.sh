@@ -119,6 +119,7 @@ rm -f /etc/sddm.conf /etc/sddm.conf.d/wayland.conf
 cp "$CURRENT_DIR/etc/sddm.conf.d/10-theme.conf" /etc/sddm.conf.d/10-theme.conf
 cp "$CURRENT_DIR/etc/sddm.conf.d/20-wayland.conf" /etc/sddm.conf.d/20-wayland.conf
 cp "$CURRENT_DIR/etc/sddm.conf.d/30-general.conf" /etc/sddm.conf.d/30-general.conf
+cp "$CURRENT_DIR/etc/sddm.conf.d/40-users.conf" /etc/sddm.conf.d/40-users.conf
 
 THEME_DIR="/usr/share/sddm/themes/sddm-astronaut-theme"
 if [[ ! -d "$THEME_DIR" ]]; then
@@ -135,6 +136,13 @@ fi
 if [[ -f "$CURRENT_DIR/sddm/Fondo_de_Bloqueo.png" && -d "$THEME_DIR/Backgrounds" ]]; then
     log "6. Desplegando fondo de bloqueo oficial en el tema..."
     cp "$CURRENT_DIR/sddm/Fondo_de_Bloqueo.png" "$THEME_DIR/Backgrounds/Fondo_de_Bloqueo.png"
+fi
+
+if [[ -d "$THEME_DIR/Fonts" && ! -d "/usr/local/share/fonts/sddm-astronaut" ]]; then
+    log "7. Instalando tipografías oficiales del tema en /usr/local/share/fonts/sddm-astronaut..."
+    mkdir -p /usr/local/share/fonts/sddm-astronaut
+    cp -r "$THEME_DIR/Fonts/"* /usr/local/share/fonts/sddm-astronaut/
+    fc-cache -f /usr/local/share/fonts/sddm-astronaut || true
 fi
 
 log "=== ESTANDARIZACIÓN COMPLETADA EXITOSAMENTE SIN ERRORES ==="

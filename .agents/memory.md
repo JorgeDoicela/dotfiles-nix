@@ -66,7 +66,8 @@
   * Se mantiene `/etc/default/grub` con valores mínimos limpios para evitar prompts interactivos de `dpkg` en actualizaciones de paquetes.
   * Todas las políticas residen en `/etc/default/grub.d/`: `10-system.cfg` (políticas base y timeout), `20-resume.cfg` (swap física en disco resuelta dinámicamente y filtrando zram), `50-grub-theme.cfg` (tema Apple Dark y GFXMODE sin alterar timeout/recovery) y `99-clean-boot.cfg` (concatenación estricta de parámetros de kernel silencioso con `plymouth.enable=0` y omisión de `splash` para transición oscura directa a SDDM).
 * **SDDM Modular y Adaptativo:**
-  * Eliminación del `/etc/sddm.conf` monolítico. Uso estricto de drop-ins en `/etc/sddm.conf.d/` (`10-theme.conf`, `20-wayland.conf`, `30-general.conf`).
-  * Tema `sddm-astronaut-theme` parametrizado con `ScreenWidth=""` y `ScreenHeight=""` para cálculo responsivo en tiempo de ejecución a través del motor QML (`Screen.width` / `Screen.height`), garantizando soporte nativo para 1080p, 768p y monitores externos sin desalineación.
+  * Eliminación del `/etc/sddm.conf` monolítico. Uso estricto de drop-ins en `/etc/sddm.conf.d/` (`10-theme.conf`, `20-wayland.conf`, `30-general.conf`, `40-users.conf`).
+  * `40-users.conf`: Filtra usuarios de sistema sin shell interactiva (`HideShells=/sbin/nologin,/usr/sbin/nologin,/bin/false,/usr/bin/false`) y establece `MaximumUid=29999` para erradicar la aparición de las cuentas de compilación `nixbld1..32` en el login.
+  * Tema `sddm-astronaut-theme` parametrizado con `ScreenWidth=""` y `ScreenHeight=""` para cálculo responsivo en tiempo de ejecución a través del motor QML (`Screen.width` / `Screen.height`), garantizando soporte nativo para 1080p, 768p y monitores externos sin desalineación. Requiere los paquetes `qml6-module-qtquick-effects`, `qml6-module-qtmultimedia` y `qml6-module-qtquick-virtualkeyboard`.
   * Recursos del tema (`astronaut.conf` y `Fondo_de_Bloqueo.png`) centralizados en `setup/sddm/` para aprovisionamiento autosuficiente.
 
