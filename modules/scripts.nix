@@ -99,4 +99,16 @@
       exec /usr/bin/brave-browser-stable "''${FLAGS[@]}" "$@"
     '';
   };
+
+  # Wrapper declarativo para Zoom nativo de Debian
+  # Zoom empaqueta su propio runtime de Qt 6 en /opt/zoom/Qt/. Las variables de sesión globales de Qt
+  # (QT_STYLE_OVERRIDE, QT_QPA_PLATFORMTHEME y QT_PLUGIN_PATH) contaminan el motor QML interno,
+  # provocando que la interfaz no renderice controles y quede en negro.
+  home.file.".local/bin/zoom" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      exec env -u QT_STYLE_OVERRIDE -u QT_QPA_PLATFORMTHEME -u QT_PLUGIN_PATH /usr/bin/zoom "$@"
+    '';
+  };
 }

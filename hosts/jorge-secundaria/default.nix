@@ -10,7 +10,7 @@
     rofiWidth = "440px";
     rofiHeight = "270px";
     browserScale = "0.8";
-    hyprActiveBorder = "rgba(ffffffb5)"; # Borde blanco atenuado (~71% alfa) para igualar el peso visual de 1080p
+    hyprActiveBorder = "rgba(ffffffc6)"; # Borde blanco con incremento mínimo (~78% alfa vs 71% anterior)
     hyprRounding = 10;                  # Redondeo adaptado proporcionalmente a 768p (10px vs 14px en 1080p)
     rofiLauncherPadding = "40px 80px 30px 308px"; # 80px base + 228px compensación franja rota eDP-1
     rofiLauncherColumns = 5;

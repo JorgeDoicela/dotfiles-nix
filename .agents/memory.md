@@ -14,7 +14,7 @@
     * Monitor externo `HDMI-A-1` / `DP-1` a 1366x768, posicionado en `0x0` (izquierda).
   * Workaround físico: La pantalla interna de la laptop tiene una franja rota en su margen izquierdo, compensada mediante directiva de Hyprland (`monitor = eDP-1, addreserved, 0, 0, 228, 0`) y paddings dedicados en Rofi (`rofiLauncherPadding`, `rofiBooksPadding`) en `mySystem`.
   * Workspaces: Intercalados (eDP-1: 1, 2, 5, 6, 9, 10; HDMI-A-1: 3, 4, 7, 8).
-  * Escala: Compacta (9pt GTK/DConf, Waybar 11px, cursor Bibata 20px, browserScale 0.8, hyprActiveBorder "rgba(ffffffb5)", hyprRounding 10, SwayNC 300x620px, SwayOSD 11px, Hyprshell 11px).
+  * Escala: Compacta (9pt GTK/DConf, Waybar 11px, cursor Bibata 20px, browserScale 0.8, hyprActiveBorder "rgba(ffffffc6)", hyprRounding 10, SwayNC 300x620px, SwayOSD 11px, Hyprshell 11px).
 
 ---
 
@@ -32,6 +32,9 @@
 4. **Seguridad y Permisos:**
    * No se agregan usuarios al grupo secundario `input` por riesgo crítico de keylogging en Wayland. El acceso a periféricos lo gobierna `systemd-logind` / `seatd`.
    * El script de provisionamiento base [setup/instalar.sh](../setup/instalar.sh) es idempotente y crea copias timestamped (`safe_copy`) antes de editar archivos en `/etc/`.
+5. **Separación de Herramientas Gráficas y Aceleración GPU (Alacritty y Zoom):**
+   * Alacritty y Zoom se delegan al entorno nativo de Debian (`package = null` en Nix o paquete `.deb` en Debian).
+   * Motivo: En Debian con Nix standalone (no NixOS), los sandbox FHS de Nixpkgs carecen de `/run/opengl-driver/`, lo que genera fallos en GLX o fuerza software rendering en CPU. Correrlos nativamente en Debian garantiza aceleración por hardware con Mesa/AMDGPU (`radeonsi_dri.so`), VA-API y decodificación fluida de video.
 
 ---
 
@@ -70,4 +73,20 @@
   * `40-users.conf`: Filtra usuarios de sistema sin shell interactiva (`HideShells=/sbin/nologin,/usr/sbin/nologin,/bin/false,/usr/bin/false`) y establece `MaximumUid=29999` para erradicar la aparición de las cuentas de compilación `nixbld1..32` en el login.
   * Tema `sddm-astronaut-theme` parametrizado con `ScreenWidth=""` y `ScreenHeight=""` para cálculo responsivo en tiempo de ejecución a través del motor QML (`Screen.width` / `Screen.height`), garantizando soporte nativo para 1080p, 768p y monitores externos sin desalineación. Requiere los paquetes `qml6-module-qtquick-effects`, `qml6-module-qtmultimedia` y `qml6-module-qtquick-virtualkeyboard`.
   * Recursos del tema (`astronaut.conf` y `Fondo_de_Bloqueo.png`) centralizados en `setup/sddm/` para aprovisionamiento autosuficiente.
+
+---
+
+## 6. Sincronización y Aplicaciones Gráficas de Sesión
+* **Protección de Directorios Vacíos en `sincro`:**
+  * `rclone bisync` aborta por diseño ante carpetas locales vacías para evitar interpretar la falta de archivos locales como un borrado masivo en Google Drive.
+  * En inicialización de nuevos targets o en laptops secundarias recién configuradas, el comando obligatorio es `sincro <alias> --resync`.
+* **Zoom en Debian:**
+  * Paquete `.deb` nativo para aceleración hardware.
+  * Wrapper en `~/.local/bin/zoom` que purga variables de tema Qt (`QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, `QT_PLUGIN_PATH`) para evitar fallos de interfaz bajo Wayland.
+  * Regla de mosaico en Hyprland para ventana principal y flotación para popups/diálogos secundarios.
+* **Atajos de Lanzamiento Clave:**
+  * `Super + A`: Antigravity IDE (`antigravity-ide`).
+  * `Super + M`: Zoom (`zoom`).
+  * `Super + O`: Obsidian (`obsidian`).
+
 

@@ -16,8 +16,8 @@
     pnpm
 
     # Herramientas de productividad académica y comunicación
+    # Nota: Zoom se delega al paquete nativo .deb de Debian para compatibilidad completa con Mesa/DRI y aceleración GPU
     libreoffice
-    zoom-us
     typst
   ];
 
@@ -151,9 +151,9 @@
     };
   };
 
-  # Ocultar declarativamente las entradas de escritorio de LibreOffice en lanzadores de aplicaciones (Rofi)
-  # Se utiliza xdg.dataFile para colocar las anulaciones con NoDisplay=true directamente en ~/.local/share/applications/
-  # evitando colisiones en el buildEnv de Nix store y respetando la precedencia de la especificacion XDG.
+  # Configuración declarativa de archivos de escritorio en ~/.local/share/applications/
+  # 1. Oculta entradas secundarias de LibreOffice en Rofi.
+  # 2. Anula Zoom.desktop del sistema para invocar el wrapper ~/.local/bin/zoom (evitando la pantalla negra por variables Qt).
   xdg.dataFile =
     let
       hiddenOfficeEntries = [
@@ -174,17 +174,33 @@
         "libreoffice-writer"
         "libreoffice-xsltfilter"
       ];
+      officeOverrides = builtins.listToAttrs (map (entryName: {
+        name = "applications/${entryName}.desktop";
+        value = {
+          text = ''
+            [Desktop Entry]
+            Type=Application
+            Name=LibreOffice ${entryName}
+            NoDisplay=true
+          '';
+        };
+      }) hiddenOfficeEntries);
     in
-    builtins.listToAttrs (map (entryName: {
-      name = "applications/${entryName}.desktop";
-      value = {
-        text = ''
-          [Desktop Entry]
-          Type=Application
-          Name=LibreOffice ${entryName}
-          NoDisplay=true
-        '';
-      };
-    }) hiddenOfficeEntries);
+    officeOverrides // {
+      "applications/Zoom.desktop".text = ''
+        [Desktop Entry]
+        Name=Zoom Workplace
+        Comment=Zoom Video Conference
+        Exec=zoom %U
+        Icon=Zoom
+        Terminal=false
+        Type=Application
+        Encoding=UTF-8
+        Categories=Network;Application;
+        StartupWMClass=zoom
+        MimeType=x-scheme-handler/zoommtg;x-scheme-handler/zoomus;x-scheme-handler/tel;x-scheme-handler/callto;x-scheme-handler/zoomphonecall;x-scheme-handler/zoomphonesms;x-scheme-handler/zoomcontactcentercall;application/x-zoom
+        X-KDE-Protocols=zoommtg;zoomus;tel;callto;zoomphonecall;zoomphonesms;zoomcontactcentercall;
+      '';
+    };
 }
 

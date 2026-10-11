@@ -53,9 +53,23 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
   # Consultar estado de conectividad y montaje de Drive:
   sincro --status
 
-  # Forzar resincronizacion en caso de conflicto estructural:
+  # Inicializar nuevo equipo o forzar resincronizacion en caso de conflicto estructural:
   sincro obsidian --resync
+  sincro ube --resync
   ```
+
+### Inicialización en Equipos Nuevos y Protección de Directorios Vacíos
+`rclone bisync` incorpora un mecanismo de seguridad por diseño (*Empty Directory Safety Check*):
+* **Causa Raíz del Error al Iniciar:** Si una carpeta local se crea vacía (ej. al clonar la configuración o añadir un nuevo target como `/home/jorge/Escritorio/UBE` en una laptop secundaria), `bisync` aborta preventivamente con el mensaje:
+  ```text
+  ERROR: Path2 is empty, aborting...
+  ```
+  Esto previene que una carpeta local vacía sea interpretada erróneamente como la eliminación masiva de todos los archivos existentes en Google Drive.
+* **Procedimiento Operativo Obligatorio:** En la primera sincronización de cualquier target recién configurado o en una máquina donde el directorio local aún no tiene archivos, es obligatorio ejecutar:
+  ```bash
+  sincro <alias> --resync
+  ```
+  Esto construye la base de datos de listados (`listings`) sin interpretar la disparidad como un borrado masivo y descarga todo el contenido remoto de forma segura.
 
 * **Cómo agregar nuevas carpetas a sincronizar:**
   Basta con añadir una nueva línea a `raw_configs/rclone/sincro-targets.conf` (ej. target académico UBE):
