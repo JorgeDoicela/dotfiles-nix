@@ -95,11 +95,19 @@ elif command -v grub-mkconfig &>/dev/null; then
     grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
-log "4. Desactivando servicios de pantalla de carga de Plymouth en systemd..."
-systemctl mask plymouth-start.service plymouth-poweroff.service plymouth-reboot.service plymouth-halt.service 2>/dev/null || true
+# ------------------------------------------------------------------------------
+# 3. ELIMINACIÓN DE PLYMOUTH (CAUSA RAÍZ: ARRANQUE SILENCIOSO PURO)
+# ------------------------------------------------------------------------------
+if dpkg -l | grep -qE "^ii[[:space:]]+(plymouth|libplymouth5)"; then
+    log "4. Purgando paquetes innecesarios de Plymouth para erradicar retrasos y pantalla gris..."
+    apt-get purge -y plymouth libplymouth5 plymouth-themes 2>/dev/null || true
+    rm -rf /etc/plymouth /usr/share/plymouth
+    log "   Regenerando initramfs sin hooks de splash..."
+    update-initramfs -u
+fi
 
 # ------------------------------------------------------------------------------
-# 3. CONFIGURACIÓN MODULAR DE SDDM (/etc/sddm.conf.d/)
+# 4. CONFIGURACIÓN MODULAR DE SDDM (/etc/sddm.conf.d/)
 # ------------------------------------------------------------------------------
 log "5. Configurando SDDM bajo arquitectura modular (/etc/sddm.conf.d/)..."
 mkdir -p /etc/sddm.conf.d
