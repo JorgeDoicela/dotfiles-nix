@@ -44,17 +44,17 @@
         "margin-right": 0,
         "modules-left": [
             "custom/launcher",
-            "hyprland/workspaces",
-            "hyprland/window"
+            "hyprland/workspaces"
         ],
         "modules-center": [
-            "mpris"
+            "clock"
         ],
         "modules-right": [
+            "network",
+            "bluetooth",
+            "custom/notification",
             "pulseaudio",
             "battery",
-            "custom/notification",
-            "clock#compact",
             "custom/session"
         ],
         "hyprland/workspaces": {
