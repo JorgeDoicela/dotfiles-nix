@@ -47,11 +47,6 @@ mkdir -p /etc/sysctl.d /etc/ssh/sshd_config.d /etc/default/grub.d /etc/systemd/s
 
 safe_copy "$CURRENT_DIR/etc/sysctl-optimization.conf" /etc/sysctl.d/99-sysctl-optimization.conf
 safe_copy "$CURRENT_DIR/etc/ssh-hardening.conf" /etc/ssh/sshd_config.d/99-hardening.conf
-safe_copy "$CURRENT_DIR/etc/clean-boot.cfg" /etc/default/grub.d/99-clean-boot.cfg
-if [ -d "$CURRENT_DIR/themes/apple-dark" ]; then
-    cp -r "$CURRENT_DIR/themes/apple-dark" /boot/grub/themes/
-    safe_copy "$CURRENT_DIR/etc/grub-theme.cfg" /etc/default/grub.d/50-grub-theme.cfg
-fi
 safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck@.service.d/silent.conf
 safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck-root.service.d/silent.conf
 safe_copy "$CURRENT_DIR/etc/apt-no-recommends.conf" /etc/apt/apt.conf.d/99no-recommends
@@ -71,12 +66,8 @@ safe_copy "$CURRENT_DIR/etc/dell-kbd-backlight-timeout.service" /etc/systemd/sys
 systemctl daemon-reload
 systemctl enable dell-kbd-backlight-timeout.service || true
 
-# Actualizar arranque (GRUB y Plymouth)
-if command -v update-grub &>/dev/null; then
-    update-grub
-elif command -v grub-mkconfig &>/dev/null; then
-    grub-mkconfig -o /boot/grub/grub.cfg
-fi
+# Desplegar GRUB y SDDM bajo arquitectura modular e idempotente
+bash "$CURRENT_DIR/aplicar-grub-sddm.sh"
 
 
 # 3. Replicar control de GPU AMD (Hardware coincidente)
@@ -109,12 +100,16 @@ else
     sed -i 's/^USERGROUPS_ENAB yes/USERGROUPS_ENAB yes\nUMASK\t\t022/' /etc/login.defs
 fi
 
-# 6. Actualizar repositorios e instalar paquetes base de Debian (Kernel/Drivers/Hyprland)
+# 6. Actualizar repositorios e instalar paquetes base de Debian (Kernel/Drivers/Hyprland/SDDM)
 echo "=> Actualizando fuentes de apt e instalando paquetes base del sistema..."
 apt-get update
 apt-get install -y --no-install-recommends \
     curl \
     git \
+    sddm \
+    qml6-module-qtquick-layouts \
+    qml6-module-qtquick-controls \
+    libqt6svg6 \
     hyprland \
     hyprland-guiutils \
     hyprpolkitagent \

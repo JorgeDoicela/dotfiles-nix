@@ -59,3 +59,14 @@
 * **Tema Visual:** `raw_configs/rofi/books.rasi` enlazado a `~/.config/rofi/books.rasi` (Fullscreen WhiteSur-Dark a doble columna, botones píldora adaptativos sin truncamiento y navegación con `Tab` / `Shift+Tab`).
 * **Filtros defensivos:** Poda automática de directorios ocultos (`.git`, `.obsidian`, cachés) y archivos ocultos (`.DS_Store`, temporales). Formatos: `.pdf`, `.epub`, `.djvu`. Detección nativa con `shutil.which`.
 
+---
+
+## 5. Gestión del Arranque y Display Manager (GRUB & SDDM)
+* **Arquitectura 100% Drop-In en GRUB:**
+  * Se mantiene `/etc/default/grub` con valores mínimos limpios para evitar prompts interactivos de `dpkg` en actualizaciones de paquetes.
+  * Todas las políticas residen en `/etc/default/grub.d/`: `10-system.cfg` (políticas base y timeout), `20-resume.cfg` (swap física en disco resuelta dinámicamente y filtrando zram), `50-grub-theme.cfg` (tema Apple Dark y GFXMODE sin alterar timeout/recovery) y `99-clean-boot.cfg` (concatenación estricta de parámetros de kernel silencioso).
+* **SDDM Modular y Adaptativo:**
+  * Eliminación del `/etc/sddm.conf` monolítico. Uso estricto de drop-ins en `/etc/sddm.conf.d/` (`10-theme.conf`, `20-wayland.conf`, `30-general.conf`).
+  * Tema `sddm-astronaut-theme` parametrizado con `ScreenWidth=""` y `ScreenHeight=""` para cálculo responsivo en tiempo de ejecución a través del motor QML (`Screen.width` / `Screen.height`), garantizando soporte nativo para 1080p, 768p y monitores externos sin desalineación.
+  * Recursos del tema (`astronaut.conf` y `Fondo_de_Bloqueo.png`) centralizados en `setup/sddm/` para aprovisionamiento autosuficiente.
+
