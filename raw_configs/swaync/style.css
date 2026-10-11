@@ -60,12 +60,12 @@
 
 .summary {
   font-weight: bold;
-  font-size: 14px;
+  font-size: @SWAYNC_SUMMARY_SIZE@;
   color: #ffffff;
 }
 
 .body {
-  font-size: 13px;
+  font-size: @SWAYNC_BODY_SIZE@;
   color: @text-muted;
   margin-top: 4px;
 }
@@ -121,7 +121,7 @@
 
 /* Header / Título */
 .widget-title {
-  font-size: 16px;
+  font-size: @SWAYNC_TITLE_SIZE@;
   font-weight: bold;
   margin: 8px;
   color: #ffffff;

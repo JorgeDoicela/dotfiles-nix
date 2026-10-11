@@ -28,6 +28,31 @@
   # Servicio de usuario Systemd para garantizar que SwayNC siempre esté activo en DBus
   services.swaync = {
     enable = true;
+    settings = builtins.fromJSON (
+      builtins.replaceStrings
+        [ "@SWAYNC_WIDTH@"
+          "@SWAYNC_HEIGHT@"
+          "@SWAYNC_NOTIFICATION_WIDTH@"
+          "@SWAYNC_ICON_SIZE@"
+        ]
+        [ (toString config.mySystem.swayncWidth)
+          (toString config.mySystem.swayncHeight)
+          (toString config.mySystem.swayncNotificationWidth)
+          (toString config.mySystem.swayncIconSize)
+        ]
+        (builtins.readFile ../raw_configs/swaync/config.json)
+    );
+    style =
+      builtins.replaceStrings
+        [ "@SWAYNC_TITLE_SIZE@"
+          "@SWAYNC_SUMMARY_SIZE@"
+          "@SWAYNC_BODY_SIZE@"
+        ]
+        [ config.mySystem.swayncTitleSize
+          config.mySystem.swayncSummarySize
+          config.mySystem.swayncBodySize
+        ]
+        (builtins.readFile ../raw_configs/swaync/style.css);
   };
 
   # Servicio de usuario Systemd para OSD moderno de volumen y brillo
@@ -88,11 +113,13 @@
         "@SCROLL_FACTOR@"
         "@HYPR_ACTIVE_BORDER@"
         "@HYPR_ROUNDING@"
+        "@GSIMPLECAL_MOVE@"
       ]
       [ config.mySystem.cursorSensitivity
         config.mySystem.scrollFactor
         config.mySystem.hyprActiveBorder
         (toString config.mySystem.hyprRounding)
+        config.mySystem.gsimplecalMove
       ]
       (builtins.readFile ../raw_configs/hypr/userprefs.conf);
   xdg.configFile."hypr/windowrules.conf".source = ../raw_configs/hypr/windowrules.conf;
@@ -150,8 +177,6 @@
       ]
       (builtins.readFile ../raw_configs/rofi/config.rasi);
 
-  # Enlace declarativo de SwayNC
-  xdg.configFile."swaync".source = ../raw_configs/swaync;
 
   # Enlace declarativo de gsimplecal
   xdg.configFile."gsimplecal".source = ../raw_configs/gsimplecal;
@@ -166,11 +191,23 @@
   xdg.configFile."xdg-desktop-portal/portals.conf".source = ../raw_configs/xdg-desktop-portal/portals.conf;
 
   # Enlace declarativo de SwayOSD
-  xdg.configFile."swayosd/style.css".source = ../raw_configs/swayosd/style.css;
+  xdg.configFile."swayosd/style.css".text =
+    builtins.replaceStrings
+      [ "@SWAYOSD_FONT_SIZE@"
+        "@SWAYOSD_PADDING@"
+      ]
+      [ config.mySystem.swayosdFontSize
+        config.mySystem.swayosdPadding
+      ]
+      (builtins.readFile ../raw_configs/swayosd/style.css);
 
   # Enlaces declarativos de Hyprshell (Selector de ventanas Alt+Tab)
   xdg.configFile."hyprshell/config.toml".source = ../raw_configs/hyprshell/config.toml;
-  xdg.configFile."hyprshell/styles.css".source = ../raw_configs/hyprshell/styles.css;
+  xdg.configFile."hyprshell/styles.css".text =
+    builtins.replaceStrings
+      [ "@HYPRSHELL_FONT_SIZE@" ]
+      [ config.mySystem.hyprshellFontSize ]
+      (builtins.readFile ../raw_configs/hyprshell/styles.css);
 
   # Configuración declarativa de Swappy (Anotador Wayland)
   xdg.configFile."swappy/config".text = ''

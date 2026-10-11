@@ -2,7 +2,7 @@
 window {
     background-color: transparent;
     font-family: "JetBrainsMono Nerd Font", -apple-system, "SF Pro", monospace;
-    font-size: 13px;
+    font-size: @HYPRSHELL_FONT_SIZE@;
 }
 
 .main-container {

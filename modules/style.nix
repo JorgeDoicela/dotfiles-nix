@@ -57,6 +57,61 @@
       default = 14;
       description = "Radio de curvatura de esquinas de ventanas en Hyprland";
     };
+    swayncWidth = lib.mkOption {
+      type = lib.types.int;
+      default = 380;
+      description = "Ancho del Centro de Control de SwayNC en píxeles";
+    };
+    swayncHeight = lib.mkOption {
+      type = lib.types.int;
+      default = 860;
+      description = "Altura del Centro de Control de SwayNC en píxeles";
+    };
+    swayncNotificationWidth = lib.mkOption {
+      type = lib.types.int;
+      default = 350;
+      description = "Ancho de la ventana emergente de notificación de SwayNC en píxeles";
+    };
+    swayncIconSize = lib.mkOption {
+      type = lib.types.int;
+      default = 64;
+      description = "Tamaño de iconos de notificación en SwayNC";
+    };
+    swayncTitleSize = lib.mkOption {
+      type = lib.types.str;
+      default = "16px";
+      description = "Tamaño tipográfico del título del Centro de Control de SwayNC";
+    };
+    swayncSummarySize = lib.mkOption {
+      type = lib.types.str;
+      default = "14px";
+      description = "Tamaño tipográfico del resumen de notificación en SwayNC";
+    };
+    swayncBodySize = lib.mkOption {
+      type = lib.types.str;
+      default = "13px";
+      description = "Tamaño tipográfico del cuerpo de notificación en SwayNC";
+    };
+    swayosdFontSize = lib.mkOption {
+      type = lib.types.str;
+      default = "13px";
+      description = "Tamaño tipográfico de SwayOSD";
+    };
+    swayosdPadding = lib.mkOption {
+      type = lib.types.str;
+      default = "6px 14px";
+      description = "Padding de la píldora de SwayOSD";
+    };
+    hyprshellFontSize = lib.mkOption {
+      type = lib.types.str;
+      default = "13px";
+      description = "Tamaño tipográfico de Hyprshell";
+    };
+    gsimplecalMove = lib.mkOption {
+      type = lib.types.str;
+      default = "1500 65";
+      description = "Coordenadas de posicionamiento de gsimplecal en Hyprland";
+    };
     rofiLauncherPadding = lib.mkOption {
       type = lib.types.str;
       default = "60px 120px 40px 120px";

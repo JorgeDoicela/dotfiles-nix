@@ -6,7 +6,7 @@ window#osd {
   background-color: rgba(28, 28, 30, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  padding: 6px 14px;
+  padding: @SWAYOSD_PADDING@;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
 }
 
@@ -18,7 +18,7 @@ window#osd image,
 window#osd label {
   color: #ffffff;
   font-family: "JetBrainsMono Nerd Font", "Inter", sans-serif;
-  font-size: 13px;
+  font-size: @SWAYOSD_FONT_SIZE@;
   font-weight: 500;
 }
 

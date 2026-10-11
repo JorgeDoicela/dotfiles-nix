@@ -18,6 +18,23 @@
     rofiLauncherIconSize = "48px";
     rofiBooksPadding = "30px 60px 20px 288px"; # 60px base + 228px compensación franja rota eDP-1
     rofiBooksLines = 7;
+
+    # Dimensionamiento adaptativo de SwayNC para 768p (elimina desborde vertical de 860px)
+    swayncWidth = 300;
+    swayncHeight = 620;
+    swayncNotificationWidth = 280;
+    swayncIconSize = 48;
+    swayncTitleSize = "13px";
+    swayncSummarySize = "12px";
+    swayncBodySize = "11px";
+
+    # Densidad compacta para SwayOSD y Hyprshell
+    swayosdFontSize = "11px";
+    swayosdPadding = "5px 10px";
+    hyprshellFontSize = "11px";
+
+    # Posicionamiento del calendario gsimplecal bajo el reloj de eDP-1
+    gsimplecalMove = "2460 45";
   };
 
   # Configuración declarativa de hardware específica para jorge-secundaria (Dual Display)
