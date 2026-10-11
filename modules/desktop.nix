@@ -86,9 +86,13 @@
     builtins.replaceStrings
       [ "@CURSOR_SENSITIVITY@"
         "@SCROLL_FACTOR@"
+        "@HYPR_ACTIVE_BORDER@"
+        "@HYPR_ROUNDING@"
       ]
       [ config.mySystem.cursorSensitivity
         config.mySystem.scrollFactor
+        config.mySystem.hyprActiveBorder
+        (toString config.mySystem.hyprRounding)
       ]
       (builtins.readFile ../raw_configs/hypr/userprefs.conf);
   xdg.configFile."hypr/windowrules.conf".source = ../raw_configs/hypr/windowrules.conf;

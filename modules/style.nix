@@ -47,6 +47,16 @@
       default = "0.75";
       description = "Factor de desplazamiento vertical (scroll arriba/abajo) en Hyprland";
     };
+    hyprActiveBorder = lib.mkOption {
+      type = lib.types.str;
+      default = "rgba(ffffffff)";
+      description = "Color o gradiente del borde de ventana activa en Hyprland";
+    };
+    hyprRounding = lib.mkOption {
+      type = lib.types.int;
+      default = 14;
+      description = "Radio de curvatura de esquinas de ventanas en Hyprland";
+    };
     rofiLauncherPadding = lib.mkOption {
       type = lib.types.str;
       default = "60px 120px 40px 120px";
