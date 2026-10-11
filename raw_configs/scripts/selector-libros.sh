@@ -1,114 +1,261 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 # ==============================================================================
 # SELECTOR DINÁMICO DE LIBROS Y ESTUDIO PARA SIOYEK (HYPRLAND / ROFI)
 # ==============================================================================
-# - Consulta en tiempo real el historial real de lectura de Sioyek (SQLite)
-# - Escanea dinámicamente toda la biblioteca (PDF / EPUB) en ~/Documentos
-# - Cero listas manuales fijas; actualización automática al añadir libros
+# - Interfaz Fullscreen con pestañas superiores generadas DINÁMICAMENTE
+# - Cada subcarpeta detectada en disco se convierte automáticamente en una pestaña
+# - Filtrado y búsqueda instantánea sin mezclar categorías
 # ==============================================================================
-set -euo pipefail
-
-# 1. Obtener parámetros de estilo de Hyprland para coherencia visual
-hypr_border=$(hyprctl -j getoption decoration:rounding 2>/dev/null | jq -r '.int // 10' 2>/dev/null || echo 10)
-hypr_width=$(hyprctl -j getoption general:border_size 2>/dev/null | jq -r '.int // 2' 2>/dev/null || echo 2)
-wind_border=$((hypr_border * 3))
-[ "$hypr_border" -eq 0 ] && elem_border="10" || elem_border=$((hypr_border * 2))
-r_override="window {border: ${hypr_width}px; border-radius: ${wind_border}px;} element {border-radius: ${elem_border}px;}"
-
-# 2. Generar lista dinámica (Recientes + Toda la colección) con Python
-python3 - "$r_override" << 'EOF'
 import os
 import sys
-import subprocess
+import shutil
 import sqlite3
+import subprocess
 
 home = os.path.expanduser("~")
 db_local = os.path.join(home, ".local/share/sioyek/local.db")
 db_shared = os.path.join(home, ".local/share/sioyek/shared.db")
 
-items = []
-seen_paths = set()
+dir_libros = os.path.join(home, "Documentos/Libros")
+dir_cristianos = os.path.join(home, "Documentos/Libros cristianos")
+search_dirs = [dir_libros, dir_cristianos]
+valid_extensions = (".pdf", ".epub", ".djvu")
 
-# A. Historial dinámico de Sioyek (Libros leídos recientemente)
-if os.path.isfile(db_local) and os.path.isfile(db_shared):
+
+def open_target_book(book_path):
+    """Abre el libro seleccionado en Sioyek o visor predeterminado."""
+    if not book_path or not os.path.isfile(book_path):
+        sys.exit(0)
+    viewer = "sioyek" if shutil.which("sioyek") else "xdg-open"
+    subprocess.Popen([viewer, book_path], start_new_session=True)
+    sys.exit(0)
+
+
+def has_valid_books(target_dir):
+    """Verifica si un directorio contiene al menos un libro válido."""
+    if not os.path.isdir(target_dir):
+        return False
+    for root, dirs, files in os.walk(target_dir, followlinks=True):
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+        for f in files:
+            if not f.startswith(".") and f.lower().endswith(valid_extensions):
+                return True
+    return False
+
+
+def get_recent_books():
+    """Obtiene los últimos libros leídos desde el historial SQLite de Sioyek."""
+    recent = []
+    seen = set()
+    if os.path.isfile(db_local) and os.path.isfile(db_shared):
+        try:
+            con = sqlite3.connect(db_local)
+            con.execute(f'ATTACH DATABASE "{db_shared}" AS shared')
+            query = """
+            SELECT d.path, s.last_access_time
+            FROM document_hash d
+            JOIN shared.opened_books s ON d.hash = s.path
+            ORDER BY s.last_access_time DESC
+            LIMIT 14
+            """
+            for path, _ in con.execute(query):
+                if os.path.isfile(path) and path not in seen:
+                    title = os.path.splitext(os.path.basename(path))[0].replace("\n", " ")
+                    parent_dir = os.path.basename(os.path.dirname(path))
+                    tag = f" [{parent_dir}]" if parent_dir not in ("Libros", "Libros cristianos") else ""
+                    recent.append((f"[Reciente] {title}{tag}", path))
+                    seen.add(path)
+        except Exception:
+            pass
+    return recent
+
+
+def scan_directory(target_dir, is_recursive=True):
+    """Escanea un directorio y devuelve tuplas (display_text, full_path)."""
+    results = []
+    if not os.path.isdir(target_dir):
+        return results
+
+    visited_dirs = set()
+
+    for root, dirs, files in os.walk(target_dir, followlinks=True):
+        real_root = os.path.realpath(root)
+        if real_root in visited_dirs:
+            dirs[:] = []
+            continue
+        visited_dirs.add(real_root)
+
+        dirs[:] = [d for d in dirs if not d.startswith(".")]
+
+        rel_dir = os.path.relpath(root, target_dir)
+        tag = f" [{rel_dir}]" if (rel_dir != "." and is_recursive) else ""
+
+        for f in files:
+            if f.startswith("."):
+                continue
+            if f.lower().endswith(valid_extensions):
+                full_path = os.path.join(root, f)
+                title = os.path.splitext(f)[0].replace("\n", " ")
+                results.append((f"{title}{tag}", full_path))
+
+        if not is_recursive:
+            break
+
+    return results
+
+
+def print_items(items):
+    """Imprime los elementos con metadatos de Rofi manejando broken pipes."""
     try:
-        con = sqlite3.connect(db_local)
-        con.execute(f"ATTACH DATABASE \"{db_shared}\" AS shared")
-        query = """
-        SELECT d.path, s.last_access_time
-        FROM document_hash d
-        JOIN shared.opened_books s ON d.hash = s.path
-        ORDER BY s.last_access_time DESC
-        LIMIT 8
-        """
-        for path, _ in con.execute(query):
-            if os.path.isfile(path) and path not in seen_paths:
-                title = os.path.splitext(os.path.basename(path))[0]
-                items.append((f"🕒 [Reciente]  {title}", path))
-                seen_paths.add(path)
-    except Exception:
-        pass
+        for display, path in items:
+            clean_display = display.replace("\x00", "").replace("\x1f", "")
+            print(f"{clean_display}\0info\x1f{path}")
+        sys.stdout.flush()
+    except BrokenPipeError:
+        sys.exit(0)
 
-# B. Escaneo dinámico de la colección completa
-search_dirs = [
-    os.path.join(home, "Documentos/Libros cristianos"),
-    os.path.join(home, "Documentos/Libros"),
-]
 
-library = []
-for sdir in search_dirs:
-    if os.path.isdir(sdir):
-        for root, _, files in os.walk(sdir):
-            for f in files:
-                if f.lower().endswith((".pdf", ".epub")):
-                    full_path = os.path.join(root, f)
-                    if full_path not in seen_paths:
-                        title = os.path.splitext(f)[0]
-                        rel_dir = os.path.relpath(root, sdir)
-                        tag = f" [{rel_dir}]" if rel_dir != "." else ""
-                        library.append((f"📖  {title}{tag}", full_path))
-                        seen_paths.add(full_path)
+def handle_mode_dispatch():
+    """Maneja las peticiones de datos de cada modo o la selección de un libro."""
+    rofi_info = os.environ.get("ROFI_INFO", "").strip()
+    if rofi_info:
+        open_target_book(rofi_info)
 
-library.sort(key=lambda x: x[0].lower())
-items.extend(library)
+    mode = sys.argv[2] if len(sys.argv) >= 3 else "all"
 
-if not items:
-    subprocess.run(["notify-send", "-a", "Biblioteca", "Aviso", "No se encontraron libros en ~/Documentos/Libros*"])
-    sys.exit(0)
+    # Detección defensiva de selección cuando no llega ROFI_INFO
+    if mode in ("dir-hex", "root-hex"):
+        if len(sys.argv) >= 5 and sys.argv[4]:
+            open_target_book(sys.argv[4])
+    else:
+        if len(sys.argv) >= 4 and sys.argv[3]:
+            open_target_book(sys.argv[3])
 
-# C. Construir menú para Rofi
-rofi_input = "\n".join(display for display, _ in items)
-r_override = sys.argv[1] if len(sys.argv) > 1 else ""
+    if mode == "recent":
+        print_items(get_recent_books())
+    elif mode == "dir-hex":
+        try:
+            target_dir = bytes.fromhex(sys.argv[3]).decode("utf-8") if len(sys.argv) >= 4 else ""
+            books = scan_directory(target_dir, is_recursive=True)
+            books.sort(key=lambda x: x[0].lower())
+            print_items(books)
+        except Exception:
+            sys.exit(0)
+    elif mode == "root-hex":
+        try:
+            target_dir = bytes.fromhex(sys.argv[3]).decode("utf-8") if len(sys.argv) >= 4 else ""
+            books = scan_directory(target_dir, is_recursive=False)
+            books.sort(key=lambda x: x[0].lower())
+            print_items(books)
+        except Exception:
+            sys.exit(0)
+    else:  # "all"
+        all_items = []
+        seen = set()
 
-rofi_cmd = [
-    "rofi",
-    "-dmenu",
-    "-i",
-    "-format", "i",
-    "-p", "󰗚 Biblioteca de Estudio",
-    "-theme", os.path.expanduser("~/.config/rofi/config.rasi"),
-    "-theme-str", r_override,
-    "-theme-str", "window {width: 48em;}",
-    "-theme-str", "inputbar entry { placeholder: \"Buscar en toda la biblioteca o recientes...\"; }"
-]
+        # Recientes primero
+        for display, path in get_recent_books():
+            all_items.append((display, path))
+            seen.add(path)
 
-proc = subprocess.Popen(rofi_cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
-stdout, _ = proc.communicate(input=rofi_input)
+        # Toda la biblioteca
+        books_list = []
+        for sdir in search_dirs:
+            if not os.path.isdir(sdir):
+                continue
+            base_name = os.path.basename(sdir)
+            for display, path in scan_directory(sdir, is_recursive=True):
+                if path not in seen:
+                    rel = os.path.relpath(path, sdir)
+                    parent = os.path.dirname(rel)
+                    tag = f" [{base_name} » {parent}]" if parent and parent != "." else f" [{base_name}]"
+                    title = os.path.splitext(os.path.basename(path))[0].replace("\n", " ")
+                    books_list.append((f"{title}{tag}", path))
+                    seen.add(path)
 
-if proc.returncode != 0 or not stdout.strip():
-    sys.exit(0)
+        books_list.sort(key=lambda x: x[0].lower())
+        all_items.extend(books_list)
+        print_items(all_items)
 
-try:
-    selected_idx = int(stdout.strip())
-    selected_path = items[selected_idx][1]
-except (ValueError, IndexError):
-    sys.exit(0)
 
-# D. Abrir en Sioyek (o visor del sistema)
-sioyek_available = subprocess.run(["which", "sioyek"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+def build_dynamic_modes(script_path):
+    """Detecta dinámicamente las carpetas existentes y genera los modos de Rofi."""
+    modes = []
+    modes.append(f"Todos:{script_path} --mode all")
+    modes.append(f"Recientes:{script_path} --mode recent")
 
-if sioyek_available:
-    subprocess.Popen(["sioyek", selected_path], start_new_session=True)
-else:
-    subprocess.Popen(["xdg-open", selected_path], start_new_session=True)
-EOF
+    detected_categories = []
+
+    for sdir in search_dirs:
+        if not os.path.isdir(sdir):
+            continue
+
+        base_name = os.path.basename(sdir)
+
+        # 1. Comprobar si hay libros sueltos en la raíz directa
+        root_books = scan_directory(sdir, is_recursive=False)
+        if root_books:
+            label = "Libros" if base_name == "Libros" else "Cristianos"
+            hex_path = sdir.encode("utf-8").hex()
+            detected_categories.append((label, f"{script_path} --mode root-hex {hex_path}"))
+
+        # 2. Descubrir subcarpetas con libros
+        try:
+            with os.scandir(sdir) as it:
+                for entry in it:
+                    if entry.is_dir() and not entry.name.startswith("."):
+                        if has_valid_books(entry.path):
+                            hex_path = entry.path.encode("utf-8").hex()
+                            detected_categories.append(
+                                (entry.name, f"{script_path} --mode dir-hex {hex_path}")
+                            )
+        except Exception:
+            pass
+
+    # Ordenar las categorías detectadas
+    detected_categories.sort(key=lambda x: x[0].lower())
+
+    # Evitar nombres duplicados en pestañas si existieran en ambas bibliotecas
+    seen_labels = {}
+    for label, cmd in detected_categories:
+        count = seen_labels.get(label, 0)
+        seen_labels[label] = count + 1
+        final_label = label if count == 0 else f"{label} ({count + 1})"
+        modes.append(f"{final_label}:{cmd}")
+
+    return ",".join(modes)
+
+
+def main():
+    # Si fue invocado por Rofi para un modo específico
+    if len(sys.argv) >= 2 and sys.argv[1] == "--mode":
+        handle_mode_dispatch()
+        return
+
+    # Invocación principal (al presionar Super + L)
+    script_path = os.path.expanduser("~/.local/bin/selector-libros.sh")
+    if not os.path.isfile(script_path):
+        script_path = os.path.abspath(__file__)
+
+    theme_path = os.path.expanduser("~/.config/rofi/books.rasi")
+    if not os.path.isfile(theme_path):
+        repo_theme = os.path.expanduser("~/dotfiles-nix/raw_configs/rofi/books.rasi")
+        if os.path.isfile(repo_theme):
+            theme_path = repo_theme
+        else:
+            theme_path = os.path.expanduser("~/.config/rofi/config.rasi")
+
+    modes_arg = build_dynamic_modes(script_path)
+
+    rofi_cmd = [
+        "rofi",
+        "-show", "Todos",
+        "-modes", modes_arg,
+        "-theme", theme_path
+    ]
+
+    os.execvp("rofi", rofi_cmd)
+
+
+if __name__ == "__main__":
+    main()

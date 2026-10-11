@@ -49,3 +49,13 @@
   ```bash
   nix-collect-garbage -d
   ```
+
+---
+
+## 4. Biblioteca de Estudio (`Super + L`)
+* **Script:** `raw_configs/scripts/selector-libros.sh` enlazado a `~/.local/bin/selector-libros.sh`.
+* **Pestañas Dinámicas:** `mode-switcher` superior autogenerado al vuelo: `[ Todos ]`, `[ Recientes ]` y una pestaña por cada subcarpeta real que contenga libros en disco (codificación hex en argumentos para inmunidad a caracteres especiales y espacios).
+* **Escaneo:** Recursivo con `followlinks=True` y control anti-cíclico (`visited_dirs` con `realpath`) sobre `~/Documentos/Libros` y `~/Documentos/Libros cristianos`.
+* **Tema Visual:** `raw_configs/rofi/books.rasi` enlazado a `~/.config/rofi/books.rasi` (Fullscreen WhiteSur-Dark a doble columna, botones píldora adaptativos sin truncamiento y navegación con `Tab` / `Shift+Tab`).
+* **Filtros defensivos:** Poda automática de directorios ocultos (`.git`, `.obsidian`, cachés) y archivos ocultos (`.DS_Store`, temporales). Formatos: `.pdf`, `.epub`, `.djvu`. Detección nativa con `shutil.which`.
+

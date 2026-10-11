@@ -109,6 +109,7 @@
   # Enlaces declarativos de Rofi parametrizados por host mediante contrato explícito de plantilla
   xdg.configFile."rofi/theme.rasi".source = ../raw_configs/rofi/theme.rasi;
   xdg.configFile."rofi/launcher.rasi".source = ../raw_configs/rofi/launcher.rasi;
+  xdg.configFile."rofi/books.rasi".source = ../raw_configs/rofi/books.rasi;
   xdg.configFile."rofi/config.rasi".text =
     builtins.replaceStrings
       [ "@ROFI_FONT@"

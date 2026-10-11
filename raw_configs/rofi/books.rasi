@@ -1,0 +1,143 @@
+/**
+ * Rofi Configuration — Fullscreen Dual-Column Books Catalog Style
+ * Usado exclusivamente para el selector de biblioteca de estudio (Super + L).
+ */
+
+configuration {
+    show-icons:                 false;
+    font:                       "JetBrainsMono Nerd Font 10.5";
+    kb-element-next:            "";
+    kb-element-prev:            "";
+    kb-mode-next:               "Tab,Shift+Right,Control+Tab";
+    kb-mode-previous:           "Shift+Tab,ISO_Left_Tab,Shift+Left,Control+ISO_Left_Tab";
+}
+
+@theme "~/.config/rofi/theme.rasi"
+
+window {
+    transparency:                "real";
+    fullscreen:                  true;
+    enabled:                     true;
+    cursor:                      "default";
+    background-color:            @main-bg;
+    padding:                     0px;
+    margin:                      0px;
+    border:                      0px;
+}
+
+mainbox {
+    enabled:                     true;
+    spacing:                     20px;
+    margin:                      0px;
+    padding:                     40px 80px 30px 80px;
+    background-color:            transparent;
+    children:                    [ "inputbar", "mode-switcher", "listview" ];
+}
+
+mode-switcher {
+    enabled:                     true;
+    spacing:                     8px;
+    margin:                      0px calc( 50% - 450px );
+    background-color:            transparent;
+    text-color:                  @main-fg;
+}
+
+button {
+    padding:                     6px 16px;
+    border:                      1px;
+    border-color:                @main-br;
+    border-radius:               999px;
+    background-color:            @main-ex;
+    text-color:                  @main-fg;
+    cursor:                      "pointer";
+    font:                        "JetBrainsMono Nerd Font 9.5";
+}
+
+button selected {
+    background-color:            @select-bg;
+    border-color:                @main-br;
+    text-color:                  @select-fg;
+}
+
+inputbar {
+    enabled:                     true;
+    spacing:                     12px;
+    margin:                      0px calc( 50% - 320px );
+    padding:                     12px 24px;
+    border:                      1px;
+    border-color:                @main-br;
+    border-radius:               999px;
+    background-color:            @main-ex;
+    text-color:                  @main-fg;
+    children:                    [ "prompt", "entry" ];
+}
+
+prompt {
+    enabled:                     true;
+    background-color:            transparent;
+    text-color:                  inherit;
+    font:                        "JetBrainsMono Nerd Font 11";
+    padding:                     0px 10px 0px 0px;
+}
+
+entry {
+    enabled:                     true;
+    background-color:            transparent;
+    text-color:                  inherit;
+    cursor:                      "text";
+    placeholder:                 "Buscar por título, categoría o recientes...";
+    placeholder-color:           rgba(245, 245, 247, 0.4);
+    font:                        "JetBrainsMono Nerd Font 10.5";
+}
+
+listview {
+    enabled:                     true;
+    columns:                     2;
+    lines:                       10;
+    cycle:                       true;
+    dynamic:                     true;
+    scrollbar:                   false;
+    layout:                      vertical;
+    reverse:                     false;
+    fixed-height:                false;
+    fixed-columns:               true;
+    spacing:                     10px;
+    margin:                      0px;
+    padding:                     10px 0px;
+    background-color:            transparent;
+    text-color:                  @main-fg;
+    cursor:                      "default";
+}
+
+element {
+    enabled:                     true;
+    orientation:                 horizontal;
+    spacing:                     12px;
+    margin:                      0px;
+    padding:                     10px 16px;
+    border:                      1px;
+    border-color:                transparent;
+    border-radius:               12px;
+    background-color:            transparent;
+    text-color:                  @main-fg;
+    cursor:                      "pointer";
+}
+
+element normal.normal {
+    background-color:            transparent;
+    text-color:                  @main-fg;
+}
+
+element selected.normal {
+    background-color:            @select-bg;
+    border-color:                @main-br;
+    text-color:                  @select-fg;
+}
+
+element-text {
+    background-color:            transparent;
+    text-color:                  inherit;
+    cursor:                      inherit;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+}
