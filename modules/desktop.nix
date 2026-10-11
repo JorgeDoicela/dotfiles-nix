@@ -108,8 +108,32 @@
 
   # Enlaces declarativos de Rofi parametrizados por host mediante contrato explícito de plantilla
   xdg.configFile."rofi/theme.rasi".source = ../raw_configs/rofi/theme.rasi;
-  xdg.configFile."rofi/launcher.rasi".source = ../raw_configs/rofi/launcher.rasi;
-  xdg.configFile."rofi/books.rasi".source = ../raw_configs/rofi/books.rasi;
+  xdg.configFile."rofi/launcher.rasi".text =
+    builtins.replaceStrings
+      [ "@ROFI_FONT_SIZE@"
+        "@ROFI_LAUNCHER_PADDING@"
+        "@ROFI_LAUNCHER_COLUMNS@"
+        "@ROFI_LAUNCHER_LINES@"
+        "@ROFI_LAUNCHER_ICON_SIZE@"
+      ]
+      [ (toString config.mySystem.fontSize)
+        config.mySystem.rofiLauncherPadding
+        (toString config.mySystem.rofiLauncherColumns)
+        (toString config.mySystem.rofiLauncherLines)
+        config.mySystem.rofiLauncherIconSize
+      ]
+      (builtins.readFile ../raw_configs/rofi/launcher.rasi);
+  xdg.configFile."rofi/books.rasi".text =
+    builtins.replaceStrings
+      [ "@ROFI_FONT_SIZE@"
+        "@ROFI_BOOKS_PADDING@"
+        "@ROFI_BOOKS_LINES@"
+      ]
+      [ (toString config.mySystem.fontSize)
+        config.mySystem.rofiBooksPadding
+        (toString config.mySystem.rofiBooksLines)
+      ]
+      (builtins.readFile ../raw_configs/rofi/books.rasi);
   xdg.configFile."rofi/config.rasi".text =
     builtins.replaceStrings
       [ "@ROFI_FONT@"

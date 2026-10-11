@@ -47,6 +47,36 @@
       default = "0.75";
       description = "Factor de desplazamiento vertical (scroll arriba/abajo) en Hyprland";
     };
+    rofiLauncherPadding = lib.mkOption {
+      type = lib.types.str;
+      default = "60px 120px 40px 120px";
+      description = "Padding para el lanzador fullscreen launcher.rasi (top right bottom left)";
+    };
+    rofiLauncherColumns = lib.mkOption {
+      type = lib.types.int;
+      default = 6;
+      description = "Columnas para el lanzador fullscreen launcher.rasi";
+    };
+    rofiLauncherLines = lib.mkOption {
+      type = lib.types.int;
+      default = 4;
+      description = "Filas para el lanzador fullscreen launcher.rasi";
+    };
+    rofiLauncherIconSize = lib.mkOption {
+      type = lib.types.str;
+      default = "64px";
+      description = "Tamaño de iconos para el lanzador fullscreen launcher.rasi";
+    };
+    rofiBooksPadding = lib.mkOption {
+      type = lib.types.str;
+      default = "40px 80px 30px 80px";
+      description = "Padding para el selector fullscreen books.rasi (top right bottom left)";
+    };
+    rofiBooksLines = lib.mkOption {
+      type = lib.types.int;
+      default = 10;
+      description = "Número de líneas/filas para books.rasi";
+    };
   };
 
   config = {

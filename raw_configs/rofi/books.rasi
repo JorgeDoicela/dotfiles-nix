@@ -5,7 +5,7 @@
 
 configuration {
     show-icons:                 false;
-    font:                       "JetBrainsMono Nerd Font 10.5";
+    font:                       "JetBrainsMono Nerd Font @ROFI_FONT_SIZE@";
     kb-element-next:            "";
     kb-element-prev:            "";
     kb-mode-next:               "Tab,Shift+Right,Control+Tab";
@@ -29,7 +29,7 @@ mainbox {
     enabled:                     true;
     spacing:                     20px;
     margin:                      0px;
-    padding:                     40px 80px 30px 80px;
+    padding:                     @ROFI_BOOKS_PADDING@;
     background-color:            transparent;
     children:                    [ "inputbar", "mode-switcher", "listview" ];
 }
@@ -50,7 +50,7 @@ button {
     background-color:            @main-ex;
     text-color:                  @main-fg;
     cursor:                      "pointer";
-    font:                        "JetBrainsMono Nerd Font 9.5";
+    font:                        "JetBrainsMono Nerd Font @ROFI_FONT_SIZE@";
 }
 
 button selected {
@@ -76,7 +76,7 @@ prompt {
     enabled:                     true;
     background-color:            transparent;
     text-color:                  inherit;
-    font:                        "JetBrainsMono Nerd Font 11";
+    font:                        "JetBrainsMono Nerd Font @ROFI_FONT_SIZE@";
     padding:                     0px 10px 0px 0px;
 }
 
@@ -87,13 +87,13 @@ entry {
     cursor:                      "text";
     placeholder:                 "Buscar por título, categoría o recientes...";
     placeholder-color:           rgba(245, 245, 247, 0.4);
-    font:                        "JetBrainsMono Nerd Font 10.5";
+    font:                        "JetBrainsMono Nerd Font @ROFI_FONT_SIZE@";
 }
 
 listview {
     enabled:                     true;
     columns:                     2;
-    lines:                       10;
+    lines:                       @ROFI_BOOKS_LINES@;
     cycle:                       true;
     dynamic:                     true;
     scrollbar:                   false;

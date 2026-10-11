@@ -23,11 +23,33 @@ valid_extensions = (".pdf", ".epub", ".djvu")
 
 
 def open_target_book(book_path):
-    """Abre el libro seleccionado en Sioyek o visor predeterminado."""
+    """Abre el libro seleccionado en Sioyek o visor predeterminado de forma desacoplada."""
     if not book_path or not os.path.isfile(book_path):
         sys.exit(0)
     viewer = "sioyek" if shutil.which("sioyek") else "xdg-open"
-    subprocess.Popen([viewer, book_path], start_new_session=True)
+    # Desacoplar por completo el visor de los descriptores de archivo (pipes) de Rofi
+    # para evitar que Rofi quede bloqueado esperando EOF en stdout/stderr
+    subprocess.Popen(
+        [viewer, book_path],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+        close_fds=True,
+    )
+    try:
+        sys.stdout.close()
+        sys.stderr.close()
+    except Exception:
+        pass
+    # Forzar el cierre inmediato y limpio de Rofi para liberar el foco y el layer surface
+    subprocess.Popen(
+        ["pkill", "-x", "rofi"],
+        stdin=subprocess.DEVNULL,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        start_new_session=True,
+    )
     sys.exit(0)
 
 

@@ -18,6 +18,11 @@ Este documento especifica los perfiles técnicos de hardware para cada laptop ge
 | **`browserScale`** | `1.0` | `0.8` | Factor `--force-device-scale-factor` para Brave/Chromium. |
 | **`cursorSensitivity`** | `0.35` | `0.2` (default) | Calibración de aceleración del puntero en Hyprland. |
 | **`scrollFactor`** | `0.27` | `0.75` (default) | Sensibilidad de desplazamiento en el touchpad. |
+| **`rofiLauncherPadding`** | `60px 120px 40px 120px` | `40px 80px 30px 308px` | Padding del Launchpad fullscreen (compensa 228px de pantalla rota). |
+| **`rofiLauncherColumns` x `Lines`** | `6` x `4` | `5` x `3` | Cuadrícula de aplicaciones del Launchpad adaptada a 768p. |
+| **`rofiLauncherIconSize`** | `64px` | `48px` | Tamaño de iconos de aplicaciones en el Launchpad. |
+| **`rofiBooksPadding`** | `40px 80px 30px 80px` | `30px 60px 20px 288px` | Padding del selector de libros fullscreen (compensa 228px de pantalla rota). |
+| **`rofiBooksLines`** | `10` | `7` | Filas de libros en el catálogo adaptadas a pantalla 768p. |
 
 ---
 

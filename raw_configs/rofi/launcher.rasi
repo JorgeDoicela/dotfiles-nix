@@ -9,7 +9,7 @@ configuration {
     display-drun:               " ";
     display-run:                " ";
     drun-display-format:        "{name}";
-    font:                       "JetBrainsMono Nerd Font 11";
+    font:                       "JetBrainsMono Nerd Font @ROFI_FONT_SIZE@";
 }
 
 @theme "~/.config/rofi/theme.rasi"
@@ -29,7 +29,7 @@ mainbox {
     enabled:                     true;
     spacing:                     40px;
     margin:                      0px;
-    padding:                     60px 120px 40px 120px;
+    padding:                     @ROFI_LAUNCHER_PADDING@;
     background-color:            transparent;
     children:                    [ "inputbar", "listview" ];
 }
@@ -61,13 +61,13 @@ entry {
     cursor:                      "text";
     placeholder:                 "Buscar aplicaciones...";
     placeholder-color:           rgba(245, 245, 247, 0.4);
-    font:                        "JetBrainsMono Nerd Font 11";
+    font:                        "JetBrainsMono Nerd Font @ROFI_FONT_SIZE@";
 }
 
 listview {
     enabled:                     true;
-    columns:                     6;
-    lines:                       4;
+    columns:                     @ROFI_LAUNCHER_COLUMNS@;
+    lines:                       @ROFI_LAUNCHER_LINES@;
     cycle:                       true;
     dynamic:                     true;
     scrollbar:                   false;
@@ -111,7 +111,7 @@ element selected.normal {
 element-icon {
     background-color:            transparent;
     text-color:                  inherit;
-    size:                        64px;
+    size:                        @ROFI_LAUNCHER_ICON_SIZE@;
     cursor:                      inherit;
     horizontal-align:            0.5;
 }
