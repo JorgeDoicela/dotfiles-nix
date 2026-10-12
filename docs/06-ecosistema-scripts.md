@@ -37,6 +37,7 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
 4. `- *.conflict*`: Pasa por alto copias residuales de conflictos antiguos generados por clientes externos.
 5. `- ~$*.docx / ~$*.pptx / ~$*.xlsx`: Excluye archivos de bloqueo temporal de suites ofimáticas (Word, Excel, PowerPoint) para no generar colisiones en la nube.
 6. `- __pycache__/** / .venv/**`: Evita sincronizar entornos y cachés de ejecución locales.
+7. `- .git/**`: Excluye bases de datos y repositorios Git locales para evitar que Rclone colisione con respaldos remotos (ej. GitHub).
 
 * **Comandos Operativos:**
   ```bash

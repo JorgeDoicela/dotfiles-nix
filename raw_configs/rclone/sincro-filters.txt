@@ -34,3 +34,7 @@
 # 6. Cachés y entornos efímeros
 - __pycache__/**
 - .venv/**
+
+# 7. Repositorios y bases de datos Git (evita corromper objetos Git al sincronizar con Drive)
+- .git/**
+
