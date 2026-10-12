@@ -153,3 +153,74 @@ Con el tiempo, el Nix Store retiene paquetes de generaciones anteriores. Para el
 # Eliminar generaciones anteriores y limpiar paquetes huérfanos:
 nix-collect-garbage -d
 ```
+
+---
+
+## Runbook 5: Vinculación Multidispositivo de la Bóveda Obsidian en GitHub Privado
+
+Este runbook detalla el procedimiento para enlazar una laptop secundaria o nuevo equipo a la bóveda privada versionada en GitHub (`https://github.com/JorgeDoicela/Vida-de-Jorge.git`).
+
+### 1. Modelo de Redundancia y Aislamiento Dual
+* **Capa Activa (Google Drive vía `sincro`):** Sincronización en vivo, continua y bidireccional entre laptops y teléfonos Android (FolderSync).
+* **Capa Histórica (GitHub Privado):** Respaldo versionado bajo demanda de hitos de estudio o notas consolidadas.
+* **Aislamiento Técnico:** La carpeta interna `.git/` reside exclusivamente en el almacenamiento local de cada equipo. Está estrictamente excluida en [sincro-filters.txt](../raw_configs/rclone/sincro-filters.txt) mediante la regla `- .git/**`. De esta forma, Google Drive jamás toca la base de datos de Git ni corrompe punteros de ramas entre laptops.
+
+### 2. Procedimiento de Vinculación en un Nuevo Equipo
+
+Ejecuta estos pasos una sola vez en cualquier laptop secundaria una vez que `sincro` haya descargado las notas de Google Drive:
+
+#### Paso 1: Navegar a la bóveda local
+```bash
+cd "/home/jorge/Documentos/Vida de Jorge"
+```
+
+#### Paso 2: Inicializar el repositorio y registrar el remoto oficial
+```bash
+# Inicializar repositorio en rama 'main':
+git init -b main
+
+# Enlazar el repositorio privado remoto:
+git remote add origin https://github.com/JorgeDoicela/Vida-de-Jorge.git
+```
+
+#### Paso 3: Sincronizar el árbol de trabajo sin alterar notas locales
+```bash
+# Descargar el historial remoto sin tocar archivos en disco:
+git fetch origin
+
+# Alinear el puntero local HEAD al último commit remoto:
+git reset --mixed origin/main
+```
+
+> [!NOTE]
+> `git reset --mixed origin/main` indexa los archivos de trabajo locales contra el commit más reciente de GitHub sin modificar ni eliminar ninguna nota. 
+
+#### Paso 4: Comprobación de integridad
+```bash
+git status
+```
+La salida debe confirmar el árbol limpio:
+```text
+En la rama main
+Tu rama está actualizada con 'origin/main'.
+
+nada para hacer commit, el árbol de trabajo está limpio
+```
+
+### 3. Flujo Operativo Posterior
+Cualquiera de tus laptops vinculadas tiene plena potestad para subir o bajar cambios:
+
+* **Para consolidar un respaldo hacia GitHub:**
+  ```bash
+  cd "/home/jorge/Documentos/Vida de Jorge"
+  git add .
+  git commit -m "docs: consolidacion de notas"
+  git push
+  ```
+
+* **Para descargar novedades subidas desde otra máquina:**
+  ```bash
+  cd "/home/jorge/Documentos/Vida de Jorge"
+  git pull
+  ```
+
