@@ -104,5 +104,9 @@
 * **Herramientas CLI Declarativas de Soporte:**
   * Linters, formatters y compiladores de parsers (`tree-sitter`, `ripgrep`, `fd`, `stylua`, `shfmt`, `shellcheck`, `ruff`) se declaran en `home.packages` dentro de `modules/apps.nix` para garantizar su presencia independiente del host o distribución subyacente.
 
+---
 
-
+## 8. Optimización FUSE de Google Drive y Rendimiento de Exploradores (Desktop IaC)
+* **Prevención de Bloqueos en `statfs` / GVFS (`rclone-gdrive`):**
+  * Al montar Google Drive vía FUSE en `modules/apps.nix` (`~/Drive`), es mandatorio declarar `--vfs-disk-space-total-size 5T` y `--vfs-fast-fingerprint`.
+  * Motivo: Sin esta bandera, `rclone` intercepta las llamadas al sistema `statfs()`/`statvfs()` de Linux y realiza una consulta HTTP síncrona a la API de Google Drive (`About.get`) para resolver la cuota libre. Esto congela de forma síncrona a exploradores de archivos (Thunar, Yazi) y monitores de dispositivos (`gvfs-udisks2-volume-monitor`) durante 20-35 segundos en el arranque. Declarar el tamaño estático emula la geometría en memoria local respondiendo en milisegundos sin llamadas de red.

@@ -146,6 +146,8 @@
           --vfs-cache-max-size 15G \
           --vfs-cache-max-age 72h \
           --dir-cache-time 1h \
+          --vfs-disk-space-total-size 5T \
+          --vfs-fast-fingerprint \
           --vfs-read-chunk-size 32M \
           --vfs-read-chunk-size-limit 2G \
           --buffer-size 32M \
