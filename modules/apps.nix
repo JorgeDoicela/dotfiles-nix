@@ -202,7 +202,7 @@
         [Desktop Entry]
         Name=Zoom Workplace
         Comment=Zoom Video Conference
-        Exec=zoom %U
+        Exec=${config.home.homeDirectory}/.local/bin/zoom %U
         Icon=Zoom
         Terminal=false
         Type=Application

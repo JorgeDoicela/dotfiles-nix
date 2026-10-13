@@ -101,13 +101,20 @@
   };
 
   # Wrapper declarativo para Zoom nativo de Debian
-  # Zoom empaqueta su propio runtime de Qt 6 en /opt/zoom/Qt/. Las variables de sesión globales de Qt
-  # (QT_STYLE_OVERRIDE, QT_QPA_PLATFORMTHEME y QT_PLUGIN_PATH) contaminan el motor QML interno,
-  # provocando que la interfaz no renderice controles y quede en negro.
+  # 1. Aplica patron Raise or Launch en Hyprland si ya existe ventana activa sin argumentos.
+  # 2. Si se pasa un argumento de reunion (zoommtg://) o no existe ventana, despacha a Zoom.
+  # 3. Purga variables de tema Qt del sistema para prevenir pantallas negras con el Qt 6 empaquetado.
   home.file.".local/bin/zoom" = {
     executable = true;
     text = ''
       #!/usr/bin/env bash
+      set -euo pipefail
+
+      if [ "$#" -eq 0 ] && command -v hyprctl >/dev/null 2>&1 && hyprctl clients -j 2>/dev/null | ${pkgs.jq}/bin/jq -e '.[] | select(.class == "zoom")' >/dev/null 2>&1; then
+          hyprctl dispatch focuswindow class:^zoom$ >/dev/null 2>&1
+          exit 0
+      fi
+
       exec env -u QT_STYLE_OVERRIDE -u QT_QPA_PLATFORMTHEME -u QT_PLUGIN_PATH /usr/bin/zoom "$@"
     '';
   };

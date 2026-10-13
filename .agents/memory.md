@@ -82,7 +82,9 @@
   * En inicialización de nuevos targets o en laptops secundarias recién configuradas, el comando obligatorio es `sincro <alias> --resync`.
 * **Zoom en Debian:**
   * Paquete `.deb` nativo para aceleración hardware.
-  * Wrapper en `~/.local/bin/zoom` que purga variables de tema Qt (`QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, `QT_PLUGIN_PATH`) para evitar fallos de interfaz bajo Wayland.
+  * Wrapper en `~/.local/bin/zoom` con patrón *Raise or Launch*: si no se pasan argumentos y ya existe ventana mapeada en Hyprland, la enfoca al instante (`hyprctl dispatch focuswindow class:^zoom$`); si se invoca con enlace de reunión (`zoommtg://`) o sin ventana, despacha limpiando variables de tema Qt (`QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, `QT_PLUGIN_PATH`).
+  * Lanzador `Zoom.desktop` apunta a la ruta absoluta `${config.home.homeDirectory}/.local/bin/zoom %U` para blindar aperturas desde Rofi y navegadores web.
+  * Aceleración GPU habilitada en `~/.config/zoomus.conf` (`enableCefGpu=true` y `enablegpucomputeutilization=true`) para renderizado por hardware en CEF sin software rasterizer SwiftShader.
   * Regla de mosaico en Hyprland para ventana principal y flotación para popups/diálogos secundarios.
 * **Atajos de Lanzamiento Clave:**
   * `Super + A`: Antigravity IDE (`antigravity-ide`).
