@@ -3,13 +3,6 @@
 --  Estándar: PEP8 para Python, 2 espacios para JS/TS/Lua
 -- =============================================================
 
--- Filtro de avisos falso-positivos en Neovim 0.10
-local _notify = vim.notify
-vim.notify = function(msg, level, opts)
-  if type(msg) == "string" and (msg:find("deprecated") or msg:find("lspconfig")) then return end
-  _notify(msg, level, opts)
-end
-
 local opt = vim.opt
 
 -- UI

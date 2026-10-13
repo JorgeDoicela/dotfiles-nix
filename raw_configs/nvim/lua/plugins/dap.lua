@@ -87,12 +87,12 @@ return {
       { "<leader>dl", function() require("dap").run_last() end,          desc = "Debug: Ejecutar última depuración" },
     },
     config = function()
-      -- Estética: íconos bonitos en la barra de números/gutter
-      vim.fn.sign_define("DapBreakpoint",          { text = "🔴", texthl = "", linehl = "", numhl = "" })
-      vim.fn.sign_define("DapBreakpointCondition", { text = "🟡", texthl = "", linehl = "", numhl = "" })
-      vim.fn.sign_define("DapLogPoint",             { text = "📝", texthl = "", linehl = "", numhl = "" })
-      vim.fn.sign_define("DapStopped",              { text = "➡️", texthl = "GitSignsAdd", linehl = "Visual", numhl = "" })
-      vim.fn.sign_define("DapBreakpointRejected",   { text = "🚫", texthl = "", linehl = "", numhl = "" })
+      -- Estética: íconos sobrios y discretos en el gutter (cero emojis)
+      vim.fn.sign_define("DapBreakpoint",          { text = "●", texthl = "DiagnosticError", linehl = "", numhl = "" })
+      vim.fn.sign_define("DapBreakpointCondition", { text = "◆", texthl = "DiagnosticWarn",  linehl = "", numhl = "" })
+      vim.fn.sign_define("DapLogPoint",             { text = "»", texthl = "DiagnosticInfo",  linehl = "", numhl = "" })
+      vim.fn.sign_define("DapStopped",              { text = "→", texthl = "DiagnosticOk",    linehl = "Visual", numhl = "" })
+      vim.fn.sign_define("DapBreakpointRejected",   { text = "✕", texthl = "DiagnosticError", linehl = "", numhl = "" })
     end,
   },
 }

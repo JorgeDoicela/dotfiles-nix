@@ -15,6 +15,15 @@
     nodejs_22
     pnpm
 
+    # Herramientas de soporte Neovim, linters, formatters y compilación de parsers
+    tree-sitter
+    ripgrep
+    fd
+    stylua
+    shfmt
+    shellcheck
+    ruff
+
     # Herramientas de productividad académica y comunicación
     # Nota: Zoom se delega al paquete nativo .deb de Debian para compatibilidad completa con Mesa/DRI y aceleración GPU
     libreoffice

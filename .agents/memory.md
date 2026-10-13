@@ -93,4 +93,16 @@
   * `sincro-filters.txt` excluye estrictamente `- .git/**` para que Google Drive no interfiera ni corrompa objetos locales de Git.
   * La bóveda utiliza `.gitignore` local para excluir `.obsidian/workspace*.json`, cachés y papelera `.trash/`.
 
+---
+
+## 7. Entorno de Desarrollo y Neovim (Desktop IaC)
+* **Gestión de Lockfile en Entornos Nix Inmutables:**
+  * Dado que `~/.config/nvim` es un symlink de solo lectura hacia `/nix/store/`, el parámetro `lockfile` de `lazy.nvim` debe apuntar a una ruta mutable de usuario (`vim.fn.stdpath("data") .. "/lazy-lock.json"`). De lo contrario, cualquier sincronización o actualización de plugins arroja `Permiso denegado`.
+* **Arquitectura LSP Nativa (Neovim 0.11+ / 0.12):**
+  * Se descarta el framework legacy `require("lspconfig")[server].setup(...)` y se utiliza la API nativa `vim.lsp.config` y `vim.lsp.enable` junto al evento autocmd `LspAttach`.
+  * Se prohíbe el uso de monkey-patches en `vim.notify` para ocultar avisos de deprecación.
+* **Herramientas CLI Declarativas de Soporte:**
+  * Linters, formatters y compiladores de parsers (`tree-sitter`, `ripgrep`, `fd`, `stylua`, `shfmt`, `shellcheck`, `ruff`) se declaran en `home.packages` dentro de `modules/apps.nix` para garantizar su presencia independiente del host o distribución subyacente.
+
+
 

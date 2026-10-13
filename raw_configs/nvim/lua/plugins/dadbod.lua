@@ -40,20 +40,6 @@ return {
         vim.g.db_ui_env_variable_connections = "DB_UI_CONNECTIONS"
       end
     end,
-    config = function()
-      -- Autocompletado SQL con blink.cmp
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern  = { "sql", "mysql", "plsql" },
-        callback = function()
-          local ok, blink = pcall(require, "blink.cmp")
-          if ok and blink.add_source then
-            blink.add_source("dadbod", {
-              module = "vim_dadbod_completion.blink",
-              name   = "Dadbod",
-            })
-          end
-        end,
-      })
-    end,
+
   },
 }

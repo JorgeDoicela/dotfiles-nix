@@ -17,11 +17,16 @@ return {
         nerd_font_variant       = "mono",
       },
       sources = {
-        default = { "lsp", "path", "snippets", "buffer", "codecompanion" },
+        default = { "lsp", "path", "snippets", "buffer", "dadbod", "codecompanion" },
         providers = {
           codecompanion = {
-            name = "CodeCompanion",
+            name   = "CodeCompanion",
             module = "codecompanion.providers.completion.blink",
+          },
+          dadbod = {
+            name   = "Dadbod",
+            module = "vim_dadbod_completion.blink",
+            score_offset = 100,
           },
         },
       },
