@@ -85,7 +85,7 @@
   * Wrapper en `~/.local/bin/zoom` con patrón *Raise or Launch*: si no se pasan argumentos y ya existe ventana mapeada en Hyprland, la enfoca al instante (`hyprctl dispatch focuswindow class:^zoom$`); si se invoca con enlace de reunión (`zoommtg://`) o sin ventana, despacha limpiando variables de tema Qt (`QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, `QT_PLUGIN_PATH`).
   * Lanzador `Zoom.desktop` apunta a la ruta absoluta `${config.home.homeDirectory}/.local/bin/zoom %U` para blindar aperturas desde Rofi y navegadores web.
   * Aceleración GPU habilitada en `~/.config/zoomus.conf` (`enableCefGpu=true` y `enablegpucomputeutilization=true`) para renderizado por hardware en CEF sin software rasterizer SwiftShader.
-  * Regla de mosaico en Hyprland para ventana principal y flotación para popups/diálogos secundarios.
+  * Reglas de mosaico en Hyprland: Las ventanas principales de reunión y pantalla compartida se fuerzan a mosaico (`tile true`) mediante regex inclusiva (`Zoom Workplace.*|Zoom Meeting.*|Zoom.*|Reuni.*|Pantalla de Zoom.*|Meeting.*`) para cubrir títulos dinámicos en español y caracteres no-UTF8 de XWayland (`Reuni\ufffd`). Esto garantiza que en `eDP-1` la ventana respete la compensación `addreserved 0, 0, 228, 0` sin invadir la franja rota, y en monitores externos (`HDMI-A-1`) ocupe los 1366x768 completos sin letterboxing de ventana flotante. Diálogos, configuración y popups permanecen en `float true`.
 * **Atajos de Lanzamiento Clave:**
   * `Super + A`: Antigravity IDE (`antigravity-ide`).
   * `Super + M`: Zoom (`zoom`).
