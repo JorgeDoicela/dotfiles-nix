@@ -28,6 +28,7 @@
     # Nota: Zoom se delega al paquete nativo .deb de Debian para compatibilidad completa con Mesa/DRI y aceleración GPU
     libreoffice
     typst
+    zapzap
   ];
 
   # Alacritty (Terminal declarativo tipado nativo de Home Manager)
