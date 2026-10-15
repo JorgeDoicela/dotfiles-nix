@@ -127,7 +127,15 @@ apt-get install -y --no-install-recommends \
     pipewire-pulse \
     tlp \
     tlp-rdw \
+    flatpak \
     brave-browser || true
+
+# 7. Configurar repositorio Flatpak Flathub y aplicaciones de escritorio esenciales
+echo "=> Configurando Flathub y aplicaciones Flatpak..."
+if command -v flatpak >/dev/null 2>&1; then
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || true
+    flatpak install -y --noninteractive flathub com.rtosta.zapzap || true
+fi
 
 echo "=== MIGRACIÓN Y RÉPLICA COMPLETADA CON ÉXITO ==="
 echo "Ahora instala Nix y ejecuta Home Manager para restaurar todo el entorno de usuario:"

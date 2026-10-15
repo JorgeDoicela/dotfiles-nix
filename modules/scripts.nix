@@ -118,4 +118,13 @@
       exec env -u QT_STYLE_OVERRIDE -u QT_QPA_PLATFORMTHEME -u QT_PLUGIN_PATH /usr/bin/zoom "$@"
     '';
   };
+
+  # Wrapper declarativo para ZapZap (WhatsApp) desplegado vía Flatpak
+  home.file.".local/bin/zapzap" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      exec /usr/bin/flatpak run com.rtosta.zapzap "$@"
+    '';
+  };
 }

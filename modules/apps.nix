@@ -25,10 +25,9 @@
     ruff
 
     # Herramientas de productividad académica y comunicación
-    # Nota: Zoom se delega al paquete nativo .deb de Debian para compatibilidad completa con Mesa/DRI y aceleración GPU
+    # Nota: Zoom se delega al paquete nativo .deb de Debian y ZapZap a Flatpak para compatibilidad completa con Mesa/DRI y aceleración GPU
     libreoffice
     typst
-    zapzap
   ];
 
   # Alacritty (Terminal declarativo tipado nativo de Home Manager)

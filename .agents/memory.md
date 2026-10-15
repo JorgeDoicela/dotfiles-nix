@@ -32,9 +32,11 @@
 4. **Seguridad y Permisos:**
    * No se agregan usuarios al grupo secundario `input` por riesgo crítico de keylogging en Wayland. El acceso a periféricos lo gobierna `systemd-logind` / `seatd`.
    * El script de provisionamiento base [setup/instalar.sh](../setup/instalar.sh) es idempotente y crea copias timestamped (`safe_copy`) antes de editar archivos en `/etc/`.
-5. **Separación de Herramientas Gráficas y Aceleración GPU (Alacritty y Zoom):**
+5. **Separación de Herramientas Gráficas y Aceleración GPU (Alacritty, Zoom y Flatpak):**
    * Alacritty y Zoom se delegan al entorno nativo de Debian (`package = null` en Nix o paquete `.deb` en Debian).
-   * Motivo: En Debian con Nix standalone (no NixOS), los sandbox FHS de Nixpkgs carecen de `/run/opengl-driver/`, lo que genera fallos en GLX o fuerza software rendering en CPU. Correrlos nativamente en Debian garantiza aceleración por hardware con Mesa/AMDGPU (`radeonsi_dri.so`), VA-API y decodificación fluida de video.
+   * Aplicaciones de escritorio complejas de terceros (como ZapZap / WhatsApp) se delegan a Flatpak (`flathub`), integradas con wrapper declarativo en `~/.local/bin/` gestionado por Home Manager.
+   * Motivo: En Debian con Nix standalone (no NixOS), los paquetes con QtWebEngine/Chromium/OpenGL de Nixpkgs fallan por incompatibilidad ABI con el driver Mesa del host (`radeonsi_drv_video.so` enlazado a `libLLVM.so` de Debian). Flatpak empaqueta sus propios runtimes de Mesa desacoplados de las librerías dinámicas del host, garantizando aceleración completa sin errores de RHI o core dumps.
+   * Replicación: `setup/instalar.sh` aprovisiona automáticamente `flatpak`, el remoto Flathub y `com.rtosta.zapzap` para paridad total en nuevas máquinas.
 
 ---
 
