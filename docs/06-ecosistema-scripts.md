@@ -136,3 +136,22 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
 
 * **Ubicación:** Generado por [modules/scripts.nix](../modules/scripts.nix)
 * **Propósito:** Lee automáticamente todas las opciones y flags declarados en `~/.config/brave-flags.conf` (incluyendo aceleración VA-API por GPU y el factor de escala por host `--force-device-scale-factor`) y los pasa de forma transparente al binario del navegador `/usr/bin/brave-browser-stable`.
+
+---
+
+## 7. Wrapper y Patrón Raise or Launch para Zoom (`zoom`)
+
+* **Ubicación:** Generado por [modules/scripts.nix](../modules/scripts.nix) hacia `~/.local/bin/zoom`.
+* **Mecanismos de Ingeniería:**
+  1. **Patrón Raise or Launch en Hyprland:** Si se invoca sin argumentos y ya existe una ventana activa con clase `zoom`, utiliza `hyprctl dispatch focuswindow class:^zoom$` para traerla al frente de inmediato, evitando ventanas duplicadas innecesarias.
+  2. **Compatibilidad de Reuniones:** Si se recibe un enlace de unión (`zoommtg://...`) o no hay ventanas previas, despacha directamente al binario nativo `/usr/bin/zoom`.
+  3. **Purga de Variables de Tema Qt:** Ejecuta bajo `env -u QT_STYLE_OVERRIDE -u QT_QPA_PLATFORMTHEME -u QT_PLUGIN_PATH` para prevenir pantallas negras causadas por temas globales incompatibles con el Qt empaquetado de Zoom.
+
+---
+
+## 8. Wrapper Declarativo para ZapZap / WhatsApp (`zapzap`)
+
+* **Ubicación:** Generado por [modules/scripts.nix](../modules/scripts.nix) hacia `~/.local/bin/zapzap`.
+* **Propósito:** Encapsula la ejecución del contenedor Flatpak (`exec /usr/bin/flatpak run com.rtosta.zapzap "$@"`).
+* **Beneficio:** Permite lanzar el cliente de WhatsApp desde terminales, scripts personalizados o lanzadores rápidos de manera transparente sin depender de la sintaxis verbosa de Flatpak.
+

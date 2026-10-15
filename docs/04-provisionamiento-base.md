@@ -54,6 +54,12 @@ Para maximizar la autonomía de las laptops desconectadas de la corriente:
 * **Bluetooth Apagado en Boot:** Modificación de `AutoEnable=false` en `/etc/bluetooth/main.conf` para evitar gasto innecesario de batería al arrancar la laptop.
 * **Control de Teclado Dell:** Servicio [dell-kbd-backlight-timeout.service](../setup/etc/dell-kbd-backlight-timeout.service) para gestionar el tiempo de apagado de los LEDs del teclado.
 
+### 6. Aprovisionamiento de Aplicaciones Gráficas Aisladas (Flatpak)
+Para dotar al sistema de clientes de comunicación y aplicaciones de escritorio de terceros sin generar conflictos de enlaces dinámicos con Mesa/AMDGPU:
+* Instalación automatizada del paquete base `flatpak` dentro del lote esencial de Debian.
+* Registro criptográfico del repositorio oficial de Flathub (`https://dl.flathub.org/repo/flathub.flatpakrepo`).
+* Despliegue desatendido de ZapZap (`com.rtosta.zapzap`) para soporte completo de WhatsApp Web con bandeja de sistema y aceleración de hardware.
+
 ---
 
 ## 3. Ejecución del Script de Aprovisionamiento
@@ -63,5 +69,4 @@ En una máquina nueva o tras actualizar configuraciones en `setup/etc/` (ejecuta
 ```bash
 sudo bash ./setup/instalar.sh
 ```
-El script reportará cada fase con indicadores legibles y ejecutará `update-grub` y `udevadm control --reload-rules` de forma automática.
 El script reportará cada fase con indicadores legibles y ejecutará `update-grub` y `udevadm control --reload-rules` de forma automática.

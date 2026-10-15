@@ -32,6 +32,7 @@ Una de las decisiones arquitectónicas más importantes de este entorno es el us
 | :--- | :--- | :--- | :--- |
 | **Capa 1: Sistema Base** | Debian (`apt` + `/etc/`) | Kernel Linux, Firmware/DRM, controladores gráficos Mesa/AMDGPU, PipeWire, compositor Hyprland, Systemd base. | Enlace 100% nativo con las librerías dinámicas del sistema (`radeonsi_dri.so`, `libEGL.so`), garantizando aceleración por hardware por GPU sin wrappers ni problemas de ABI. |
 | **Capa 2: Entorno Declarativo** | Nix Flakes + Home Manager | CLI (Neovim, Yazi, Fastfetch, LSD, Rclone), entorno visual (Waybar, Rofi, SwayNC, SwayOSD, Hyprlock), temas GTK/Qt, cursores, fuentes y scripts. | Entorno reproducible, versionado, aislado de dependencias de Debian y con posibilidad de rollback instantáneo sin romper el sistema operativo. |
+| **Capa 3: Aplicaciones GUI Aisladas** | Flatpak (`flathub`) | Clientes de mensajería (ZapZap), multimedia y aplicaciones de terceros con interfaces web o Qt complejas. | Provee runtimes y drivers Mesa autocontenidos que operan directamente sobre el subsistema DRM del kernel, eliminando rupturas de enlaces dinámicos (ABI) que ocurren al ejecutar aplicaciones gráficas pesadas dentro de Nix Standalone sobre Debian. |
 
 ### Por qué esta separación es superior en laptops de producción:
 1. **Estabilidad Gráfica en Wayland:** Compositor Wayland (Hyprland) y navegadores (Brave/Chromium) se comunican directamente con el subsistema gráfico del kernel y Mesa sin desajustes de versiones de drivers.
