@@ -59,10 +59,10 @@ monitor = eDP-1, addreserved, 0, 0, 228, 0
 ```
 *Efecto:* El compositor Wayland reduce el área utilizable del monitor, desplazando el inicio del espacio de trabajo 228 píxeles a la derecha. Ninguna ventana flotante, tiled o barra cubrirá la zona dañada.
 
-### Esquema de Workspaces Intercalados:
+### Esquema de Workspaces Intercalados en Bloques de 3:
 Para optimizar el flujo de trabajo entre ambas pantallas:
-* **Pantalla de la Laptop (`eDP-1` - Derecha / Principal):** Workspaces `1`, `2`, `5`, `6`, `9`, `10`
-* **Monitor Externo (`HDMI-A-1` - Izquierda / Secundario):** Workspaces `3`, `4`, `7`, `8`
+* **Pantalla de la Laptop (`eDP-1` - Derecha / Principal):** Workspaces `1`, `2`, `3`, `7`, `8`, `9`
+* **Monitor Externo (`HDMI-A-1` - Izquierda / Secundario):** Workspaces `4`, `5`, `6`, `10`
 
 ---
 

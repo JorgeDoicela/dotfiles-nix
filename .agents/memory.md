@@ -13,7 +13,7 @@
     * Panel interno `eDP-1` a 1366x768 (768p nativo), posicionado en `1366x0` (derecha).
     * Monitor externo `HDMI-A-1` / `DP-1` a 1366x768, posicionado en `0x0` (izquierda).
   * Workaround físico: La pantalla interna de la laptop tiene una franja rota en su margen izquierdo, compensada mediante directiva de Hyprland (`monitor = eDP-1, addreserved, 0, 0, 228, 0`) y paddings dedicados en Rofi (`rofiLauncherPadding`, `rofiBooksPadding`) en `mySystem`.
-  * Workspaces: Intercalados (eDP-1: 1, 2, 5, 6, 9, 10; HDMI-A-1: 3, 4, 7, 8).
+  * Workspaces: Intercalados en bloques de 3 (eDP-1: 1, 2, 3, 7, 8, 9; HDMI-A-1: 4, 5, 6, 10).
   * Escala: Compacta (9pt GTK/DConf, Waybar 11px, cursor Bibata 20px, browserScale 0.8, hyprActiveBorder "rgba(ffffffc6)", hyprRounding 10, SwayNC 300x620px, SwayOSD 11px, Hyprshell 11px).
 
 ---
