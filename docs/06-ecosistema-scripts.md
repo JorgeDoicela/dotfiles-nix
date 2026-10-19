@@ -75,7 +75,7 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
 * **Cómo agregar nuevas carpetas a sincronizar:**
   Basta con añadir una nueva línea a `raw_configs/rclone/sincro-targets.conf` (ej. target académico UBE):
   ```text
-  ube|gdrive:Academico/UBE|$HOME/Escritorio/UBE
+  ube|gdrive:UBE|$HOME/Escritorio/UBE
   ```
 
 ---
