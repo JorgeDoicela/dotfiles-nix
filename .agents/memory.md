@@ -92,8 +92,8 @@
   * `Super + A`: Antigravity IDE (`antigravity-ide`).
   * `Super + M`: Zoom (`zoom`).
   * `Super + O`: Obsidian (`obsidian`).
-* **Respaldo Git en Obsidian (`Vida-de-Jorge.git`):**
-  * La bóveda `/home/jorge/Documentos/Vida de Jorge` coexiste con Git (GitHub Privado) y Rclone (`sincro`).
+* **Respaldo Git en Obsidian (`vida_de_jorge.git`):**
+  * La bóveda `/home/jorge/Documentos/Vida de Jorge` coexiste con Git (GitHub Privado via SSH) y Rclone (`sincro`).
   * `sincro-filters.txt` excluye estrictamente `- .git/**` para que Google Drive no interfiera ni corrompa objetos locales de Git.
   * La bóveda utiliza `.gitignore` local para excluir `.obsidian/workspace*.json`, cachés y papelera `.trash/`.
 

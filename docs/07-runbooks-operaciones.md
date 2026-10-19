@@ -158,7 +158,7 @@ nix-collect-garbage -d
 
 ## Runbook 5: Vinculación Multidispositivo de la Bóveda Obsidian en GitHub Privado
 
-Este runbook detalla el procedimiento para enlazar una laptop secundaria o nuevo equipo a la bóveda privada versionada en GitHub (`https://github.com/JorgeDoicela/Vida-de-Jorge.git`).
+Este runbook detalla el procedimiento para enlazar una laptop secundaria o nuevo equipo a la bóveda privada versionada en GitHub (`git@github.com:JorgeDoicela/vida_de_jorge.git`).
 
 ### 1. Modelo de Redundancia y Aislamiento Dual
 * **Capa Activa (Google Drive vía `sincro`):** Sincronización en vivo, continua y bidireccional entre laptops y teléfonos Android (FolderSync).
@@ -179,8 +179,8 @@ cd "/home/jorge/Documentos/Vida de Jorge"
 # Inicializar repositorio en rama 'main':
 git init -b main
 
-# Enlazar el repositorio privado remoto:
-git remote add origin https://github.com/JorgeDoicela/Vida-de-Jorge.git
+# Enlazar el repositorio privado remoto via SSH:
+git remote add origin git@github.com:JorgeDoicela/vida_de_jorge.git
 ```
 
 #### Paso 3: Sincronizar el árbol de trabajo sin alterar notas locales
