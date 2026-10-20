@@ -102,7 +102,7 @@ fi
 # Habilitar user_allow_other en /etc/fuse.conf para soporte multi-hilo FUSE y aislamiento GIO/GVFS
 if [ -f /etc/fuse.conf ]; then
     echo "=> Habilitando user_allow_other en /etc/fuse.conf..."
-    sed -i 's/^[#[:space:]]*user_allow_other/user_allow_other/' /etc/fuse.conf
+    sed -i 's/^[#[:space:]]*user_allow_other[[:space:]]*$/user_allow_other/' /etc/fuse.conf
 fi
 
 # 6. Actualizar repositorios e instalar paquetes base de Debian (Kernel/Drivers/Hyprland/SDDM)
