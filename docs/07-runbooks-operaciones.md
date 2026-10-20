@@ -163,7 +163,7 @@ Este runbook detalla el procedimiento para enlazar una laptop secundaria o nuevo
 ### 1. Modelo de Redundancia y Aislamiento Dual
 * **Capa Activa (Sincronización en Caliente):**
   * **Linux:** Sincronización continua y bidireccional mediante `sincro` (Rclone Bisync). Excluye estrictamente `.git/**` mediante [sincro-filters.txt](../raw_configs/rclone/sincro-filters.txt).
-  * **Windows:** Sincronización mediante Google Drive for Desktop enlazado localmente con puntos de unión NTFS (*Junction Points*).
+  * **Windows:** Sincronización mediante Google Drive for Desktop operando directamente sobre la unidad virtual `G:\` sin intermediarios.
   * **Android:** Sincronización bidireccional mediante FolderSync con exclusión de `.obsidian/workspace*.json` y `.git/**`.
 * **Capa Histórica (GitHub Privado):** Respaldo versionado bajo demanda de hitos de estudio o notas consolidadas en `git@github.com:JorgeDoicela/vida_de_jorge.git`.
 * **Regla de Operación:** Queda prohibido el uso de plugins de Git con temporizadores automáticos en segundo plano (como `obsidian-git`). Los respaldos Git se realizan manualmente bajo demanda al concluir sesiones de trabajo para evitar bloqueos de archivos (`.git/index.lock`) o duplicados concurrentes.
