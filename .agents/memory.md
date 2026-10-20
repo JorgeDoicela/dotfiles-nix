@@ -31,7 +31,7 @@
    * La densidad visual se adapta mediante las opciones de tipografía y paddings en `mySystem` ([modules/style.nix](../modules/style.nix)).
 4. **Seguridad y Permisos:**
    * No se agregan usuarios al grupo secundario `input` por riesgo crítico de keylogging en Wayland. El acceso a periféricos lo gobierna `systemd-logind` / `seatd`.
-   * El script de provisionamiento base [setup/instalar.sh](../setup/instalar.sh) es idempotente y crea copias timestamped (`safe_copy`) antes de editar archivos en `/etc/`.
+   * El script de provisionamiento base [setup/instalar.sh](../setup/instalar.sh) es estrictamente idempotente: compara archivos mediante `cmp -s` antes de aplicar copias y genera respaldos timestamped (`safe_copy`) únicamente si existen diferencias reales, previniendo acumulación de basura en `/etc/`.
 5. **Separación de Herramientas Gráficas y Aceleración GPU (Alacritty, Zoom y Flatpak):**
    * Alacritty y Zoom se delegan al entorno nativo de Debian (`package = null` en Nix o paquete `.deb` en Debian).
    * Aplicaciones de escritorio complejas de terceros (como ZapZap / WhatsApp) se delegan a Flatpak (`flathub`), integradas con wrapper declarativo en `~/.local/bin/` gestionado por Home Manager.
