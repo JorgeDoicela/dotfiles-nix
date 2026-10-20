@@ -224,3 +224,37 @@ Cualquiera de tus laptops vinculadas tiene plena potestad para subir o bajar cam
   git pull
   ```
 
+---
+
+## Runbook 6: Diagnóstico y Mantenimiento del Explorador de Archivos y Puntos FUSE
+
+Si el gestor de archivos o la interfaz experimentan bloqueos tras desconexiones abruptas de red o suspensión del sistema:
+
+### 1. Auditoría del Estado de Servicios y Procesos
+```bash
+# Comprobar el estado del montaje FUSE de Google Drive:
+systemctl --user status rclone-gdrive.service
+
+# Comprobar los demonios auxiliares de VFS y miniaturas:
+ps aux | grep -Ei 'thunar|tumbler|gvfs'
+```
+
+### 2. Reinicio Limpio de Demonios VFS
+```bash
+# Terminar instancias residuales o colgadas:
+killall -9 thunar tumblerd 2>/dev/null || true
+
+# Reiniciar el gestor de configuraciones Xfconf para recargar valores declarativos:
+systemctl --user restart xfconfd.service 2>/dev/null || pkill xfconfd || true
+
+# Purgar caché de miniaturas fallidas en disco local:
+rm -rf ~/.cache/thumbnails/fail/*
+```
+
+### 3. Comprobación de Políticas Inmutables en Xfconf
+Confirma que las directivas de seguridad locales están activas en tiempo de ejecución:
+```bash
+xfconf-query -c thunar -p /misc-thumbnail-mode
+# Salida esperada: THUNAR_THUMBNAIL_MODE_ONLY_LOCAL
+```
+

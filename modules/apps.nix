@@ -133,8 +133,8 @@
   systemd.user.services.rclone-gdrive = {
     Unit = {
       Description = "Montaje virtual de Google Drive con Rclone (FUSE)";
-      After = [ "network-online.target" ];
-      Wants = [ "network-online.target" ];
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
     };
     Service = {
       Type = "simple";
@@ -145,12 +145,19 @@
           --vfs-cache-mode full \
           --vfs-cache-max-size 15G \
           --vfs-cache-max-age 72h \
-          --dir-cache-time 1h \
+          --dir-cache-time 24h \
+          --attr-timeout 10m \
+          --poll-interval 1m \
+          --vfs-cache-poll-interval 1m \
           --vfs-disk-space-total-size 5T \
           --vfs-fast-fingerprint \
           --vfs-read-chunk-size 32M \
           --vfs-read-chunk-size-limit 2G \
           --buffer-size 32M \
+          --timeout 30s \
+          --contimeout 10s \
+          --drive-acknowledge-abuse \
+          --no-modtime \
           --umask 022
       '';
       ExecStop = "/usr/bin/fusermount3 -u -z %h/Drive";

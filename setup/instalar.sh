@@ -91,12 +91,18 @@ udevadm control --reload-rules
 # de forma dinámica y segura a la sesión activa. Queda terminantemente prohibido
 # agregar usuarios al grupo 'input' por riesgo crítico de keylogging local sin privilegios.
 
-# 5. Permisos profesionales estándar (umask 022 a nivel de sistema)
+# 5. Permisos profesionales estándar y configuración FUSE
 echo "=> Configurando umask 022 profesional a nivel de sistema..."
 if grep -q "^UMASK" /etc/login.defs; then
     sed -i 's/^UMASK.*/UMASK\t\t022/' /etc/login.defs
 else
     sed -i 's/^USERGROUPS_ENAB yes/USERGROUPS_ENAB yes\nUMASK\t\t022/' /etc/login.defs
+fi
+
+# Habilitar user_allow_other en /etc/fuse.conf para soporte multi-hilo FUSE y aislamiento GIO/GVFS
+if [ -f /etc/fuse.conf ]; then
+    echo "=> Habilitando user_allow_other en /etc/fuse.conf..."
+    sed -i 's/^[#[:space:]]*user_allow_other/user_allow_other/' /etc/fuse.conf
 fi
 
 # 6. Actualizar repositorios e instalar paquetes base de Debian (Kernel/Drivers/Hyprland/SDDM)
@@ -128,7 +134,16 @@ apt-get install -y --no-install-recommends \
     tlp \
     tlp-rdw \
     flatpak \
-    brave-browser || true
+    brave-browser \
+    thunar \
+    thunar-volman \
+    thunar-archive-plugin \
+    gvfs \
+    gvfs-backends \
+    gvfs-fuse \
+    tumbler \
+    tumbler-plugins-extra \
+    ffmpegthumbnailer || true
 
 # 7. Configurar repositorio Flatpak Flathub y aplicaciones de escritorio esenciales
 echo "=> Configurando Flathub y aplicaciones Flatpak..."

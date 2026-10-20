@@ -60,6 +60,13 @@ Para dotar al sistema de clientes de comunicación y aplicaciones de escritorio 
 * Registro criptográfico del repositorio oficial de Flathub (`https://dl.flathub.org/repo/flathub.flatpakrepo`).
 * Despliegue desatendido de ZapZap (`com.rtosta.zapzap`) para soporte completo de WhatsApp Web con bandeja de sistema y aceleración de hardware.
 
+### 7. Subsistema de Archivos, VFS y Desacoplamiento FUSE
+Para garantizar que el explorador de archivos y las operaciones de entrada/salida no sufran bloqueos síncronos ni congelamiento de la interfaz gráfica GTK:
+* **Habilitación de FUSE Multi-usuario (`/etc/fuse.conf`):** Activa de forma idempotente `user_allow_other` para permitir el aislamiento seguro y desacoplamiento de permisos entre demonios VFS de usuario y el kernel.
+* **Stack Completo del Explorador Gráfico:** Despliegue automatizado de `thunar`, `thunar-volman` (gestor de volúmenes y dispositivos externos) y `thunar-archive-plugin`.
+* **Capa de Abstracción VFS de Usuario:** Instalación de `gvfs-backends` y `gvfs-fuse`. Sin `gvfs-fuse`, el subsistema GIO intenta ejecutar llamadas síncronas bloqueantes de metadatos directamente sobre puntos de montaje FUSE, provocando que el hilo de renderizado de GTK se cuelgue al abrir `$HOME`.
+* **Motor de Miniaturas y Previsualizaciones:** Instalación de `tumbler`, `tumbler-plugins-extra` y `ffmpegthumbnailer` para procesamiento eficiente de imágenes y videos locales.
+
 ---
 
 ## 3. Ejecución del Script de Aprovisionamiento

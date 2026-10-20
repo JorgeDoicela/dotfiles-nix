@@ -222,4 +222,13 @@
     early_exit=true
     fill_shape=false
   '';
+
+  # Configuración declarativa del explorador de archivos Thunar (Xfconf)
+  # Fuerza miniaturas solo locales para evitar cuelgues en sistemas FUSE / red
+  xdg.configFile."xfce4/xfconf/xfce-perchannel-xml/thunar.xml".source =
+    ../raw_configs/xfce4/xfconf/xfce-perchannel-xml/thunar.xml;
+
+  # Configuración declarativa de Tumbler (Daemon de miniaturas)
+  # Excluye explícitamente ~/Drive para evitar saturación de D-Bus y bloqueos del hilo GTK
+  xdg.configFile."tumbler/tumbler.rc".source = ../raw_configs/tumbler/tumbler.rc;
 }

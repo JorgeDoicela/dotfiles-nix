@@ -76,3 +76,30 @@ El punto de entrada del sistema es [flake.nix](../flake.nix):
      * `apps.nix`: Terminal Alacritty tipado, navegadores, flags de aceleración y utilidades.
      * `shell.nix`: Zsh, Starship prompt, FZF personalizado y Git.
      * `scripts.nix`: Enlace declarativo de ejecutables a `~/.local/bin/`.
+
+---
+
+## 5. Subsistema de Archivos, VFS y Aislamiento FUSE
+
+La exploración de archivos y el montaje de unidades virtuales combinan la base de Debian y Home Manager bajo un diseño estrictamente defensivo para erradicar cuelgues de la interfaz gráfica:
+
+```mermaid
+graph TD
+    Thunar["Thunar (GTK3 / Wayland)"] -->|Solicitud de miniaturas| Tumbler["Tumbler Daemon (tumblerd)"]
+    Tumbler -->|Exclusión declarativa| BlockRemote["Regla Excludes: ~/Drive;~/.cache; (Ignorado)"]
+    Thunar -->|I/O Local| Ext4["Almacenamiento Local (SSD / Ext4)"]
+    Thunar -->|Acceso a ~/Drive| FUSE["Kernel VFS / FUSE (/etc/fuse.conf)"]
+    FUSE -->|Lectura con Caché VFS| Rclone["Rclone Daemon (rclone-gdrive.service)"]
+    Rclone -->|HTTPS con Timeout estricto| GDrive["Google Drive (Cloud)"]
+```
+
+### Principios de Aislamiento
+1. **Aislamiento de Miniaturas ([raw_configs/tumbler/tumbler.rc](../raw_configs/tumbler/tumbler.rc)):**
+   * Enlazado declarativamente a `~/.config/tumbler/tumbler.rc`.
+   * Define formalmente `Excludes=~/Drive;~/.cache;` y tope `MaxFileSize=52428800` (50 MB) en todos los generadores. Impide que `tumblerd` intente descargar o procesar archivos masivos a través del montaje FUSE, protegiendo el bus D-Bus de saturación.
+2. **Políticas Inmutables en Thunar ([raw_configs/xfce4/.../thunar.xml](../raw_configs/xfce4/xfconf/xfce-perchannel-xml/thunar.xml)):**
+   * Gestionado por Home Manager mediante canal Xfconf.
+   * Fija `misc-thumbnail-mode` en `THUNAR_THUMBNAIL_MODE_ONLY_LOCAL` y `misc-parallel-copy-mode` en `THUNAR_PARALLEL_COPY_MODE_ALWAYS`.
+3. **Resiliencia en el Montaje FUSE de Rclone ([modules/apps.nix](../modules/apps.nix)):**
+   * Vinculado a `graphical-session.target` (eliminando la dependencia inexistente `network-online.target` en el gestor de usuario).
+   * Banderas críticas: `--attr-timeout 10m` y `--dir-cache-time 24h` (eliminan llamadas remotas `stat()` redundantes), `--poll-interval 1m` (notificaciones asíncronas de cambios), `--vfs-disk-space-total-size 5T` (emulación estática de espacio que previene congelamiento en `statfs()`), `--timeout 30s` y `--contimeout 10s` (corte estricto de sockets para prevenir procesos en estado D no interrumpible ante fallos de red).

@@ -114,3 +114,12 @@
 * **Prevención de Bloqueos en `statfs` / GVFS (`rclone-gdrive`):**
   * Al montar Google Drive vía FUSE en `modules/apps.nix` (`~/Drive`), es mandatorio declarar `--vfs-disk-space-total-size 5T` y `--vfs-fast-fingerprint`.
   * Motivo: Sin esta bandera, `rclone` intercepta las llamadas al sistema `statfs()`/`statvfs()` de Linux y realiza una consulta HTTP síncrona a la API de Google Drive (`About.get`) para resolver la cuota libre. Esto congela de forma síncrona a exploradores de archivos (Thunar, Yazi) y monitores de dispositivos (`gvfs-udisks2-volume-monitor`) durante 20-35 segundos en el arranque. Declarar el tamaño estático emula la geometría en memoria local respondiendo en milisegundos sin llamadas de red.
+* **Blindaje del Servicio FUSE y Resiliencia de Red:**
+  * La unidad `rclone-gdrive.service` no debe depender de `network-online.target` (inexistente en `systemd --user`), sino acoplarse a `graphical-session.target`.
+  * Parámetros innegociables de resiliencia: `--attr-timeout 10m` y `--dir-cache-time 24h` (eliminan consultas repetitivas de atributos a la API remota), `--poll-interval 1m` (notificaciones asíncronas de cambios), `--timeout 30s` y `--contimeout 10s` (límite estricto para evitar sockets en estado D en el kernel ante caídas de red) y `--no-modtime`.
+* **Aislamiento Declarativo de Miniaturas (Tumbler y Thunar):**
+  * `raw_configs/tumbler/tumbler.rc` enlazado a `~/.config/tumbler/tumbler.rc`: Define formalmente `Excludes=~/Drive;~/.cache;` en todos los generadores y fija `MaxFileSize=52428800` (50 MB). Esto impide que `tumblerd` intente escanear o descargar archivos a través de FUSE, eliminando saturaciones del bus D-Bus y deadlocks en el hilo de UI de GTK.
+  * `raw_configs/xfce4/xfconf/xfce-perchannel-xml/thunar.xml` enlazado declarativamente por Home Manager: Fija `misc-thumbnail-mode="THUNAR_THUMBNAIL_MODE_ONLY_LOCAL"` y `misc-parallel-copy-mode="THUNAR_PARALLEL_COPY_MODE_ALWAYS"`.
+* **Stack Base del Sistema Operativo (`setup/instalar.sh`):**
+  * Para réplica limpia en nuevas máquinas, `instalar.sh` aprovisiona obligatoriamente: `thunar`, `thunar-volman`, `thunar-archive-plugin`, `gvfs`, `gvfs-backends`, `gvfs-fuse` (imprescindible para el puente GIO/FUSE), `tumbler`, `tumbler-plugins-extra` y `ffmpegthumbnailer`.
+  * Habilita de forma idempotente `user_allow_other` en `/etc/fuse.conf` para desacoplamiento seguro de permisos entre demonios de usuario y el kernel.
