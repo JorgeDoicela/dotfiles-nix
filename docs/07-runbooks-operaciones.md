@@ -257,7 +257,35 @@ git -C "G:\Mi unidad\Documents\Vida de Jorge" init --separate-git-dir="C:\Users\
 
 ---
 
-### 4. Flujo Operativo Posterior
+### 4. Configuración en Dispositivos Móviles Android (FolderSync)
+
+Dado que Obsidian en Android requiere acceso al almacenamiento físico local (`/storage/emulated/0/...`), la sincronización continua se realiza mediante la aplicación **FolderSync**.
+
+#### Paso 1: Vincular la Cuenta en FolderSync
+Vincular tu cuenta de Google Drive (*Cuentas* > *Añadir cuenta* > *Google Drive*).
+
+#### Paso 2: Crear el Par de Carpetas (*Folderpair*)
+* **Tipo de sincronización:** Bidireccional (*Two-way*).
+* **Carpeta remota:** `Documents/Vida de Jorge`.
+* **Carpeta local:** `/Documents/Vida de Jorge` (en el almacenamiento interno de tu móvil).
+* **Sincronizar subcarpetas:** ACTIVADO.
+* **Sincronizar archivos ocultos:** ACTIVADO (requerido para plugins y snippets en `.obsidian`).
+* **Sincronizar eliminaciones:** ACTIVADO.
+* **Usar esquema de archivos temporales:** DESACTIVADO (evita creación de archivos `.tmp` residuales).
+* **Sincronización instantánea:** DESACTIVADO (ahorra batería; sincronizar bajo demanda o al abrir la app).
+* **Gestión de conflictos:** Sobrescribir el archivo más antiguo (*Overwrite oldest*).
+
+#### Paso 3: Filtros de Exclusión Obligatorios
+En la pestaña **Filtros** del par de carpetas, añadir las reglas para evitar colisiones:
+* Excluir: `workspace.json`
+* Excluir: `workspace-mobile.json`
+* Excluir: `cache/**`
+* Excluir: `.git/**`
+* Excluir: `*.conflict*`
+
+---
+
+### 5. Flujo Operativo Posterior
 Cualquiera de tus equipos vinculados (Linux o Windows) tiene potestad para sincronizar o respaldar:
 
 * **Para consolidar un respaldo hacia GitHub (Manual / Bajo Demanda):**
