@@ -19,6 +19,10 @@ safe_copy() {
     local src="$1"
     local dest="$2"
     if [ -f "$dest" ]; then
+        # Si el archivo destino ya es exactamente idéntico, no generar backups ni tocarlo
+        if cmp -s "$src" "$dest"; then
+            return 0
+        fi
         cp -a "$dest" "${dest}.bak.$(date +%Y%m%d_%H%M%S)"
     fi
     cp "$src" "$dest"
