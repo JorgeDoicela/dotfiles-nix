@@ -93,9 +93,10 @@
   * `Super + M`: Zoom (`zoom`).
   * `Super + O`: Obsidian (`obsidian`).
 * **Respaldo Git en Obsidian (`vida_de_jorge.git`):**
-  * La bóveda `/home/jorge/Documentos/Vida de Jorge` coexiste con Git (GitHub Privado via SSH) y Rclone (`sincro`).
-  * `sincro-filters.txt` excluye estrictamente `- .git/**` para que Google Drive no interfiera ni corrompa objetos locales de Git.
-  * La bóveda utiliza `.gitignore` local para excluir `.obsidian/workspace*.json`, cachés y papelera `.trash/`.
+  * La bóveda `/home/jorge/Documentos/Vida de Jorge` (Linux) y `C:\Users\DESARROLLADOR\Documents\Vida de Jorge` (Windows) coexiste con Git (GitHub Privado) y Google Drive.
+  * **Linux:** `sincro-filters.txt` excluye estrictamente `- .git/**` para que Google Drive no interfiera ni corrompa objetos locales de Git.
+  * **Windows:** Se utiliza el cliente Google Drive Desktop con NTFS Junctions (`C:\Users\$env:USERNAME\Documents\Vida de Jorge` -> `G:\Mi unidad\Documents\Vida de Jorge`) evitando duplicación de disco y bloqueos de VFS. Git se vincula vía HTTPS con Git Credential Manager (`https://github.com/JorgeDoicela/vida_de_jorge.git`).
+  * La bóveda utiliza `.gitignore` local para excluir estrictamente `.obsidian/workspace*.json`, `.obsidian/workspace-mobile.json`, cachés, papelera `.trash/` y metadatos del SO (`desktop.ini`, `Thumbs.db`).
 
 ---
 

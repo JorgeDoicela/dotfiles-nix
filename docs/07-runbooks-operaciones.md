@@ -161,13 +161,18 @@ nix-collect-garbage -d
 Este runbook detalla el procedimiento para enlazar una laptop secundaria o nuevo equipo a la bóveda privada versionada en GitHub (`git@github.com:JorgeDoicela/vida_de_jorge.git`).
 
 ### 1. Modelo de Redundancia y Aislamiento Dual
-* **Capa Activa (Google Drive vía `sincro`):** Sincronización en vivo, continua y bidireccional entre laptops y teléfonos Android (FolderSync).
-* **Capa Histórica (GitHub Privado):** Respaldo versionado bajo demanda de hitos de estudio o notas consolidadas.
-* **Aislamiento Técnico:** La carpeta interna `.git/` reside exclusivamente en el almacenamiento local de cada equipo. Está estrictamente excluida en [sincro-filters.txt](../raw_configs/rclone/sincro-filters.txt) mediante la regla `- .git/**`. De esta forma, Google Drive jamás toca la base de datos de Git ni corrompe punteros de ramas entre laptops.
+* **Capa Activa (Sincronización en Caliente):**
+  * **Linux:** Sincronización continua y bidireccional mediante `sincro` (Rclone Bisync). Excluye estrictamente `.git/**` mediante [sincro-filters.txt](../raw_configs/rclone/sincro-filters.txt).
+  * **Windows:** Sincronización mediante Google Drive for Desktop enlazado localmente con puntos de unión NTFS (*Junction Points*).
+  * **Android:** Sincronización bidireccional mediante FolderSync con exclusión de `.obsidian/workspace*.json` y `.git/**`.
+* **Capa Histórica (GitHub Privado):** Respaldo versionado bajo demanda de hitos de estudio o notas consolidadas en `git@github.com:JorgeDoicela/vida_de_jorge.git`.
+* **Regla de Operación:** Queda prohibido el uso de plugins de Git con temporizadores automáticos en segundo plano (como `obsidian-git`). Los respaldos Git se realizan manualmente bajo demanda al concluir sesiones de trabajo para evitar bloqueos de archivos (`.git/index.lock`) o duplicados concurrentes.
 
-### 2. Procedimiento de Vinculación en un Nuevo Equipo
+---
 
-Ejecuta estos pasos una sola vez en cualquier laptop secundaria una vez que `sincro` haya descargado las notas de Google Drive:
+### 2. Procedimiento de Vinculación en Linux (Debian + Sincro)
+
+Ejecuta estos pasos una sola vez en cualquier laptop secundaria una vez que `sincro obsidian` haya descargado las notas de Google Drive:
 
 #### Paso 1: Navegar a la bóveda local
 ```bash
@@ -207,12 +212,78 @@ Tu rama está actualizada con 'origin/main'.
 nada para hacer commit, el árbol de trabajo está limpio
 ```
 
-### 3. Flujo Operativo Posterior
-Cualquiera de tus laptops vinculadas tiene plena potestad para subir o bajar cambios:
+---
 
-* **Para consolidar un respaldo hacia GitHub:**
+### 3. Procedimiento de Vinculación en Windows (Google Drive Desktop + NTFS Junctions)
+
+En estaciones de trabajo Windows, Google Drive for Desktop opera sobre la unidad virtual `G:`. Para optimizar el rendimiento de Obsidian y evitar duplicación de disco, se enlazan las carpetas mediante *Junction Points* NTFS.
+
+#### Paso 1: Verificar disponibilidad sin conexión en Google Drive
+1. En las preferencias de Google Drive para ordenadores, asegurar el modo **Transmitir archivos (Stream files)** (asigna la unidad `G:`).
+2. En el explorador, navegar a `G:\Mi unidad\Documents\`.
+3. Clic derecho sobre `Vida de Jorge` > **Acceso sin conexión** > **Disponible sin conexión**.
+
+#### Paso 2: Crear el Punto de Unión NTFS en PowerShell
+Ejecuta en PowerShell (no requiere elevación de Administrador):
+```powershell
+$usuario = $env:USERNAME
+$rutaLocal = "C:\Users\$usuario\Documents\Vida de Jorge"
+$rutaDrive = "G:\Mi unidad\Documents\Vida de Jorge"
+
+# Eliminar carpeta local vacía previa si existiera:
+if (Test-Path $rutaLocal) {
+    Remove-Item -Path $rutaLocal -Force -Recurse
+}
+
+# Crear el enlace simbólico Junction NTFS:
+New-Item -ItemType Junction -Path $rutaLocal -Value $rutaDrive
+```
+
+#### Paso 3: Inicializar Git y vincular remoto oficial
+```powershell
+cd "C:\Users\$env:USERNAME\Documents\Vida de Jorge"
+
+# Inicializar repositorio en rama main:
+git init -b main
+
+# Enlazar origen remoto vía HTTPS (utiliza Git Credential Manager de Windows):
+git remote add origin https://github.com/JorgeDoicela/vida_de_jorge.git
+
+# Descargar historial remoto:
+git fetch origin
+
+# Alinear el HEAD local al commit remoto sin alterar notas en disco:
+git reset --mixed origin/main
+
+# Configurar seguimiento de rama:
+git branch --set-upstream-to=origin/main main
+```
+
+#### Paso 4: Verificación de exclusiones
+Comprobar que `git status` no reporte archivos efímeros de interfaz:
+```powershell
+git status
+```
+*El archivo `.gitignore` raíz garantiza que `.obsidian/workspace*.json`, `.obsidian/workspace-mobile.json`, `.obsidian/cache/`, `.trash/`, `desktop.ini` y `Thumbs.db` permanezcan fuera de control de versiones.*
+
+#### Paso 5 (Opcional Avanzado): Aislamiento de base de datos con `--separate-git-dir`
+Si Google Drive Desktop intenta sincronizar continuamente los binarios en `.git/objects/`, se puede externalizar la base de datos fuera de Drive:
+```powershell
+git -C "C:\Users\$env:USERNAME\Documents\Vida de Jorge" init --separate-git-dir="C:\Users\$env:USERNAME\.git-repos\vida_de_jorge.git"
+```
+
+---
+
+### 4. Flujo Operativo Posterior
+Cualquiera de tus equipos vinculados (Linux o Windows) tiene potestad para sincronizar o respaldar:
+
+* **Para consolidar un respaldo hacia GitHub (Manual / Bajo Demanda):**
   ```bash
+  # En Linux:
   cd "/home/jorge/Documentos/Vida de Jorge"
+  # En Windows (PowerShell):
+  # cd "C:\Users\$env:USERNAME\Documents\Vida de Jorge"
+
   git add .
   git commit -m "docs: consolidacion de notas"
   git push
@@ -220,7 +291,6 @@ Cualquiera de tus laptops vinculadas tiene plena potestad para subir o bajar cam
 
 * **Para descargar novedades subidas desde otra máquina:**
   ```bash
-  cd "/home/jorge/Documentos/Vida de Jorge"
   git pull
   ```
 
