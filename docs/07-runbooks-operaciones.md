@@ -214,34 +214,19 @@ nada para hacer commit, el árbol de trabajo está limpio
 
 ---
 
-### 3. Procedimiento de Vinculación en Windows (Google Drive Desktop + NTFS Junctions)
+### 3. Procedimiento de Vinculación en Windows (Google Drive Desktop Directo)
 
-En estaciones de trabajo Windows, Google Drive for Desktop opera sobre la unidad virtual `G:`. Para optimizar el rendimiento de Obsidian y evitar duplicación de disco, se enlazan las carpetas mediante *Junction Points* NTFS.
+En estaciones de trabajo Windows, Google Drive for Desktop opera sobre la unidad virtual `G:`. Se opera de forma directa y nativa sobre dicha unidad sin requerir duplicación de almacenamiento ni enlaces intermedios.
 
 #### Paso 1: Verificar disponibilidad sin conexión en Google Drive
 1. En las preferencias de Google Drive para ordenadores, asegurar el modo **Transmitir archivos (Stream files)** (asigna la unidad `G:`).
 2. En el explorador, navegar a `G:\Mi unidad\Documents\`.
 3. Clic derecho sobre `Vida de Jorge` > **Acceso sin conexión** > **Disponible sin conexión**.
 
-#### Paso 2: Crear el Punto de Unión NTFS en PowerShell
-Ejecuta en PowerShell (no requiere elevación de Administrador):
+#### Paso 2: Inicializar Git y vincular remoto oficial en PowerShell
+Abre PowerShell y ejecuta:
 ```powershell
-$usuario = $env:USERNAME
-$rutaLocal = "C:\Users\$usuario\Documents\Vida de Jorge"
-$rutaDrive = "G:\Mi unidad\Documents\Vida de Jorge"
-
-# Eliminar carpeta local vacía previa si existiera:
-if (Test-Path $rutaLocal) {
-    Remove-Item -Path $rutaLocal -Force -Recurse
-}
-
-# Crear el enlace simbólico Junction NTFS:
-New-Item -ItemType Junction -Path $rutaLocal -Value $rutaDrive
-```
-
-#### Paso 3: Inicializar Git y vincular remoto oficial
-```powershell
-cd "C:\Users\$env:USERNAME\Documents\Vida de Jorge"
+cd "G:\Mi unidad\Documents\Vida de Jorge"
 
 # Inicializar repositorio en rama main:
 git init -b main
@@ -259,17 +244,23 @@ git reset --mixed origin/main
 git branch --set-upstream-to=origin/main main
 ```
 
-#### Paso 4: Verificación de exclusiones
+#### Paso 3: Verificación de exclusiones
 Comprobar que `git status` no reporte archivos efímeros de interfaz:
 ```powershell
 git status
 ```
 *El archivo `.gitignore` raíz garantiza que `.obsidian/workspace*.json`, `.obsidian/workspace-mobile.json`, `.obsidian/cache/`, `.trash/`, `desktop.ini` y `Thumbs.db` permanezcan fuera de control de versiones.*
 
+#### Paso 4 (Opcional): Punto de Unión NTFS (*Junction Point*)
+Si prefieres que la carpeta aparezca visualmente listada dentro de tu biblioteca personal de `Documentos` en `C:`, puedes crear un punto de unión NTFS:
+```powershell
+New-Item -ItemType Junction -Path "C:\Users\$env:USERNAME\Documents\Vida de Jorge" -Value "G:\Mi unidad\Documents\Vida de Jorge"
+```
+
 #### Paso 5 (Opcional Avanzado): Aislamiento de base de datos con `--separate-git-dir`
 Si Google Drive Desktop intenta sincronizar continuamente los binarios en `.git/objects/`, se puede externalizar la base de datos fuera de Drive:
 ```powershell
-git -C "C:\Users\$env:USERNAME\Documents\Vida de Jorge" init --separate-git-dir="C:\Users\$env:USERNAME\.git-repos\vida_de_jorge.git"
+git -C "G:\Mi unidad\Documents\Vida de Jorge" init --separate-git-dir="C:\Users\$env:USERNAME\.git-repos\vida_de_jorge.git"
 ```
 
 ---
