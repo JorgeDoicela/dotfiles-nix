@@ -249,15 +249,7 @@ Comprobar que `git status` no reporte archivos efímeros de interfaz:
 ```powershell
 git status
 ```
-*El archivo `.gitignore` raíz garantiza que `.obsidian/workspace*.json`, `.obsidian/workspace-mobile.json`, `.obsidian/cache/`, `.trash/`, `desktop.ini` y `Thumbs.db` permanezcan fuera de control de versiones.*
-
-#### Paso 4 (Opcional): Punto de Unión NTFS (*Junction Point*)
-Si prefieres que la carpeta aparezca visualmente listada dentro de tu biblioteca personal de `Documentos` en `C:`, puedes crear un punto de unión NTFS:
-```powershell
-New-Item -ItemType Junction -Path "C:\Users\$env:USERNAME\Documents\Vida de Jorge" -Value "G:\Mi unidad\Documents\Vida de Jorge"
-```
-
-#### Paso 5 (Opcional Avanzado): Aislamiento de base de datos con `--separate-git-dir`
+#### Paso 4 (Opcional Avanzado): Aislamiento de base de datos con `--separate-git-dir`
 Si Google Drive Desktop intenta sincronizar continuamente los binarios en `.git/objects/`, se puede externalizar la base de datos fuera de Drive:
 ```powershell
 git -C "G:\Mi unidad\Documents\Vida de Jorge" init --separate-git-dir="C:\Users\$env:USERNAME\.git-repos\vida_de_jorge.git"
@@ -273,7 +265,7 @@ Cualquiera de tus equipos vinculados (Linux o Windows) tiene potestad para sincr
   # En Linux:
   cd "/home/jorge/Documentos/Vida de Jorge"
   # En Windows (PowerShell):
-  # cd "C:\Users\$env:USERNAME\Documents\Vida de Jorge"
+  # cd "G:\Mi unidad\Documents\Vida de Jorge"
 
   git add .
   git commit -m "docs: consolidacion de notas"
