@@ -48,7 +48,6 @@
     nixfmt
     tree
     which
-    htop
     btop
   ];
 }

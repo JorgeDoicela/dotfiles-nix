@@ -2,13 +2,12 @@
 
 {
   # Paquetes declarativos del entorno de escritorio Hyprland
+  # Nota: hyprlock e hypridle se delegan al Nivel 1 (Debian .deb) para integración nativa con PAM (/etc/pam.d/hyprlock)
   home.packages = with pkgs; [
     waybar
     rofi
     swaynotificationcenter
     wlogout
-    hypridle
-    hyprlock
     grim
     slurp
     swappy

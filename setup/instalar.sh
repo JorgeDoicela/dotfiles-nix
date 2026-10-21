@@ -37,13 +37,11 @@ mkdir -p /usr/share/keyrings /etc/apt/sources.list.d /etc/apt/preferences.d /etc
 # Restaurar sources.list base de Debian
 safe_copy "$CURRENT_DIR/etc/sources.list" /etc/apt/sources.list
 
-# Copiar llaves GPG locales del sistema (Brave y HashiCorp)
+# Copiar llaves GPG locales del sistema (Brave)
 safe_copy "$CURRENT_DIR/keyrings/brave-browser-archive-keyring.gpg" /usr/share/keyrings/brave-browser-archive-keyring.gpg
-safe_copy "$CURRENT_DIR/keyrings/hashicorp-archive-keyring.gpg" /usr/share/keyrings/hashicorp-archive-keyring.gpg
 
 # Copiar archivos de repositorios exactos
 safe_copy "$CURRENT_DIR/etc/brave-browser-release.list" /etc/apt/sources.list.d/brave-browser-release.list
-safe_copy "$CURRENT_DIR/etc/hashicorp.list" /etc/apt/sources.list.d/hashicorp.list
 
 # 2. Copiar archivos de configuración de etc
 echo "=> Copiando archivos de optimización y arranque silencioso..."

@@ -30,9 +30,9 @@ Una de las decisiones arquitectónicas más importantes de este entorno es el us
 
 | Capa | Administrador | Responsabilidad Técnica | Razón de Ingeniería |
 | :--- | :--- | :--- | :--- |
-| **Capa 1: Sistema Base** | Debian (`apt` + `/etc/`) | Kernel Linux, Firmware/DRM, controladores gráficos Mesa/AMDGPU, PipeWire, compositor Hyprland, Systemd base. | Enlace 100% nativo con las librerías dinámicas del sistema (`radeonsi_dri.so`, `libEGL.so`), garantizando aceleración por hardware por GPU sin wrappers ni problemas de ABI. |
-| **Capa 2: Entorno Declarativo** | Nix Flakes + Home Manager | CLI (Neovim, Yazi, Fastfetch, LSD, Rclone), entorno visual (Waybar, Rofi, SwayNC, SwayOSD, Hyprlock), temas GTK/Qt, cursores, fuentes y scripts. | Entorno reproducible, versionado, aislado de dependencias de Debian y con posibilidad de rollback instantáneo sin romper el sistema operativo. |
-| **Capa 3: Aplicaciones GUI Aisladas** | Flatpak (`flathub`) | Clientes de mensajería (ZapZap), multimedia y aplicaciones de terceros con interfaces web o Qt complejas. | Provee runtimes y drivers Mesa autocontenidos que operan directamente sobre el subsistema DRM del kernel, eliminando rupturas de enlaces dinámicos (ABI) que ocurren al ejecutar aplicaciones gráficas pesadas dentro de Nix Standalone sobre Debian. |
+| **Capa 1: Sistema Base** | Debian (`apt` + `/etc/`) | Kernel Linux, Firmware/DRM, controladores gráficos Mesa/AMDGPU, PipeWire, compositor Hyprland base, Display Manager SDDM (módulos Qt6), autenticación PAM (`/etc/pam.d/hyprlock` para `hyprlock`/`hypridle`), almacenamiento de sistema/FUSE (`gvfs`, `gvfs-fuse`, `thunar`, `tumbler`), TLP y aplicaciones nativas aceleradas (`brave-browser`, `zoom`). | Enlace 100% nativo con librerías dinámicas del sistema (`radeonsi_dri.so`, `libEGL.so`), aceleración por hardware por GPU sin wrappers ni desajustes de ABI, y gestión de seguridad privilegiada en PAM que no puede ser gobernada por gestores de paquetes no privilegiados de usuario. |
+| **Capa 2: Entorno Declarativo** | Nix Flakes + Home Manager | Herramientas CLI (Neovim, Yazi, Fastfetch, LSD, Rclone, Linters/Formatters), monitor `btop`, entorno visual de sesión (Waybar, Rofi, SwayNC, SwayOSD, Hyprshell), temas GTK/Qt, cursores, fuentes, scripts en `~/.local/bin/` y dotfiles inmutables en `/nix/store/` (incluyendo `hyprlock.conf` e `hypridle.conf`). | Entorno reproducible, versionado, aislado de dependencias de Debian y con posibilidad de rollback instantáneo sin romper el sistema operativo. Se evita instalar paquetes que colisionen con PAM del host. |
+| **Capa 3: Aplicaciones GUI Aisladas** | Flatpak (`flathub`) | Clientes de mensajería (ZapZap / WhatsApp), multimedia y aplicaciones de terceros con interfaces web o QtWebEngine complejas. | Provee runtimes y drivers Mesa autocontenidos que operan directamente sobre el subsistema DRM del kernel, eliminando rupturas de enlaces dinámicos (ABI) que ocurren al ejecutar aplicaciones gráficas pesadas dentro de Nix Standalone sobre Debian. |
 
 ### Por qué esta separación es superior en laptops de producción:
 1. **Estabilidad Gráfica en Wayland:** Compositor Wayland (Hyprland) y navegadores (Brave/Chromium) se comunican directamente con el subsistema gráfico del kernel y Mesa sin desajustes de versiones de drivers.
@@ -103,3 +103,20 @@ graph TD
 3. **Resiliencia en el Montaje FUSE de Rclone ([modules/apps.nix](../modules/apps.nix)):**
    * Vinculado a `graphical-session.target` (eliminando la dependencia inexistente `network-online.target` en el gestor de usuario).
    * Banderas críticas: `--attr-timeout 10m` y `--dir-cache-time 24h` (eliminan llamadas remotas `stat()` redundantes), `--poll-interval 1m` (notificaciones asíncronas de cambios), `--vfs-disk-space-total-size 5T` (emulación estática de espacio que previene congelamiento en `statfs()`), `--timeout 30s` y `--contimeout 10s` (corte estricto de sockets para prevenir procesos en estado D no interrumpible ante fallos de red).
+
+---
+
+## 6. Resolución Declarativa de Tipos MIME y Protocolos URL
+
+El despacho de enlaces web y protocolos personalizados (`zoommtg://`, `zoomus://`, `whatsapp://`, `mailto://`) se gobierna mediante la especificación oficial de **FreeDesktop XDG MIME**:
+
+1. **Preferencia Primaria Declarativa ([raw_configs/mimeapps.list](../raw_configs/mimeapps.list)):**
+   * Enlazado a `~/.config/mimeapps.list` por Home Manager.
+   * La biblioteca GLib/GIO y los portales Wayland (`xdg-desktop-portal-gtk` vía OpenURI) consultan primero este archivo. Al definir explícitamente los mapeos:
+     ```ini
+     [Default Applications]
+     x-scheme-handler/zoommtg=Zoom.desktop
+     x-scheme-handler/zoomus=Zoom.desktop
+     x-scheme-handler/whatsapp=com.rtosta.zapzap.desktop
+     ```
+   * Se elimina la necesidad de herramientas auxiliares o reconstrucciones de caché `mimeinfo.cache`, resolviendo los lanzadores de forma instantánea sin mostrar cuadros de error de aplicaciones no disponibles.

@@ -37,6 +37,10 @@
    * Aplicaciones de escritorio complejas de terceros (como ZapZap / WhatsApp) se delegan a Flatpak (`flathub`), integradas con wrapper declarativo en `~/.local/bin/` gestionado por Home Manager.
    * Motivo: En Debian con Nix standalone (no NixOS), los paquetes con QtWebEngine/Chromium/OpenGL de Nixpkgs fallan por incompatibilidad ABI con el driver Mesa del host (`radeonsi_drv_video.so` enlazado a `libLLVM.so` de Debian). Flatpak empaqueta sus propios runtimes de Mesa desacoplados de las librerías dinámicas del host, garantizando aceleración completa sin errores de RHI o core dumps.
    * Replicación: `setup/instalar.sh` aprovisiona automáticamente `flatpak`, el remoto Flathub y `com.rtosta.zapzap` para paridad total en nuevas máquinas.
+6. **Arquitectura Estricta en 3 Niveles de Ejecución y Privilegios:**
+   * **Nivel 1 (Sistema Base Debian .deb):** Componentes que exigen privilegios de root, módulos de kernel, aceleración directa GPU/Mesa, integración PAM (`sddm`, `hyprlock` mediante `/etc/pam.d/hyprlock`), almacenamiento de sistema/FUSE (`gvfs`, `gvfs-fuse`, `thunar`, `tumbler`), servidor PipeWire y aceleración nativa VA-API (`brave-browser`, `zoom`). `hyprlock` e `hypridle` se delegan exclusivamente a Debian para blindar la autenticación de desbloqueo.
+   * **Nivel 2 (Espacio de Usuario Declarativo Nix):** Herramientas CLI inmutables (`neovim`, `yazi`, `rclone`), linters/formatters, monitor `btop`, entorno visual de sesión (`waybar`, `rofi`, `swaync`) y dotfiles en `/nix/store/`. Se erradican repositorios APT de terceros innecesarios (como HashiCorp) en Debian.
+   * **Nivel 3 (Sandbox Gráfico Flatpak):** Aplicaciones de terceros desacopladas del ABI del host (`com.rtosta.zapzap`) para máxima estabilidad gráfica sin interferir con librerías del sistema.
 
 ---
 
@@ -86,6 +90,7 @@
   * Paquete `.deb` nativo para aceleración hardware.
   * Wrapper en `~/.local/bin/zoom` con patrón *Raise or Launch*: si no se pasan argumentos y ya existe ventana mapeada en Hyprland, la enfoca al instante (`hyprctl dispatch focuswindow class:^zoom$`); si se invoca con enlace de reunión (`zoommtg://`) o sin ventana, despacha limpiando variables de tema Qt (`QT_STYLE_OVERRIDE`, `QT_QPA_PLATFORMTHEME`, `QT_PLUGIN_PATH`).
   * Lanzador `Zoom.desktop` apunta a la ruta absoluta `${config.home.homeDirectory}/.local/bin/zoom %U` para blindar aperturas desde Rofi y navegadores web.
+  * Asociación de Esquemas URL (MIME): Para que navegadores web (Brave/Chromium) y portales Wayland (`xdg-desktop-portal-gtk`) despachen enlaces de reunión (`zoommtg://...`, `zoomus://...`) directamente a Zoom sin arrojar diálogos de error "No hay aplicaciones disponibles", se declaran explícitamente los manejadores en `raw_configs/mimeapps.list` según el estándar XDG, sin requerir paquetes ni scripts adicionales.
   * Aceleración GPU habilitada en `~/.config/zoomus.conf` (`enableCefGpu=true` y `enablegpucomputeutilization=true`) para renderizado por hardware en CEF sin software rasterizer SwiftShader.
   * Reglas de mosaico en Hyprland: Las ventanas principales de reunión y pantalla compartida se fuerzan a mosaico (`tile true`) mediante regex inclusiva (`Zoom Workplace.*|Zoom Meeting.*|Zoom.*|Reuni.*|Pantalla de Zoom.*|Meeting.*`) para cubrir títulos dinámicos en español y caracteres no-UTF8 de XWayland (`Reuni\ufffd`). Esto garantiza que en `eDP-1` la ventana respete la compensación `addreserved 0, 0, 228, 0` sin invadir la franja rota, y en monitores externos (`HDMI-A-1`) ocupe los 1366x768 completos sin letterboxing de ventana flotante. Diálogos, configuración y popups permanecen en `float true`.
 * **Atajos de Lanzamiento Clave:**

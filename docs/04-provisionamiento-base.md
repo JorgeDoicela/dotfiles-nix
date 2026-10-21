@@ -29,8 +29,8 @@ El script está diseñado para ejecutarse múltiples veces de forma segura sin p
 ### 1. Repositorios de Paquetes y Llaves GPG Seguras
 * Se configuran las llaves en `/usr/share/keyrings/` (estándar moderno de Debian, descartando `apt-key` deprecado):
   * Llave oficial de Brave Browser: `brave-browser-archive-keyring.gpg`.
-  * Llave oficial de HashiCorp: `hashicorp-archive-keyring.gpg`.
 * Se restaura el [sources.list](../setup/etc/sources.list) base de Debian Bookworm/Trixie.
+* Se mantiene `/etc/apt/sources.list.d/` estrictamente libre de repositorios de terceros para herramientas de desarrollo (las cuales se gestionan mediante Nix).
 
 ### 2. Gestión de Energía y Batería con TLP ([setup/etc/tlp.conf](../setup/etc/tlp.conf))
 Para maximizar la autonomía de las laptops desconectadas de la corriente:
@@ -54,13 +54,18 @@ Para maximizar la autonomía de las laptops desconectadas de la corriente:
 * **Bluetooth Apagado en Boot:** Modificación de `AutoEnable=false` en `/etc/bluetooth/main.conf` para evitar gasto innecesario de batería al arrancar la laptop.
 * **Control de Teclado Dell:** Servicio [dell-kbd-backlight-timeout.service](../setup/etc/dell-kbd-backlight-timeout.service) para gestionar el tiempo de apagado de los LEDs del teclado.
 
-### 6. Aprovisionamiento de Aplicaciones Gráficas Aisladas (Flatpak)
+### 6. Display Manager y Seguridad PAM (SDDM e Hyprlock)
+Para garantizar la autenticación correcta y el bloqueo de pantalla en Wayland:
+* **Módulos Qt6 de SDDM:** Se aprovisionan `qml6-module-qtquick-layouts`, `qml6-module-qtquick-controls`, `qml6-module-qtquick-effects`, `qml6-module-qtmultimedia`, `qml6-module-qtquick-virtualkeyboard` y `libqt6svg6`. Estos paquetes son requeridos por las directivas `import` del tema `sddm-astronaut-theme` para evitar que el intérprete QML falle en el arranque.
+* **Integración PAM de Hyprlock:** `hyprlock` e `hypridle` se instalan a nivel de sistema (.deb) para proveer el conffile `/etc/pam.d/hyprlock`. Esto garantiza que el desbloqueo de pantalla autentique contra los módulos PAM nativos de Debian sin desajustes de librerías.
+
+### 7. Aprovisionamiento de Aplicaciones Gráficas Aisladas (Flatpak)
 Para dotar al sistema de clientes de comunicación y aplicaciones de escritorio de terceros sin generar conflictos de enlaces dinámicos con Mesa/AMDGPU:
 * Instalación automatizada del paquete base `flatpak` dentro del lote esencial de Debian.
 * Registro criptográfico del repositorio oficial de Flathub (`https://dl.flathub.org/repo/flathub.flatpakrepo`).
 * Despliegue desatendido de ZapZap (`com.rtosta.zapzap`) para soporte completo de WhatsApp Web con bandeja de sistema y aceleración de hardware.
 
-### 7. Subsistema de Archivos, VFS y Desacoplamiento FUSE
+### 8. Subsistema de Archivos, VFS y Desacoplamiento FUSE
 Para garantizar que el explorador de archivos y las operaciones de entrada/salida no sufran bloqueos síncronos ni congelamiento de la interfaz gráfica GTK:
 * **Habilitación de FUSE Multi-usuario (`/etc/fuse.conf`):** Activa de forma idempotente `user_allow_other` para permitir el aislamiento seguro y desacoplamiento de permisos entre demonios VFS de usuario y el kernel.
 * **Stack Completo del Explorador Gráfico:** Despliegue automatizado de `thunar`, `thunar-volman` (gestor de volúmenes y dispositivos externos) y `thunar-archive-plugin`.
