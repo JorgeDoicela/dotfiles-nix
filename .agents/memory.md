@@ -114,6 +114,9 @@
   * Se prohíbe el uso de monkey-patches en `vim.notify` para ocultar avisos de deprecación.
 * **Herramientas CLI Declarativas de Soporte:**
   * Linters, formatters y compiladores de parsers (`tree-sitter`, `ripgrep`, `fd`, `stylua`, `shfmt`, `shellcheck`, `ruff`) se declaran en `home.packages` dentro de `modules/apps.nix` para garantizar su presencia independiente del host o distribución subyacente.
+* **GitHub CLI Declarativo (`programs.gh`):**
+  * Declarado en [modules/shell.nix](../modules/shell.nix) con `git_protocol = "ssh"`.
+  * La configuración estructural `~/.config/gh/config.yml` reside inmutable en `/nix/store/`, mientras que los tokens de autenticación (`hosts.yml` / keyring) se almacenan en el espacio mutable de usuario.
 
 ---
 

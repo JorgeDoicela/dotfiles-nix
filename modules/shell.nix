@@ -12,6 +12,14 @@
     };
   };
 
+  # GitHub CLI declarativo
+  programs.gh = {
+    enable = true;
+    settings = {
+      git_protocol = "ssh";
+    };
+  };
+
   # Configuración declarativa de Xresources
   xresources.properties = {
     "Xcursor.theme" = "Bibata-Modern-Ice";
