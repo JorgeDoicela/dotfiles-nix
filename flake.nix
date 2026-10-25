@@ -19,7 +19,9 @@
 
       # Detección y generación declarativa dinámica de perfiles para todos los directorios en hosts/
       hostDirs = builtins.attrNames (
-        nixpkgs.lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./hosts)
+        nixpkgs.lib.filterAttrs (name: type:
+          type == "directory" && builtins.pathExists (./hosts + "/${name}/default.nix")
+        ) (builtins.readDir ./hosts)
       );
 
       mkHostConfig = hostName: home-manager.lib.homeManagerConfiguration {

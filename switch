@@ -35,5 +35,10 @@ if [[ "$PROFILE" =~ ^[a-zA-Z0-9_-]+@([a-zA-Z0-9_-]+)$ ]]; then
 fi
 
 echo "[INFO] Aplicando Home Manager Flake para '$PROFILE'..."
-home-manager switch --flake "$SCRIPT_DIR#$PROFILE" "$@"
+if command -v home-manager >/dev/null 2>&1; then
+    home-manager switch --flake "$SCRIPT_DIR#$PROFILE" "$@"
+else
+    echo "[WARN] 'home-manager' no encontrado en PATH. Ejecutando mediante 'nix run'..."
+    nix run github:nix-community/home-manager -- switch --flake "$SCRIPT_DIR#$PROFILE" "$@"
+fi
 echo "[INFO] Despliegue completado exitosamente para '$PROFILE'."

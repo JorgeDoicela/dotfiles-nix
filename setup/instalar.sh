@@ -114,7 +114,7 @@ else
     echo "=> Memoria swap activa detectada. Omitiendo creación de swapfile."
 fi
 
-# 5. Desacoplamiento de Docker de la partición raíz
+# 5. Desacoplamiento de Docker de la partición raíz y permisos de usuario
 echo "=> Configurando daemon de Docker con data-root en /home/docker..."
 mkdir -p /home/docker /etc/docker
 safe_copy "$CURRENT_DIR/etc/docker-daemon.json" /etc/docker/daemon.json
@@ -122,14 +122,17 @@ chmod 644 /etc/docker/daemon.json
 if systemctl is-active --quiet docker; then
     systemctl restart docker || true
 fi
+if getent group docker >/dev/null 2>&1; then
+    echo "=> Asegurando privilegios de ejecución de Docker para el usuario $CURRENT_USER..."
+    usermod -aG docker "$CURRENT_USER" || true
+fi
 
-
-# 4. Seguridad de dispositivos de entrada (Principio de mínimo privilegio)
+# 6. Seguridad de dispositivos de entrada (Principio de mínimo privilegio)
 # En Wayland moderno con systemd-logind / seatd, el acceso a /dev/input/* es asignado
 # de forma dinámica y segura a la sesión activa. Queda terminantemente prohibido
 # agregar usuarios al grupo 'input' por riesgo crítico de keylogging local sin privilegios.
 
-# 5. Permisos profesionales estándar y configuración FUSE
+# 7. Permisos profesionales estándar y configuración FUSE
 echo "=> Configurando umask 022 profesional a nivel de sistema..."
 if grep -q "^UMASK" /etc/login.defs; then
     sed -i 's/^UMASK.*/UMASK\t\t022/' /etc/login.defs
