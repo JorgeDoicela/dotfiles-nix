@@ -29,9 +29,12 @@
 3. **Escala Nativa 1.0 vs Escalado Fraccional:**
    * Se prohíbe el escalado menor a 1.0 en Wayland por degradación tipográfica y remuestreo borroso.
    * La densidad visual se adapta mediante las opciones de tipografía y paddings en `mySystem` ([modules/style.nix](../modules/style.nix)).
-4. **Seguridad y Permisos:**
+4. **Seguridad, Estabilidad y Aislamiento de Almacenamiento:**
    * No se agregan usuarios al grupo secundario `input` por riesgo crítico de keylogging en Wayland. El acceso a periféricos lo gobierna `systemd-logind` / `seatd`.
    * El script de provisionamiento base [setup/instalar.sh](../setup/instalar.sh) es estrictamente idempotente: compara archivos mediante `cmp -s` antes de aplicar copias y genera respaldos timestamped (`safe_copy`) únicamente si existen diferencias reales, previniendo acumulación de basura en `/etc/`.
+   * **Swap Defensiva en `/home/swapfile`:** Provisión automática de 8 GB de swap en `/home` si el sistema carece de intercambio activo, previniendo cierres por el OOM Killer.
+   * **Desacoplamiento de Docker (`/home/docker`):** Configuración de `/etc/docker/daemon.json` con `"data-root": "/home/docker"` y rotación de logs (50 MB x 3) para erradicar la saturación de los 46 GB de la partición raíz `/`.
+   * **Detección Modular de Hardware:** Detección dinámica de fabricante Dell para el servicio de teclado y de GPU AMD para `amdgpu-powersave`, garantizando portabilidad limpia en laptops de cualquier marca.
 5. **Separación de Herramientas Gráficas y Aceleración GPU (Alacritty, Zoom y Flatpak):**
    * Alacritty y Zoom se delegan al entorno nativo de Debian (`package = null` en Nix o paquete `.deb` en Debian).
    * Aplicaciones de escritorio complejas de terceros (como ZapZap / WhatsApp) se delegan a Flatpak (`flathub`), integradas con wrapper declarativo en `~/.local/bin/` gestionado por Home Manager.
@@ -39,16 +42,24 @@
    * Replicación: `setup/instalar.sh` aprovisiona automáticamente `flatpak`, el remoto Flathub y `com.rtosta.zapzap` para paridad total en nuevas máquinas.
 6. **Arquitectura Estricta en 3 Niveles de Ejecución y Privilegios:**
    * **Nivel 1 (Sistema Base Debian .deb):** Componentes que exigen privilegios de root, módulos de kernel, aceleración directa GPU/Mesa, integración PAM (`sddm`, `hyprlock` mediante `/etc/pam.d/hyprlock`), almacenamiento de sistema/FUSE (`gvfs`, `gvfs-fuse`, `thunar`, `tumbler`), servidor PipeWire y aceleración nativa VA-API (`brave-browser`, `zoom`). `hyprlock` e `hypridle` se delegan exclusivamente a Debian para blindar la autenticación de desbloqueo.
-   * **Nivel 2 (Espacio de Usuario Declarativo Nix):** Herramientas CLI inmutables (`neovim`, `yazi`, `rclone`), linters/formatters, monitor `btop`, entorno visual de sesión (`waybar`, `rofi`, `swaync`) y dotfiles en `/nix/store/`. Se erradican repositorios APT de terceros innecesarios (como HashiCorp) en Debian.
+   * **Nivel 2 (Espacio de Usuario Declarativo Nix):** Herramientas CLI inmutables (`neovim`, `yazi`, `rclone`), linters/formatters, monitor `btop`, entorno visual de sesión (`waybar`, `rofi`, `swaync`) y dotfiles en `/nix/store/`. Waybar se genera declarativamente a través de la opción `mySystem.waybarConfig`, erradicando la duplicación de `config.json` en los hosts.
    * **Nivel 3 (Sandbox Gráfico Flatpak):** Aplicaciones de terceros desacopladas del ABI del host (`com.rtosta.zapzap`) para máxima estabilidad gráfica sin interferir con librerías del sistema.
+7. **Escalabilidad Multi-Host y CI:**
+   * `flake.nix` utiliza `builtins.readDir ./hosts` para auto-descubrir dinámicamente cualquier subdirectorio en `hosts/` y registrarlo como `jorge@<hostname>`.
+   * El script wrapper `./switch` resuelve automáticamente `$(hostname)` y valida que el perfil exista en `hosts/`.
+   * Pipeline de integración continua en `.github/workflows/ci.yml` ejecuta `nix flake check` en cada push a `main`.
 
 ---
 
 ## 3. Comandos Operativos Habituales
 
-* Aplicar cambios locales desde la raíz del repositorio:
+* Aplicar cambios locales automáticamente resolviendo el host:
   ```bash
-  home-manager switch --flake .
+  ./switch
+  ```
+* Aplicar un host específico manualmente:
+  ```bash
+  ./switch jorge@jorge-terciaria
   ```
 * Validar sintaxis estricta de todos los hosts antes de hacer commit:
   ```bash

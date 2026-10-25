@@ -135,6 +135,7 @@
 
   # Enlaces declarativos comunes de Waybar (Módulos centralizados, estilos y perfiles)
   xdg.configFile."waybar/modules.json".source = ../raw_configs/waybar/modules.json;
+  xdg.configFile."waybar/config.json".text = builtins.toJSON config.mySystem.waybarConfig;
   xdg.configFile."waybar/style.css".text =
     builtins.replaceStrings [ "@WAYBAR_FONT_SIZE@" ] [ config.mySystem.waybarFontSize ]
       (builtins.readFile ../raw_configs/waybar/style.css);

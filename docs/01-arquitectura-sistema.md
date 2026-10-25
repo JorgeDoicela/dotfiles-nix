@@ -65,10 +65,13 @@ El punto de entrada del sistema es [flake.nix](../flake.nix):
    * `nixpkgs`: Canal `nixos-unstable` para disponer del software más moderno.
    * `home-manager`: Rama sincronizada que sigue a `nixpkgs` para garantizar compatibilidad binaria de librerías.
 2. **`outputs`:**
-   * Define las configuraciones de usuario bajo `homeConfigurations`:
+   * **Auto-descubrimiento dinámico de hosts:** En lugar de declarar targets manualmente, [flake.nix](../flake.nix) escanea recursivamente el directorio `./hosts/` mediante `builtins.readDir` y genera automáticamente la configuración `"jorge@<hostname>"` para cualquier nuevo subdirectorio creado.
+   * Expone formalmente `homeConfigurations`:
      * `"jorge@jorge-terciaria"`: Mapea a [home.nix](../home.nix) + [hosts/jorge-terciaria](../hosts/jorge-terciaria).
      * `"jorge@jorge-secundaria"`: Mapea a [home.nix](../home.nix) + [hosts/jorge-secundaria](../hosts/jorge-secundaria).
-     * `"jorge"`: Alias de conveniencia para la máquina principal.
+     * `"jorge"`: Alias de conveniencia retrocompatible.
+   * **Script Operativo de Despliegue ([switch](../switch)):** Wrapper que resuelve dinámicamente `$(hostname)`, valida la existencia del perfil en `hosts/` y ejecuta `home-manager switch --flake .#jorge@<hostname>`.
+   * **Validación Continua (CI):** Pipeline en `.github/workflows/ci.yml` que valida la integridad de todos los perfiles de la flota con `nix flake check` en cada commit.
 3. **Módulos (`modules/`):**
    * [home.nix](../home.nix) orquesta la importación modular de:
      * `style.nix`: Motor de temas, fuentes y opciones tipadas `mySystem`.

@@ -100,17 +100,17 @@ sequenceDiagram
     participant LaptopB as Laptop B (Destino)
 
     LaptopA->>LaptopA: Edita dotfiles en directorio del repo
-    LaptopA->>LaptopA: home-manager switch --flake .
+    LaptopA->>LaptopA: ./switch
     LaptopA->>Git: git commit && git push origin main
     Note over LaptopB: En la otra laptop
     LaptopB->>Git: git pull origin main
-    LaptopB->>LaptopB: home-manager switch --flake .
+    LaptopB->>LaptopB: ./switch
 ```
 
 1. Realiza los cambios en tu laptop actual.
 2. Aplica y prueba localmente desde el repositorio con:
    ```bash
-   home-manager switch --flake .
+   ./switch
    ```
 3. Sube los cambios a Git:
    ```bash
@@ -121,7 +121,7 @@ sequenceDiagram
 4. En tus demás laptops, simplemente ejecuta desde el repositorio:
    ```bash
    git pull origin main
-   home-manager switch --flake .
+   ./switch
    ```
    *Home Manager recargará automáticamente los servicios de usuario de systemd (como `rclone-gdrive.service`). Para verificar el estado:*
    ```bash

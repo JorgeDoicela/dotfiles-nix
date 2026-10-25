@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# SCRIPT OPERATIVO DE CONMUTACIÓN DE PERFIL DECLARATIVO (HOME MANAGER)
+# ==============================================================================
+# Detecta automáticamente el hostname local, verifica si existe perfil en hosts/
+# y ejecuta el switch con Home Manager de forma idempotente y segura.
+# ==============================================================================
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+CURRENT_HOST="$(hostname)"
+TARGET_USER="${USER:-jorge}"
+PROFILE="${TARGET_USER}@${CURRENT_HOST}"
+
+# Permitir sobreescritura manual del perfil si se pasa como argumento
+if [[ $# -gt 0 && ! "$1" =~ ^- ]]; then
+    PROFILE="$1"
+    shift
+fi
+
+echo "[INFO] Validando perfil de despliegue: $PROFILE"
+
+# Extraer el hostname si tiene el formato user@hostname
+if [[ "$PROFILE" =~ ^[a-zA-Z0-9_-]+@([a-zA-Z0-9_-]+)$ ]]; then
+    HOST_NAME="${BASH_REMATCH[1]}"
+    if [[ ! -d "$SCRIPT_DIR/hosts/$HOST_NAME" ]]; then
+        echo "[ERROR] El host '$HOST_NAME' no existe en $SCRIPT_DIR/hosts/" >&2
+        echo "        Hosts configurados actualmente:" >&2
+        for d in "$SCRIPT_DIR/hosts"/*; do
+            [[ -d "$d" ]] && echo "          - $(basename "$d")" >&2
+        done
+        exit 1
+    fi
+fi
+
+echo "[INFO] Aplicando Home Manager Flake para '$PROFILE'..."
+home-manager switch --flake "$SCRIPT_DIR#$PROFILE" "$@"
+echo "[INFO] Despliegue completado exitosamente para '$PROFILE'."

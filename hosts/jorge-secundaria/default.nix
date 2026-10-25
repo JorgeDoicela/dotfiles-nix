@@ -35,9 +35,74 @@
 
     # Posicionamiento del calendario gsimplecal bajo el reloj de eDP-1
     gsimplecalMove = "2460 45";
+
+    # Barras de Waybar declarativas para Dual Display (eDP-1 compensado a 228px + externo HDMI/DP)
+    waybarConfig = [
+      {
+        include = [ "~/.config/waybar/modules.json" ];
+        output = [ "HDMI-A-1" "DP-1" ];
+        layer = "top";
+        position = "top";
+        height = 26;
+        spacing = 4;
+        margin-top = 0;
+        margin-left = 0;
+        margin-right = 0;
+        modules-left = [
+          "custom/launcher"
+          "hyprland/workspaces"
+          "hyprland/window"
+        ];
+        modules-center = [ "clock" ];
+        modules-right = [
+          "mpris"
+          "cpu"
+          "memory"
+          "network"
+          "bluetooth"
+          "custom/notification"
+          "pulseaudio"
+          "battery"
+          "custom/session"
+        ];
+        "hyprland/workspaces" = {
+          all-outputs = false;
+        };
+      }
+      {
+        include = [ "~/.config/waybar/modules.json" ];
+        output = [ "eDP-1" ];
+        layer = "top";
+        position = "top";
+        height = 24;
+        spacing = 4;
+        margin-top = 0;
+        margin-left = 228;
+        margin-right = 0;
+        modules-left = [
+          "custom/launcher"
+          "hyprland/workspaces"
+          "hyprland/window"
+        ];
+        modules-center = [ "clock" ];
+        modules-right = [
+          "mpris"
+          "cpu"
+          "memory"
+          "network"
+          "bluetooth"
+          "custom/notification"
+          "pulseaudio"
+          "battery"
+          "custom/session"
+        ];
+        "hyprland/workspaces" = {
+          all-outputs = false;
+        };
+      }
+    ];
   };
 
   # Configuración declarativa de hardware específica para jorge-secundaria (Dual Display)
   xdg.configFile."hypr/monitors.conf".source = ./monitors.conf;
-  xdg.configFile."waybar/config.json".source = ./config.json;
 }

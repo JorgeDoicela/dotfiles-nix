@@ -142,6 +142,45 @@
       default = 10;
       description = "Número de líneas/filas para books.rasi";
     };
+    waybarConfig = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      default = [
+        {
+          include = [ "~/.config/waybar/modules.json" ];
+          output = [ "eDP-1" ];
+          layer = "top";
+          position = "top";
+          height = 26;
+          spacing = 4;
+          margin-top = 0;
+          margin-left = 0;
+          margin-right = 0;
+          modules-left = [
+            "custom/launcher"
+            "hyprland/workspaces"
+            "hyprland/window"
+          ];
+          modules-center = [
+            "clock"
+          ];
+          modules-right = [
+            "mpris"
+            "cpu"
+            "memory"
+            "network"
+            "bluetooth"
+            "custom/notification"
+            "pulseaudio"
+            "battery"
+            "custom/session"
+          ];
+          "hyprland/workspaces" = {
+            all-outputs = false;
+          };
+        }
+      ];
+      description = "Configuración declarativa de barras de Waybar para el host";
+    };
   };
 
   config = {

@@ -62,30 +62,66 @@ if [ -f /etc/bluetooth/main.conf ]; then
     sed -i 's/^[#[:space:]]*AutoEnable[[:space:]]*=.*/AutoEnable=false/' /etc/bluetooth/main.conf
 fi
 
-# Copiar y habilitar el servicio de retroiluminación de teclado Dell
-safe_copy "$CURRENT_DIR/etc/dell-kbd-backlight-timeout.service" /etc/systemd/system/dell-kbd-backlight-timeout.service
-systemctl daemon-reload
-systemctl enable dell-kbd-backlight-timeout.service || true
+# Copiar y habilitar el servicio de retroiluminación de teclado Dell (solo si el hardware es Dell)
+SYS_VENDOR="$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null || echo "")"
+if [[ "$SYS_VENDOR" =~ ^(Dell.*|DELL.*) ]]; then
+    echo "=> Hardware Dell detectado ($SYS_VENDOR). Configurando timeout de retroiluminación..."
+    safe_copy "$CURRENT_DIR/etc/dell-kbd-backlight-timeout.service" /etc/systemd/system/dell-kbd-backlight-timeout.service
+    systemctl daemon-reload
+    systemctl enable dell-kbd-backlight-timeout.service || true
+else
+    echo "=> Hardware no es Dell ($SYS_VENDOR). Omitiendo servicio de teclado Dell."
+fi
 
 # Desplegar GRUB y SDDM bajo arquitectura modular e idempotente
 bash "$CURRENT_DIR/aplicar-grub-sddm.sh"
 
+# 3. Replicar control de GPU AMD (Hardware condicional)
+if lspci -d ::0300 2>/dev/null | grep -iE "Advanced Micro Devices|AMD" >/dev/null; then
+    echo "=> GPU AMD detectada. Instalando scripts y servicios de control de energía GPU AMD..."
+    mkdir -p /usr/local/sbin /etc/udev/rules.d /etc/systemd/system
 
-# 3. Replicar control de GPU AMD (Hardware coincidente)
-echo "=> Instalando scripts y servicios de control de energía GPU AMD..."
-mkdir -p /usr/local/sbin /etc/udev/rules.d /etc/systemd/system
+    safe_copy "$CURRENT_DIR/amdgpu/amdgpu-powersave" /usr/local/sbin/amdgpu-powersave
+    chmod +x /usr/local/sbin/amdgpu-powersave
 
-safe_copy "$CURRENT_DIR/amdgpu/amdgpu-powersave" /usr/local/sbin/amdgpu-powersave
-chmod +x /usr/local/sbin/amdgpu-powersave
+    safe_copy "$CURRENT_DIR/amdgpu/amdgpu-performance" /usr/local/sbin/amdgpu-performance
+    chmod +x /usr/local/sbin/amdgpu-performance
 
-safe_copy "$CURRENT_DIR/amdgpu/amdgpu-performance" /usr/local/sbin/amdgpu-performance
-chmod +x /usr/local/sbin/amdgpu-performance
+    safe_copy "$CURRENT_DIR/amdgpu/amdgpu-powersave.service" /etc/systemd/system/amdgpu-powersave.service
+    safe_copy "$CURRENT_DIR/amdgpu/91-amdgpu-powersave.rules" /etc/udev/rules.d/91-amdgpu-powersave.rules
 
-safe_copy "$CURRENT_DIR/amdgpu/amdgpu-powersave.service" /etc/systemd/system/amdgpu-powersave.service
-safe_copy "$CURRENT_DIR/amdgpu/91-amdgpu-powersave.rules" /etc/udev/rules.d/91-amdgpu-powersave.rules
+    systemctl enable amdgpu-powersave.service
+    udevadm control --reload-rules
+else
+    echo "=> GPU AMD no detectada. Omitiendo servicios de gestión amdgpu."
+fi
 
-systemctl enable amdgpu-powersave.service
-udevadm control --reload-rules
+# 4. Provisión defensiva de Swap (8 GB en /home/swapfile si no existe swap activa)
+echo "=> Verificando estado de la memoria swap..."
+SWAP_ACTIVE="$(swapon --show --noheadings 2>/dev/null || true)"
+if [[ -z "$SWAP_ACTIVE" ]]; then
+    echo "=> No se detectó memoria swap activa. Creando /home/swapfile de 8 GB..."
+    if [ ! -f /home/swapfile ]; then
+        fallocate -l 8G /home/swapfile || dd if=/dev/zero of=/home/swapfile bs=1M count=8192 status=none
+        chmod 600 /home/swapfile
+        mkswap /home/swapfile
+    fi
+    swapon /home/swapfile 2>/dev/null || true
+    if ! grep -q "/home/swapfile" /etc/fstab; then
+        echo "/home/swapfile none swap sw 0 0" >> /etc/fstab
+    fi
+else
+    echo "=> Memoria swap activa detectada. Omitiendo creación de swapfile."
+fi
+
+# 5. Desacoplamiento de Docker de la partición raíz
+echo "=> Configurando daemon de Docker con data-root en /home/docker..."
+mkdir -p /home/docker /etc/docker
+safe_copy "$CURRENT_DIR/etc/docker-daemon.json" /etc/docker/daemon.json
+chmod 644 /etc/docker/daemon.json
+if systemctl is-active --quiet docker; then
+    systemctl restart docker || true
+fi
 
 
 # 4. Seguridad de dispositivos de entrada (Principio de mínimo privilegio)
@@ -147,7 +183,7 @@ apt-get install -y --no-install-recommends \
     tumbler-plugins-extra \
     ffmpegthumbnailer || true
 
-# 7. Configurar repositorio Flatpak Flathub y aplicaciones de escritorio esenciales
+# 8. Configurar repositorio Flatpak Flathub y aplicaciones de escritorio esenciales
 echo "=> Configurando Flathub y aplicaciones Flatpak..."
 if command -v flatpak >/dev/null 2>&1; then
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || true
@@ -157,5 +193,5 @@ fi
 echo "=== MIGRACIÓN Y RÉPLICA COMPLETADA CON ÉXITO ==="
 echo "Ahora instala Nix y ejecuta Home Manager para restaurar todo el entorno de usuario:"
 echo "  1. sh <(curl -L https://install.determinate.systems/nix) install"
-echo "  2. nix run github:nix-community/home-manager -- switch --flake ~/dotfiles-nix#jorge"
+echo "  2. cd ~/dotfiles-nix && ./switch"
 

@@ -16,34 +16,28 @@
         inherit system;
         config.allowUnfree = true;
       };
+
+      # Detección y generación declarativa dinámica de perfiles para todos los directorios en hosts/
+      hostDirs = builtins.attrNames (
+        nixpkgs.lib.filterAttrs (_: type: type == "directory") (builtins.readDir ./hosts)
+      );
+
+      mkHostConfig = hostName: home-manager.lib.homeManagerConfiguration {
+        inherit pkgs;
+        modules = [
+          ./home.nix
+          (./hosts + "/${hostName}")
+        ];
+      };
+
+      generatedHosts = builtins.listToAttrs (map (hostName: {
+        name = "jorge@${hostName}";
+        value = mkHostConfig hostName;
+      }) hostDirs);
     in {
-      homeConfigurations = {
-        # Configuración para la máquina: jorge-terciaria
-        "jorge@jorge-terciaria" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./home.nix
-            ./hosts/jorge-terciaria
-          ];
-        };
-
-        # Configuración para la máquina: jorge-secundaria (Dual Display)
-        "jorge@jorge-secundaria" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./home.nix
-            ./hosts/jorge-secundaria
-          ];
-        };
-
+      homeConfigurations = generatedHosts // {
         # Alias por defecto para compatibilidad directa
-        "jorge" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./home.nix
-            ./hosts/jorge-terciaria
-          ];
-        };
+        "jorge" = mkHostConfig "jorge-terciaria";
       };
     };
 }

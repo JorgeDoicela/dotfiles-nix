@@ -50,11 +50,16 @@ Para maximizar la autonomía de las laptops desconectadas de la corriente:
 * **Seguridad de Periféricos Wayland vs Grupo `input`:**
   En sistemas Wayland modernos gobernados por `systemd-logind` y `seatd`, los nodos `/dev/input/*` son asignados dinámicamente a la sesión gráfica activa. **Queda terminantemente prohibido agregar usuarios de forma permanente al grupo secundario `input`**, ya que permitiría a cualquier proceso no privilegiado leer todas las pulsaciones de teclado en segundo plano (vulnerabilidad crítica de keylogging).
 
-### 5. Servicios de Hardware Específicos
+### 5. Servicios de Hardware Específicos y Detección Condicional
 * **Bluetooth Apagado en Boot:** Modificación de `AutoEnable=false` en `/etc/bluetooth/main.conf` para evitar gasto innecesario de batería al arrancar la laptop.
-* **Control de Teclado Dell:** Servicio [dell-kbd-backlight-timeout.service](../setup/etc/dell-kbd-backlight-timeout.service) para gestionar el tiempo de apagado de los LEDs del teclado.
+* **Control de Teclado Dell (Condicional):** El servicio [dell-kbd-backlight-timeout.service](../setup/etc/dell-kbd-backlight-timeout.service) solo se instala y activa si `/sys/class/dmi/id/sys_vendor` detecta hardware de fabricante Dell, garantizando portabilidad limpia en laptops HP, Lenovo u otras marcas.
+* **Ahorro de Energía GPU AMD (Condicional):** Los servicios y reglas udev de `amdgpu-powersave` se despliegan exclusivamente si se detecta una controladora VGA/3D de AMD vía `lspci`.
 
-### 6. Display Manager y Seguridad PAM (SDDM e Hyprlock)
+### 6. Estabilidad del Kernel y Aislamiento de Almacenamiento (Swap y Docker)
+* **Memoria de Intercambio Defensiva (Swap 8 GB en `/home/swapfile`):** Si el sistema no cuenta con partición swap activa, `instalar.sh` crea y configura de forma idempotente un archivo swap de 8 GB en `/home/swapfile` (aprovechando el espacio mayoritario de `/home`) y lo registra en `/etc/fstab`. Esto elimina los cierres abruptos por el *OOM Killer* del kernel en cargas pesadas de desarrollo o emulación.
+* **Desacoplamiento de Docker (`/home/docker`):** Se aprovisiona declarativamente `/etc/docker/daemon.json` fijando `"data-root": "/home/docker"` y limitación de logs JSON a 50 MB (3 archivos rotativos). Esto previene que imágenes, volúmenes y cachés de Docker saturen los ~46 GB de la partición raíz `/`.
+
+### 7. Display Manager y Seguridad PAM (SDDM e Hyprlock)
 Para garantizar la autenticación correcta y el bloqueo de pantalla en Wayland:
 * **Módulos Qt6 de SDDM:** Se aprovisionan `qml6-module-qtquick-layouts`, `qml6-module-qtquick-controls`, `qml6-module-qtquick-effects`, `qml6-module-qtmultimedia`, `qml6-module-qtquick-virtualkeyboard` y `libqt6svg6`. Estos paquetes son requeridos por las directivas `import` del tema `sddm-astronaut-theme` para evitar que el intérprete QML falle en el arranque.
 * **Integración PAM de Hyprlock:** `hyprlock` e `hypridle` se instalan a nivel de sistema (.deb) para proveer el conffile `/etc/pam.d/hyprlock`. Esto garantiza que el desbloqueo de pantalla autentique contra los módulos PAM nativos de Debian sin desajustes de librerías.
