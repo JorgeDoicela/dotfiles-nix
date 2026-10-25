@@ -126,3 +126,17 @@ El despacho de enlaces web y protocolos personalizados (`zoommtg://`, `zoomus://
      x-scheme-handler/whatsapp=com.rtosta.zapzap.desktop
      ```
    * Se elimina la necesidad de herramientas auxiliares o reconstrucciones de caché `mimeinfo.cache`, resolviendo los lanzadores de forma instantánea sin mostrar cuadros de error de aplicaciones no disponibles.
+
+---
+
+## 7. Ciclo de Vida de Seguridad y Gestión Criptográfica de Parches
+
+La gestión de parches para vulnerabilidades críticas (como fallos RCE o denegación de servicio en runtimes) aprovecha el determinismo de **Nix Flakes**:
+
+1. **Bloqueo Inmutable de Versiones ([flake.lock](../flake.lock)):**
+   * Cada herramienta del entorno de desarrollo (Node.js, Neovim, linters, compiladores) está fijada a un hash SHA-256 exacto. Ningún commit o compilación introduce cambios flotantes sin consentimiento.
+2. **Mitigación Quirúrgica de Vulnerabilidades:**
+   * Ante alertas de seguridad críticas (ejemplo: `CVE-2026-111497` de ejecución remota de código en el decodificador Brotli de Node.js 22.x), la remediación se ejecuta actualizando el input de Nixpkgs (`nix flake update nixpkgs`).
+   * Nix descarga la versión mitigada (`v22.23.4`) directamente de la caché binaria oficial (`cache.nixos.org`), reemplazando el runtime en `/nix/store/` sin tocar el gestor de paquetes del sistema operativo base (Debian).
+3. **Distribución Cero-Drift a la Flota:**
+   * Al hacer commit de `flake.lock` y sincronizarlo mediante Git, cualquier laptop de la flota que ejecute `git pull && ./switch` recibe exactamente el mismo binario validado criptográficamente, erradicando discrepancias entre equipos de trabajo.

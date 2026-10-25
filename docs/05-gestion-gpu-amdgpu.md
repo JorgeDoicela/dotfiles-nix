@@ -41,6 +41,7 @@ Restaura el comportamiento dinámico (`auto`) para tareas de alta carga gráfica
 ### 3. Servicio Systemd y Regla Udev
 * **Servicio ([amdgpu-powersave.service](../setup/amdgpu/amdgpu-powersave.service)):** Se ejecuta al inicio del sistema para arrancar la laptop en estado frío y de bajo consumo por defecto.
 * **Regla Udev ([91-amdgpu-powersave.rules](../setup/amdgpu/91-amdgpu-powersave.rules)):** Aplica la política energética ante eventos de conexión en caliente o reanudación tras suspensión.
+* **Detección Condicional en Despliegue:** En [setup/instalar.sh](../setup/instalar.sh), la instalación y activación de estos componentes se condiciona a la detección real de una controladora VGA/3D de AMD vía `lspci -d ::0300`. Si la máquina dispone de gráficos Intel o NVIDIA, el script omite la instalación sin arrojar errores.
 
 ---
 

@@ -33,20 +33,17 @@ sh <(curl -L https://install.determinate.systems/nix) install
 *Cierra y reabre tu terminal o ejecuta `source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh` para cargar las variables.*
 
 ### Paso 4: Desplegar el Perfil Declarativo de Home Manager
+Desde la raíz del repositorio, ejecuta el wrapper unificado:
 ```bash
-# Desde el directorio del repositorio:
-# Para la laptop jorge-secundaria:
-nix run github:nix-community/home-manager -- switch --flake .#jorge@jorge-secundaria
-
-# Para la laptop jorge-terciaria:
-nix run github:nix-community/home-manager -- switch --flake .#jorge@jorge-terciaria
+./switch
 ```
+*El script detectará automáticamente el hostname local, validará que exista en `hosts/` y ejecutará Home Manager (haciendo uso automático de `nix run` si el comando `home-manager` aún no está en el `PATH`).*
 
 ---
 
 ## Runbook 2: Agregar una Nueva Laptop al Repositorio
 
-Si incorporas un nuevo equipo (por ejemplo, `jorge-cuarta`):
+Gracias al motor de **auto-descubrimiento dinámico** en [flake.nix](../flake.nix), añadir un nuevo host ya no requiere modificar el código del Flake:
 
 1. **Crear la estructura del host:**
    ```bash
@@ -66,25 +63,25 @@ Si incorporas un nuevo equipo (por ejemplo, `jorge-cuarta`):
        browserScale = "1";
      };
 
+     # Enlace declarativo de monitores
      xdg.configFile."hypr/monitors.conf".source = ./monitors.conf;
-     xdg.configFile."waybar/config.json".source = ./config.json;
    }
    ```
-3. **Crear `monitors.conf` y `config.json`:**
-   Configura la resolución nativa de la pantalla interna y el estilo de la barra Waybar según las características del nuevo equipo.
-4. **Registrar el host en [flake.nix](../flake.nix):**
-   ```nix
-   "jorge@jorge-cuarta" = home-manager.lib.homeManagerConfiguration {
-     inherit pkgs;
-     modules = [
-       ./home.nix
-       ./hosts/jorge-cuarta
-     ];
-   };
+   *(Nota: Waybar se genera automáticamente a partir de la barra base declarativa en `mySystem.waybarConfig`. Si la máquina usa una sola pantalla estándar, no requiere configuraciones adicionales de barra).*
+3. **Crear `hosts/jorge-cuarta/monitors.conf`:**
+   Declara la geometría del panel de la laptop:
+   ```ini
+   monitor = eDP-1, preferred, auto, 1
+   monitor = , preferred, auto, 1
    ```
-5. **Verificar que la sintaxis sea correcta:**
+4. **Verificar que el Flake detecte el host y valide con éxito:**
    ```bash
+   git add hosts/jorge-cuarta
    nix flake check .
+   ```
+5. **Aplicar en la nueva máquina:**
+   ```bash
+   ./switch
    ```
 
 ---
@@ -338,4 +335,52 @@ Confirma que las directivas de seguridad locales están activas en tiempo de eje
 xfconf-query -c thunar -p /misc-thumbnail-mode
 # Salida esperada: THUNAR_THUMBNAIL_MODE_ONLY_LOCAL
 ```
+
+---
+
+## Runbook 7: Ciclo de Actualización de Seguridad y Parches de Dependencias
+
+Cuando se publiquen boletines de seguridad para runtimes o herramientas de desarrollo (ej. parche de CVEs en Node.js, OpenSSL o Neovim):
+
+### 1. Diagnóstico de Versión Activa
+```bash
+# Consultar versión actual del binario gobernado por Nix:
+node -v
+pnpm -v
+```
+
+### 2. Actualización de Canales en el Lockfile
+Actualiza el input de `nixpkgs` hacia el último commit del canal `nixos-unstable`:
+```bash
+cd ~/dotfiles-nix
+nix flake update nixpkgs
+```
+
+### 3. Validación de Compilación de la Flota
+Verifica que la actualización no rompa ninguna configuración de las laptops:
+```bash
+nix flake check .
+```
+
+### 4. Despliegue en la Máquina Activa
+Aplica la nueva generación:
+```bash
+./switch
+```
+
+### 5. Verificación de Versión Parcheada
+```bash
+node -v   # Confirma la versión mitigada (ej. v22.23.4)
+```
+
+### 6. Procedimiento de Rollback Inmediato
+Si una actualización introduce regresiones inesperadas en alguna herramienta:
+```bash
+# Restaurar el lockfile anterior en Git:
+git checkout flake.lock
+
+# O volver a la generación anterior de Home Manager en segundos:
+~/.local/state/nix/profiles/home-manager-*-link/activate
+```
+
 

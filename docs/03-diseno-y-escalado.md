@@ -110,11 +110,11 @@ Para pantallas pequeñas (como en `jorge-secundaria`), se inyecta el flag `--for
 
 ## 4. Arquitectura Modular de la Barra de Estado (Waybar)
 
-Para erradicar la duplicación de código y garantizar consistencia absoluta entre laptops, Waybar adopta un **patrón modular desacoplado**:
+Para erradicar la duplicación de código y garantizar consistencia absoluta entre laptops, Waybar adopta un **patrón declarativo centralizado (DRY)**:
 
-### 1. Única Fuente de Verdad: `modules.json`
+### 1. Única Fuente de Verdad para Módulos: `modules.json`
 * **Ubicación:** [raw_configs/waybar/modules.json](../raw_configs/waybar/modules.json) (enlazado a `~/.config/waybar/modules.json`).
-* **Propósito:** Centraliza la definición exhaustiva de todos los módulos del sistema:
+* **Propósito:** Centraliza la definición exhaustiva de todos los widgets del sistema:
   * `hyprland/workspaces` y `hyprland/window`
   * `clock` y `clock#compact` (intervalo de 30s sin segundos para eficiencia energética)
   * `cpu`, `memory` y `disk` (telemetría de rendimiento)
@@ -126,14 +126,20 @@ Para erradicar la duplicación de código y garantizar consistencia absoluta ent
 
 Cualquier mejora en iconos, intervalos o atajos se realiza **en este único archivo** y se propaga automáticamente a todos los hosts y monitores.
 
-### 2. Archivos de Host Exclusivos para Maquetación (`include`)
-Los perfiles de máquina ya no definen módulos a mano, sino que importan `modules.json` mediante `"include": ["~/.config/waybar/modules.json"]` y se limitan a orquestar el layout:
+### 2. Generación Declarativa Tipada (`mySystem.waybarConfig`)
+Se eliminaron por completo los archivos `config.json` estáticos e independientes en las carpetas de cada host. La configuración de las barras ahora se gestiona como una estructura de datos nativa en Nix dentro de [modules/style.nix](../modules/style.nix) y se compila a JSON mediante `builtins.toJSON` en [modules/desktop.nix](../modules/desktop.nix):
 
-* **Laptop Principal ([hosts/jorge-terciaria/config.json](../hosts/jorge-terciaria/config.json)):**
-  * Barra única de `30px` adaptada a 1080p con workspaces globales (`all-outputs: true`).
-* **Laptop Secundaria ([hosts/jorge-secundaria/config.json](../hosts/jorge-secundaria/config.json)):**
-  * Barra 1 (`HDMI-A-1` / `DP-1`): Altura de `26px` con suite completa y workspaces asignados al monitor externo.
-  * Barra 2 (`eDP-1`): Altura de `26px` compacta (omite telemetría pesada para respetar el panel de 768p y la franja de 228px reservada por hardware).
+```nix
+xdg.configFile."waybar/config.json".text = builtins.toJSON config.mySystem.waybarConfig;
+```
+
+#### Comportamiento por Host:
+* **Host Estándar / Panel Único ([hosts/jorge-terciaria/default.nix](../hosts/jorge-terciaria/default.nix)):**
+  * No requiere declarar nada sobre Waybar. Hereda automáticamente la barra horizontal por defecto de 26px definida en `mySystem.waybarConfig`, vinculada a `output = [ "eDP-1" ]`.
+* **Host Multi-Monitor ([hosts/jorge-secundaria/default.nix](../hosts/jorge-secundaria/default.nix)):**
+  * Sobreescribe `mySystem.waybarConfig` declarando dos barras independientes:
+    * **Barra Externa (`HDMI-A-1` / `DP-1`):** Altura de 26px con suite completa y margen 0.
+    * **Barra Interna (`eDP-1`):** Altura de 24px con margen compensado de 228px (`margin-left = 228`) para esquivar la franja rota de la pantalla física.
 * **Rotación Vertical ([raw_configs/waybar/config_vertical.json](../raw_configs/waybar/config_vertical.json)):**
   * Altura de `28px` auto-cargada por [start_waybar.sh](../raw_configs/hypr/start_waybar.sh) cuando [hypr-rotate](../raw_configs/scripts/hypr-rotate) cambia la orientación a 90° o 270°.
 

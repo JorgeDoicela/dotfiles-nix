@@ -8,11 +8,15 @@ Este documento describe la arquitectura, dependencias y uso operativo de los scr
 
 El entorno implementa un **modelo híbrido de dos capas** para gestionar Google Drive de manera ágil entre múltiples laptops:
 
-### Capa 1: Disco Virtual On-Demand (`~/Drive` vía FUSE)
+### Capa 1: Disco Virtual On-Demand (`~/Drive` vía FUSE Aislado)
 * **Servicio:** `rclone-gdrive.service` (Systemd de usuario en [modules/apps.nix](../modules/apps.nix)).
-* **Punto de Montaje:** `$HOME/Drive`.
-* **Caché VFS:** `--vfs-cache-mode full` con límite de 15 GB y expiración de 72h.
-* **Operación:** Permite explorar, abrir, mover, subir y eliminar cualquier archivo o carpeta de tu cuenta de Google Drive directamente desde la terminal, Yazi o Thunar sin tener que clonar gigabytes al disco local.
+* **Arquitectura de Aislamiento XDG:** Para evitar que GVFS (`gvfs-udisks2-volume-monitor`) sondee la API de Google Drive buscando archivos `autorun.inf` o `bdmv` y bloquee D-Bus durante 25 segundos al abrir exploradores como Thunar, el punto de montaje real reside en un subdirectorio XDG oculto: `%h/.local/share/gdrive`.
+* **Symlink Transparente:** Se expone de forma automática hacia `%h/Drive` (`~/Drive`) para paridad con terminales y scripts.
+* **Resiliencia VFS y Emulación de Cuota:**
+  * `--vfs-disk-space-total-size 5T`: Emula un tamaño estático para responder al instante las llamadas al sistema `statfs()`/`statvfs()` de Linux sin consultar la cuota remota por HTTP.
+  * `--vfs-cache-mode full` con límite de 15 GB y expiración de 72h.
+  * `--attr-timeout 10m` y `--dir-cache-time 24h` para caching agresivo de metadatos.
+  * `--timeout 30s` y `--contimeout 10s` para desconexión limpia ante fallos de red.
 * **Aliases rápidos en Zsh:** `drive` o `gdrive` para navegar directamente a `$HOME/Drive`.
 
 ### Capa 2: Gestor Modular de Sincronización Offline (`sincro`)
@@ -154,4 +158,15 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
 * **Ubicación:** Generado por [modules/scripts.nix](../modules/scripts.nix) hacia `~/.local/bin/zapzap`.
 * **Propósito:** Encapsula la ejecución del contenedor Flatpak (`exec /usr/bin/flatpak run com.rtosta.zapzap "$@"`).
 * **Beneficio:** Permite lanzar el cliente de WhatsApp desde terminales, scripts personalizados o lanzadores rápidos de manera transparente sin depender de la sintaxis verbosa de Flatpak.
+
+---
+
+## 9. Wrapper Operativo de Despliegue (`switch`)
+
+* **Ubicación:** [switch](../switch) en la raíz del repositorio.
+* **Propósito:** Automatiza la aplicación de perfiles de Home Manager resolviendo dinámicamente el hostname de la máquina y blindando la ejecución:
+  1. **Resolución Automática:** Detecta `$(hostname)` y resuelve el target `jorge@<hostname>`.
+  2. **Validación Preventiva:** Verifica si existe la carpeta correspondiente dentro de `hosts/`. Si no existe, muestra los hosts válidos disponibles y aborta antes de evaluar el Flake.
+  3. **Auto-fallback en Bootstrapping:** Si el comando `home-manager` no se encuentra en el `PATH` del usuario (típico en la primera instalación de una laptop), delega automáticamente a `nix run github:nix-community/home-manager -- switch --flake ...` para que el usuario no tenga que memorizar comandos complejos.
+
 

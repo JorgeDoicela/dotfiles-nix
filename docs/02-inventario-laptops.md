@@ -39,7 +39,7 @@ Este documento especifica los perfiles técnicos de hardware para cada laptop ge
   Para compensar la tasa de sondeo del touchpad de este equipo y brindar una experiencia de navegación ágil y fluida, se ajustaron valores en [default.nix](../hosts/jorge-terciaria/default.nix):
   * `cursorSensitivity = "0.35"`: respuesta ágil sin sobrepasarse en distancias cortas.
   * `scrollFactor = "0.27"`: factor de reducción de inercia de scroll para evitar saltos violentos al leer documentos o navegar la web.
-* **Waybar:** [hosts/jorge-terciaria/config.json](../hosts/jorge-terciaria/config.json) con barra horizontal completa a `34px` de altura.
+* **Waybar:** Hereda la barra horizontal estándar declarativa definida en `mySystem.waybarConfig` a `26px` de altura sin requerir archivos JSON adicionales.
 
 ---
 

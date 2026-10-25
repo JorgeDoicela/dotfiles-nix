@@ -11,16 +11,22 @@ Este catálogo resume todos los atajos de teclado configurados en [raw_configs/h
 | Atajo | Acción / Aplicación |
 | :--- | :--- |
 | `Super + Return` | Terminal Alacritty |
+| `Super + A` | Antigravity IDE (`antigravity-ide`) |
 | `Super + B` | Navegador web Brave |
-| `Super + C` | Editor de código (Antigravity / VS Code) |
+| `Super + C` | Editor de código VS Code |
 | `Super + E` | Explorador de archivos terminal Yazi |
 | `Super + Shift + E` | Explorador de archivos gráfico Thunar |
+| `Super + M` | Zoom con patrón *Raise or Launch* (`zoom`) |
+| `Super + O` | Bóveda de notas Obsidian (`obsidian`) |
+| `Super + T` | Entorno de desarrollo Orca IDE (`orca-ide`) |
 | `Ctrl + Shift + Esc` | Monitor del sistema interactivo (Btop) |
 | `Super + Space` | Lanzador de aplicaciones (Rofi Drun) |
 | `Super + Tab` | Selector de ventanas abiertas (Rofi Window) |
-| `Alt + Tab` | Selector visual estilo Windows (**Hyprshell**) |
+| `Alt + Tab` | Selector visual de ventanas estilo macOS/Windows (**Hyprshell**) |
 | `Super + V` | Historial del portapapeles (Cliphist + Rofi) |
 | `Super + Shift + V` | Limpiar historial del portapapeles |
+| `Super + ,` | Selector interactivo de emojis con Rofi |
+| `Super + .` | Selector interactivo de glifos y símbolos con Rofi |
 | `Super + H` | Guía de atajos en pantalla |
 
 ---
