@@ -174,6 +174,7 @@ apt-get install -y --no-install-recommends \
     pipewire-pulse \
     tlp \
     tlp-rdw \
+    docker.io \
     flatpak \
     brave-browser \
     thunar \
