@@ -103,6 +103,9 @@ graph TD
 3. **Resiliencia en el Montaje FUSE de Rclone ([modules/apps.nix](../modules/apps.nix)):**
    * Vinculado a `graphical-session.target` (eliminando la dependencia inexistente `network-online.target` en el gestor de usuario).
    * Banderas críticas: `--attr-timeout 10m` y `--dir-cache-time 24h` (eliminan llamadas remotas `stat()` redundantes), `--poll-interval 1m` (notificaciones asíncronas de cambios), `--vfs-disk-space-total-size 5T` (emulación estática de espacio que previene congelamiento en `statfs()`), `--timeout 30s` y `--contimeout 10s` (corte estricto de sockets para prevenir procesos en estado D no interrumpible ante fallos de red).
+4. **Aislamiento FUSE contra Sondeos de Discos GVFS ([modules/apps.nix](../modules/apps.nix)):**
+   * El sistema FUSE se monta en `~/.local/share/gdrive` y se expone como enlace simbólico transparente en `~/Drive`.
+   * Motivo técnico: La regla nativa de GVFS (`g_strstr_len(mount_path, -1, "/.") != NULL`) ignora automáticamente cualquier montaje en subdirectorios ocultos. Esto impide que `gvfs-udisks2-volume-monitor` lo catalogue como unidad extraíble y envíe sondeos síncronos de red (`autorun.inf`, `bdmv`, `xdg_volume_info`) al arrancar exploradores en frío como Thunar, eliminando de raíz el timeout de 25 segundos de D-Bus.
 
 ---
 

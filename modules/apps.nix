@@ -130,6 +130,10 @@
   xdg.configFile."rclone/sincro-filters.txt".source = ../raw_configs/rclone/sincro-filters.txt;
 
   # Servicio de usuario Systemd para montaje FUSE de Google Drive bajo demanda (~/Drive)
+  # El montaje real se realiza en ~/.local/share/gdrive (ruta XDG con subdirectorio oculto '/.')
+  # para que GVFS / GVolumeMonitor lo ignore por diseno nativo (g_strstr_len "/.") y nunca
+  # realice sondeos sincronos de autorun/bdmv que bloqueen D-Bus y exploradores como Thunar.
+  # Se enlaza de forma transparente como symlink a %h/Drive para paridad total con CLI y scripts.
   systemd.user.services.rclone-gdrive = {
     Unit = {
       Description = "Montaje virtual de Google Drive con Rclone (FUSE)";
@@ -139,9 +143,13 @@
     Service = {
       Type = "simple";
       ExecCondition = "${pkgs.bash}/bin/bash -c '${pkgs.rclone}/bin/rclone listremotes 2>/dev/null | grep -q \"^gdrive:\"'";
-      ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p %h/Drive";
+      ExecStartPre = [
+        "${pkgs.coreutils}/bin/mkdir -p %h/.local/share/gdrive"
+        "${pkgs.bash}/bin/bash -c 'if [ ! -L %h/Drive ] && [ -d %h/Drive ]; then ${pkgs.coreutils}/bin/rmdir %h/Drive 2>/dev/null || true; fi'"
+        "${pkgs.coreutils}/bin/ln -sfn %h/.local/share/gdrive %h/Drive"
+      ];
       ExecStart = ''
-        ${pkgs.rclone}/bin/rclone mount gdrive: %h/Drive \
+        ${pkgs.rclone}/bin/rclone mount gdrive: %h/.local/share/gdrive \
           --vfs-cache-mode full \
           --vfs-cache-max-size 15G \
           --vfs-cache-max-age 72h \
@@ -160,7 +168,7 @@
           --no-modtime \
           --umask 022
       '';
-      ExecStop = "/usr/bin/fusermount3 -u -z %h/Drive";
+      ExecStop = "/usr/bin/fusermount3 -u -z %h/.local/share/gdrive";
       Restart = "on-failure";
       RestartSec = "10s";
     };

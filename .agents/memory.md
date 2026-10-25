@@ -121,9 +121,14 @@
 ---
 
 ## 8. Optimización FUSE de Google Drive y Rendimiento de Exploradores (Desktop IaC)
+* **Aislamiento de Montaje FUSE en Subdirectorio XDG (`~/.local/share/gdrive` + Symlink `~/Drive`):**
+  * Montar FUSE directamente en `$HOME/Drive` fuerza a GVFS (`gvfsudisks2volumemonitor.c`) a clasificarlo como un volumen de disco visible según su regla `g_str_has_prefix(path, home_dir)`. Esto provoca que en arranque en frío `update_mount()` dispare sondas síncronas a la API remota (`autorun.inf`, `bdmv`, `xdg_volume_info`), bloqueando `gvfs-udisks2-volume-monitor` en estado D del kernel y agotando el timeout de D-Bus de 25 segundos al abrir exploradores como Thunar.
+  * Solución estándar: El montaje real se aloja en `%h/.local/share/gdrive` y se expone como symlink transparente en `%h/Drive`. La regla nativa de GVFS `g_strstr_len(mount_path, -1, "/.") != NULL` ignora de inmediato cualquier montaje en subdirectorios ocultos, erradicando los sondeos remotos y manteniendo el acceso idéntico para el usuario y scripts.
+* **Precarga de Infraestructura de Discos del SO (No Demonio de Thunar):**
+  * `gvfs-udisks2-volume-monitor.service` (daemon C ligero de ~2 MB) se vincula a `hyprland-session.target` en `modules/desktop.nix` para que el bus D-Bus esté listo en el login. Thunar permanece como aplicación bajo demanda que se abre en milisegundos y libera RAM al cerrarse.
 * **Prevención de Bloqueos en `statfs` / GVFS (`rclone-gdrive`):**
-  * Al montar Google Drive vía FUSE en `modules/apps.nix` (`~/Drive`), es mandatorio declarar `--vfs-disk-space-total-size 5T` y `--vfs-fast-fingerprint`.
-  * Motivo: Sin esta bandera, `rclone` intercepta las llamadas al sistema `statfs()`/`statvfs()` de Linux y realiza una consulta HTTP síncrona a la API de Google Drive (`About.get`) para resolver la cuota libre. Esto congela de forma síncrona a exploradores de archivos (Thunar, Yazi) y monitores de dispositivos (`gvfs-udisks2-volume-monitor`) durante 20-35 segundos en el arranque. Declarar el tamaño estático emula la geometría en memoria local respondiendo en milisegundos sin llamadas de red.
+  * Al montar Google Drive vía FUSE en `modules/apps.nix`, es mandatorio declarar `--vfs-disk-space-total-size 5T` y `--vfs-fast-fingerprint`.
+  * Motivo: Sin esta bandera, `rclone` intercepta las llamadas al sistema `statfs()`/`statvfs()` de Linux y realiza una consulta HTTP síncrona a la API de Google Drive (`About.get`) para resolver la cuota libre. Declarar el tamaño estático emula la geometría en memoria local respondiendo en milisegundos sin llamadas de red.
 * **Blindaje del Servicio FUSE y Resiliencia de Red:**
   * La unidad `rclone-gdrive.service` no debe depender de `network-online.target` (inexistente en `systemd --user`), sino acoplarse a `graphical-session.target`.
   * Parámetros innegociables de resiliencia: `--attr-timeout 10m` y `--dir-cache-time 24h` (eliminan consultas repetitivas de atributos a la API remota), `--poll-interval 1m` (notificaciones asíncronas de cambios), `--timeout 30s` y `--contimeout 10s` (límite estricto para evitar sockets en estado D en el kernel ante caídas de red) y `--no-modtime`.
