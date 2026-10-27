@@ -12,11 +12,11 @@
     browserScale = "0.8";
     hyprActiveBorder = "rgba(ffffffc6)"; # Borde blanco con incremento mínimo (~78% alfa vs 71% anterior)
     hyprRounding = 10;                  # Redondeo adaptado proporcionalmente a 768p (10px vs 14px en 1080p)
-    rofiLauncherPadding = "40px 80px 30px 80px"; # Base simétrica; compensación de franja rota en eDP-1 inyectada dinámicamente por rofilaunch.sh
+    rofiLauncherPadding = "40px 80px 30px 308px"; # 80px base + 228px compensación franja rota eDP-1
     rofiLauncherColumns = 5;
     rofiLauncherLines = 3;
     rofiLauncherIconSize = "48px";
-    rofiBooksPadding = "30px 60px 20px 60px"; # Base simétrica; compensación de franja rota en eDP-1 inyectada dinámicamente por selector-libros.sh
+    rofiBooksPadding = "30px 60px 20px 288px"; # 60px base + 228px compensación franja rota eDP-1
     rofiBooksLines = 7;
 
     # Dimensionamiento adaptativo de SwayNC para 768p (elimina desborde vertical de 860px)
