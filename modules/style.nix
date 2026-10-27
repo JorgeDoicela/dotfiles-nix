@@ -109,8 +109,8 @@
     };
     gsimplecalMove = lib.mkOption {
       type = lib.types.str;
-      default = "1500 65";
-      description = "Coordenadas de posicionamiento de gsimplecal en Hyprland";
+      default = "cursor -50% 30";
+      description = "Coordenadas o modificador dinámico de posicionamiento de gsimplecal en Hyprland";
     };
     rofiLauncherPadding = lib.mkOption {
       type = lib.types.str;

@@ -269,12 +269,35 @@ def main():
 
     modes_arg = build_dynamic_modes(script_path)
 
+    # Detectar margen reservado izquierdo en el monitor enfocado (ej. compensación franja rota en eDP-1)
+    res_l = 0
+    try:
+        mon_proc = subprocess.run(
+            ["hyprctl", "monitors", "-j"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.DEVNULL,
+            text=True,
+            check=False,
+        )
+        if mon_proc.returncode == 0 and mon_proc.stdout:
+            import json
+            monitors_data = json.loads(mon_proc.stdout)
+            focused_mon = next((m for m in monitors_data if m.get("focused")), monitors_data[0] if monitors_data else {})
+            reserved = focused_mon.get("reserved", [0, 0, 0, 0])
+            if isinstance(reserved, list) and len(reserved) > 0:
+                res_l = int(reserved[0])
+    except Exception:
+        res_l = 0
+
     rofi_cmd = [
         "rofi",
         "-show", "Todos",
         "-modes", modes_arg,
-        "-theme", theme_path
+        "-theme", theme_path,
     ]
+    if res_l > 0:
+        pad_l = 60 + res_l
+        rofi_cmd.extend(["-theme-str", f"mainbox {{ padding: 30px 60px 20px {pad_l}px; }}"])
 
     os.execvp("rofi", rofi_cmd)
 

@@ -4,29 +4,36 @@ set -euo pipefail
 
 pos="${1:-center}"
 
-# Obtener dimensiones del monitor actualmente enfocado
-read -r MX MY MW MH < <(
-	hyprctl monitors -j | jq -r '(.[] | select(.focused == true) // .[0]) | "\(.x) \(.y) \(.width) \(.height)"'
+# Obtener dimensiones y márgenes reservados del monitor actualmente enfocado
+# Hyprland reporta reserved en formato [LEFT, TOP, RIGHT, BOTTOM]
+read -r MX MY MW MH RL RT RR RB < <(
+	hyprctl monitors -j | jq -r '(.[] | select(.focused == true) // .[0]) | "\(.x) \(.y) \(.width) \(.height) \(.reserved[0] // 0) \(.reserved[1] // 0) \(.reserved[2] // 0) \(.reserved[3] // 0)"'
 )
+
+# Ajustar el área usable del monitor restando márgenes reservados (ej. franja rota eDP-1 o Waybar)
+MX=$((MX + RL))
+MY=$((MY + RT))
+MW=$((MW - RL - RR))
+MH=$((MH - RT - RB))
 
 G=16
 
 case "$pos" in
 left)
 	X=$((MX + G))
-	Y=$((MY + G + 36))
+	Y=$((MY + G))
 	W=$(((MW - G * 3) / 2))
-	H=$((MH - G * 2 - 40))
+	H=$((MH - G * 2))
 	;;
 right)
 	X=$((MX + (MW + G) / 2))
-	Y=$((MY + G + 36))
+	Y=$((MY + G))
 	W=$(((MW - G * 3) / 2))
-	H=$((MH - G * 2 - 40))
+	H=$((MH - G * 2))
 	;;
 top)
 	X=$((MX + G))
-	Y=$((MY + G + 36))
+	Y=$((MY + G))
 	W=$((MW - G * 2))
 	H=$(((MH - G * 3) / 2))
 	;;

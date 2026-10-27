@@ -19,9 +19,11 @@ if [ ! -f "$wLayout" ] || [ ! -f "$wlTmplt" ]; then
     wlTmplt="$confDir/wlogout/style_$wlogoutStyle.css"
 fi
 
-# Obtener dimensiones del monitor enfocado para escalar wlogout
+# Obtener dimensiones y margen izquierdo reservado del monitor enfocado
 x_mon=$(hyprctl -j monitors | jq '.[] | select(.focused==true) | .width' 2>/dev/null || echo 1920)
 y_mon=$(hyprctl -j monitors | jq '.[] | select(.focused==true) | .height' 2>/dev/null || echo 1080)
+res_l=$(hyprctl -j monitors | jq '.[] | select(.focused==true) | .reserved[0]' 2>/dev/null || echo 0)
+[ -z "$res_l" ] && res_l=0
 hypr_scale=$(hyprctl -j monitors | jq '.[] | select (.focused == true) | .scale' | sed 's/\.//' 2>/dev/null || echo 100)
 [ -z "$hypr_scale" ] && hypr_scale=100
 
@@ -51,6 +53,6 @@ export button_rad=$((hypr_border * 8))
 # Generar archivo CSS temporal usando envsubst
 wlStyle="$(envsubst < "$wlTmplt")"
 
-# Lanzar wlogout
-wlogout -b "$wlColms" -c 0 -r 0 -m 0 --layout "$wLayout" --css <(echo "$wlStyle") --protocol layer-shell
+# Lanzar wlogout respetando margen reservado de la pantalla
+wlogout -b "$wlColms" -c 0 -r 0 -m 0 -L "$res_l" --layout "$wLayout" --css <(echo "$wlStyle") --protocol layer-shell
 
