@@ -127,4 +127,56 @@
       exec /usr/bin/flatpak run com.rtosta.zapzap "$@"
     '';
   };
+
+  # Wrapper declarativo para Steam nativo de Debian
+  # 1. Asegura configuración de idioma español en ~/.steam/registry.vdf
+  # 2. Configura compatibilidad global de Proton 9.0 y caché de sombreadores en config.vdf
+  # 3. Despacha al binario nativo /usr/games/steam
+  home.file.".local/bin/steam" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      REGISTRY_VDF="$HOME/.steam/registry.vdf"
+      CONFIG_VDF="$HOME/.steam/debian-installation/config/config.vdf"
+
+      # Asegurar idioma español en registry.vdf si existe y está en inglés
+      if [ -f "$REGISTRY_VDF" ] && grep -q '"language"[[:space:]]*"english"' "$REGISTRY_VDF" 2>/dev/null; then
+          sed -i 's/"language"[[:space:]]*"english"/"language"\t\t"spanish"/g' "$REGISTRY_VDF"
+      fi
+
+      # Asegurar Proton 9 y precompilación de sombreadores en config.vdf
+      if [ -f "$CONFIG_VDF" ]; then
+          if grep -q "proton_experimental" "$CONFIG_VDF" 2>/dev/null; then
+              sed -i 's/"name"[[:space:]]*"proton_experimental"/"name"\t\t"proton_9"/g' "$CONFIG_VDF"
+          fi
+          if ! grep -q "CompatToolMapping" "$CONFIG_VDF" 2>/dev/null; then
+              python3 -c '
+import os
+path = os.path.expanduser("~/.steam/debian-installation/config/config.vdf")
+with open(path, "r", encoding="utf-8") as f:
+    c = f.read()
+compat_block = """\t\t\t\t"EnableSteamDesktopPlay"\t\t"1"
+\t\t\t\t"SteamPlay"\t\t"1"
+\t\t\t\t"CompatToolMapping"
+\t\t\t\t{
+\t\t\t\t\t"0"
+\t\t\t\t\t{
+\t\t\t\t\t\t"name"\t\t"proton_9"
+\t\t\t\t\t\t"config"\t\t""
+\t\t\t\t\t\t"priority"\t\t"250"
+\t\t\t\t\t}
+\t\t\t\t}"""
+if "\"CompatToolMapping\"" not in c and "\"AutoUpdateWindowEnabled\"" in c:
+    c = c.replace("\"AutoUpdateWindowEnabled\"\t\t\"0\"", "\"AutoUpdateWindowEnabled\"\t\t\"0\"\n" + compat_block)
+with open(path, "w", encoding="utf-8") as f:
+    f.write(c)
+' 2>/dev/null || true
+          fi
+      fi
+
+      exec /usr/games/steam "$@"
+    '';
+  };
 }
