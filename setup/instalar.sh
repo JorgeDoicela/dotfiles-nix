@@ -37,6 +37,12 @@ mkdir -p /usr/share/keyrings /etc/apt/sources.list.d /etc/apt/preferences.d /etc
 # Restaurar sources.list base de Debian
 safe_copy "$CURRENT_DIR/etc/sources.list" /etc/apt/sources.list
 
+# Habilitar arquitectura de 32 bits (Multiarch i386) para Steam y Wine/Proton
+if ! dpkg --print-foreign-architectures 2>/dev/null | grep -q "i386"; then
+    echo "=> Habilitando arquitectura multiarch i386..."
+    dpkg --add-architecture i386
+fi
+
 # Copiar llaves GPG locales del sistema (Brave)
 safe_copy "$CURRENT_DIR/keyrings/brave-browser-archive-keyring.gpg" /usr/share/keyrings/brave-browser-archive-keyring.gpg
 
@@ -146,7 +152,7 @@ if [ -f /etc/fuse.conf ]; then
     sed -i 's/^[#[:space:]]*user_allow_other[[:space:]]*$/user_allow_other/' /etc/fuse.conf
 fi
 
-# 6. Actualizar repositorios e instalar paquetes base de Debian (Kernel/Drivers/Hyprland/SDDM)
+# 8. Actualizar repositorios e instalar paquetes base de Debian (Kernel/Drivers/Hyprland/SDDM)
 echo "=> Actualizando fuentes de apt e instalando paquetes base del sistema..."
 apt-get update
 apt-get install -y --no-install-recommends \
@@ -187,7 +193,21 @@ apt-get install -y --no-install-recommends \
     tumbler-plugins-extra \
     ffmpegthumbnailer || true
 
-# 8. Configurar repositorio Flatpak Flathub y aplicaciones de escritorio esenciales
+# 9. Aprovisionar Steam nativo y controladores gráficos 32 bits (Multiarch)
+echo "=> Aprovisionando Steam nativo, soporte de mandos y controladores gráficos 32 bits..."
+echo "steam steam/question select I AGREE" | debconf-set-selections 2>/dev/null || true
+echo "steam steam/license note" | debconf-set-selections 2>/dev/null || true
+apt-get install -y --no-install-recommends \
+    steam-installer \
+    steam-devices \
+    mesa-vulkan-drivers:i386 \
+    libgl1-mesa-dri:i386 || apt-get install -y -t trixie-backports \
+    steam-installer \
+    steam-devices \
+    mesa-vulkan-drivers:i386 \
+    libgl1-mesa-dri:i386 || true
+
+# 10. Configurar repositorio Flatpak Flathub y aplicaciones de escritorio esenciales
 echo "=> Configurando Flathub y aplicaciones Flatpak..."
 if command -v flatpak >/dev/null 2>&1; then
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || true

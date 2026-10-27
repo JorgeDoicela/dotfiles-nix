@@ -83,6 +83,14 @@ Para erradicar dependencias externas frágiles que degradan el tiempo de ejecuci
 * **Capa de Abstracción VFS de Usuario:** Instalación de `gvfs-backends` y `gvfs-fuse`. Sin `gvfs-fuse`, el subsistema GIO intenta ejecutar llamadas síncronas bloqueantes de metadatos directamente sobre puntos de montaje FUSE, provocando que el hilo de renderizado de GTK se cuelgue al abrir `$HOME`.
 * **Motor de Miniaturas y Previsualizaciones:** Instalación de `tumbler`, `tumbler-plugins-extra` y `ffmpegthumbnailer` para procesamiento eficiente de imágenes y videos locales.
 
+### 11. Plataforma de Videojuegos y Soporte Multiarch (Steam y Mesa 32 bits)
+Para habilitar videojuegos nativos y de Windows (mediante la capa de compatibilidad Proton) con aceleración gráfica completa por hardware:
+* **Habilitación de Arquitectura de 32 bits (`dpkg --add-architecture i386`):** Requerida para que el gestor de paquetes de Debian resuelva y descargue binarios y librerías dinámicas de 32 bits utilizadas por gran parte del catálogo de videojuegos de PC.
+* **Componentes `contrib` y `non-free` en APT:** Permiten el acceso al metapaquete instalador oficial `steam-installer`.
+* **Controladores Gráficos Multi-Fabricante de 32 bits (`mesa-vulkan-drivers:i386`, `libgl1-mesa-dri:i386`):** Proveen soporte Vulkan y OpenGL tanto para GPUs AMD Radeon (`radv`) como para GPUs integradas Intel Iris Xe/UHD (`anv`), garantizando compatibilidad universal en laptops de cualquier marca.
+* **Soporte de Mandos Plug-and-Play (`steam-devices`):** Despliega reglas udev a nivel de kernel para permitir el emparejamiento y uso de controladores de PlayStation (DualShock/DualSense), Xbox y Nintendo Switch Pro sin requerir privilegios de superusuario.
+* **Pre-configuración No Interactiva en Debconf:** Aceptación automatizada de las licencias requeridas por Valve (`steam steam/question select I AGREE`) para ejecuciones desatendidas y reproducibles.
+
 ---
 
 ## 3. Ejecución del Script de Aprovisionamiento
