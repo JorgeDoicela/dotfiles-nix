@@ -12,6 +12,9 @@
     socat
 
     # Entorno de desarrollo JavaScript / TypeScript declarativo
+    # NOTA DE VERSIÓN: Se fija nodejs_22 (versión Active LTS actual).
+    # REVISIÓN OBLIGATORIA: Verificar periódicamente si Node.js 22 sigue siendo la versión LTS
+    # estable activa o si corresponde actualizar a la siguiente versión LTS del ecosistema.
     nodejs_22
     pnpm
 

@@ -131,6 +131,8 @@
   # Wrapper declarativo para Steam nativo de Debian
   # 1. Asegura configuración de idioma español en ~/.steam/registry.vdf
   # 2. Configura compatibilidad global de Proton 9.0 y caché de sombreadores en config.vdf
+  #    NOTA DE VERSIÓN: Utiliza Proton 9.0 ('proton_9'). Revisar periódicamente si existe una versión
+  #    estable superior de Proton (ej. Proton 10 o GE-Proton) recomendada para compatibilidad.
   # 3. Despacha al binario nativo /usr/games/steam
   home.file.".local/bin/steam" = {
     executable = true;

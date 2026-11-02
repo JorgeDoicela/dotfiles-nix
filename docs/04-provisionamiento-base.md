@@ -91,6 +91,11 @@ Para habilitar videojuegos nativos y de Windows (mediante la capa de compatibili
 * **Soporte de Mandos Plug-and-Play (`steam-devices`):** Despliega reglas udev a nivel de kernel para permitir el emparejamiento y uso de controladores de PlayStation (DualShock/DualSense), Xbox y Nintendo Switch Pro sin requerir privilegios de superusuario.
 * **Pre-configuración No Interactiva en Debconf:** Aceptación automatizada de las licencias requeridas por Valve (`steam steam/question select I AGREE`) para ejecuciones desatendidas y reproducibles.
 
+### 12. Ecosistema de Desarrollo .NET Oficial
+Para garantizar compatibilidad nativa con Neovim (`neotest-dotnet`), depuradores C# y herramientas de compilación sin fricciones con librerías dinámicas FHS:
+* Se aprovisiona la llave oficial de Microsoft (`microsoft-prod.gpg`) y el repositorio oficial [setup/etc/microsoft-prod.list](../setup/etc/microsoft-prod.list) para Debian 13 (Trixie).
+* Despliegue automatizado del SDK oficial `dotnet-sdk-10.0` y los runtimes asociados.
+
 ---
 
 ## 3. Ejecución del Script de Aprovisionamiento

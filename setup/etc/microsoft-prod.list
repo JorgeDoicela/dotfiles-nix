@@ -1,0 +1,4 @@
+# Repositorio oficial de Microsoft para Debian 13 (Trixie)
+# NOTA: Revisar periódicamente si la versión del sistema operativo (13 / trixie) sigue siendo la versión objetivo estable soportada por Microsoft.
+deb [arch=amd64,arm64,armhf signed-by=/usr/share/keyrings/microsoft-prod.gpg] https://packages.microsoft.com/debian/13/prod trixie main
+

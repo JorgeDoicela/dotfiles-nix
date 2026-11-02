@@ -43,11 +43,13 @@ if ! dpkg --print-foreign-architectures 2>/dev/null | grep -q "i386"; then
     dpkg --add-architecture i386
 fi
 
-# Copiar llaves GPG locales del sistema (Brave)
+# Copiar llaves GPG locales del sistema (Brave y Microsoft .NET)
 safe_copy "$CURRENT_DIR/keyrings/brave-browser-archive-keyring.gpg" /usr/share/keyrings/brave-browser-archive-keyring.gpg
+safe_copy "$CURRENT_DIR/keyrings/microsoft-prod.gpg" /usr/share/keyrings/microsoft-prod.gpg
 
 # Copiar archivos de repositorios exactos
 safe_copy "$CURRENT_DIR/etc/brave-browser-release.list" /etc/apt/sources.list.d/brave-browser-release.list
+safe_copy "$CURRENT_DIR/etc/microsoft-prod.list" /etc/apt/sources.list.d/microsoft-prod.list
 
 # 2. Copiar archivos de configuración de etc
 echo "=> Copiando archivos de optimización y arranque silencioso..."
@@ -181,6 +183,7 @@ apt-get install -y --no-install-recommends \
     tlp \
     tlp-rdw \
     docker.io \
+    docker-cli \
     flatpak \
     brave-browser \
     thunar \
@@ -213,6 +216,14 @@ if command -v flatpak >/dev/null 2>&1; then
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || true
     flatpak install -y --noninteractive flathub com.rtosta.zapzap || true
 fi
+
+# 11. Aprovisionar entorno de desarrollo .NET oficial
+# NOTA DE VERSIÓN: Se instala dotnet-sdk-10.0 desde el repositorio de Microsoft para Debian 13.
+# REVISIÓN OBLIGATORIA: Verificar periódicamente si esta versión sigue siendo la versión estable
+# recomendada para desarrollo. En caso de requerir la versión de soporte extendido (LTS), validar
+# si se debe utilizar 'dotnet-sdk-8.0' (LTS) o si .NET 10 ya es la versión general estable (GA).
+echo "=> Aprovisionando SDK de .NET oficial..."
+apt-get install -y --no-install-recommends dotnet-sdk-10.0 || true
 
 echo "=== MIGRACIÓN Y RÉPLICA COMPLETADA CON ÉXITO ==="
 echo "Ahora instala Nix y ejecuta Home Manager para restaurar todo el entorno de usuario:"
