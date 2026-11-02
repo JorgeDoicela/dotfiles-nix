@@ -141,7 +141,24 @@
       set -euo pipefail
 
       REGISTRY_VDF="$HOME/.steam/registry.vdf"
-      CONFIG_VDF="$HOME/.steam/debian-installation/config/config.vdf"
+
+      # Asegurar symlink retrocompatible debian-installation si no existe
+      if [ -d "$HOME/.local/share/Steam" ] && [ ! -e "$HOME/.steam/debian-installation" ]; then
+          ln -sfn "$HOME/.local/share/Steam" "$HOME/.steam/debian-installation" 2>/dev/null || true
+      fi
+
+      # Localizar config.vdf de forma dinámica (XDG o rutas Valve en Debian)
+      CONFIG_VDF=""
+      for candidate in \
+          "$HOME/.local/share/Steam/config/config.vdf" \
+          "$HOME/.steam/root/config/config.vdf" \
+          "$HOME/.steam/steam/config/config.vdf" \
+          "$HOME/.steam/debian-installation/config/config.vdf"; do
+          if [ -f "$candidate" ]; then
+              CONFIG_VDF="$candidate"
+              break
+          fi
+      done
 
       # Asegurar idioma español en registry.vdf si existe y está en inglés
       if [ -f "$REGISTRY_VDF" ] && grep -q '"language"[[:space:]]*"english"' "$REGISTRY_VDF" 2>/dev/null; then
@@ -149,14 +166,14 @@
       fi
 
       # Asegurar Proton 9 y precompilación de sombreadores en config.vdf
-      if [ -f "$CONFIG_VDF" ]; then
+      if [ -n "$CONFIG_VDF" ] && [ -f "$CONFIG_VDF" ]; then
           if grep -q "proton_experimental" "$CONFIG_VDF" 2>/dev/null; then
               sed -i 's/"name"[[:space:]]*"proton_experimental"/"name"\t\t"proton_9"/g' "$CONFIG_VDF"
           fi
           if ! grep -q "CompatToolMapping" "$CONFIG_VDF" 2>/dev/null; then
               python3 -c '
-import os
-path = os.path.expanduser("~/.steam/debian-installation/config/config.vdf")
+import os, sys
+path = sys.argv[1]
 with open(path, "r", encoding="utf-8") as f:
     c = f.read()
 compat_block = """\t\t\t\t"EnableSteamDesktopPlay"\t\t"1"
@@ -174,7 +191,7 @@ if "\"CompatToolMapping\"" not in c and "\"AutoUpdateWindowEnabled\"" in c:
     c = c.replace("\"AutoUpdateWindowEnabled\"\t\t\"0\"", "\"AutoUpdateWindowEnabled\"\t\t\"0\"\n" + compat_block)
 with open(path, "w", encoding="utf-8") as f:
     f.write(c)
-' 2>/dev/null || true
+' "$CONFIG_VDF" 2>/dev/null || true
           fi
       fi
 
