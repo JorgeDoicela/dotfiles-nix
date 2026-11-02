@@ -169,4 +169,16 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
   2. **Validación Preventiva:** Verifica si existe la carpeta correspondiente dentro de `hosts/`. Si no existe, muestra los hosts válidos disponibles y aborta antes de evaluar el Flake.
   3. **Auto-fallback en Bootstrapping:** Si el comando `home-manager` no se encuentra en el `PATH` del usuario (típico en la primera instalación de una laptop), delega automáticamente a `nix run github:nix-community/home-manager -- switch --flake ...` para que el usuario no tenga que memorizar comandos complejos.
 
+---
+
+## 10. Wrapper Declarativo para Steam y Proton (`steam`)
+
+* **Ubicación:** Generado por [modules/scripts.nix](../modules/scripts.nix) hacia `~/.local/bin/steam`.
+* **Propósito:** Automatiza la configuración del cliente Steam nativo de Debian en Wayland:
+  1. **Configuración de Idioma:** Asegura automáticamente el idioma español en `~/.steam/registry.vdf`.
+  2. **Resolución Dinámica de Configuración:** Detecta dinámicamente la ubicación de `config.vdf` tanto en rutas estándar XDG (`~/.local/share/Steam/config/config.vdf`) como en rutas retrocompatibles de Valve (`~/.steam/root`, `~/.steam/debian-installation`).
+  3. **Inyección Global de Proton 9.0:** Configura `SteamPlay = 1`, `EnableSteamDesktopPlay = 1` y asigna `CompatToolMapping` con `proton_9` para habilitar la ejecución de todos los juegos de Windows en Linux sin requerir configuración manual por juego.
+  4. **Despacho:** Ejecuta de forma transparente el binario del sistema `/usr/games/steam "$@"`.
+
+
 

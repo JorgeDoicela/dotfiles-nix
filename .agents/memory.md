@@ -105,6 +105,10 @@
   * Asociación de Esquemas URL (MIME): Para que navegadores web (Brave/Chromium) y portales Wayland (`xdg-desktop-portal-gtk`) despachen enlaces de reunión (`zoommtg://...`, `zoomus://...`) directamente a Zoom sin arrojar diálogos de error "No hay aplicaciones disponibles", se declaran explícitamente los manejadores en `raw_configs/mimeapps.list` según el estándar XDG, sin requerir paquetes ni scripts adicionales.
   * Aceleración GPU habilitada en `~/.config/zoomus.conf` (`enableCefGpu=true` y `enablegpucomputeutilization=true`) para renderizado por hardware en CEF sin software rasterizer SwiftShader.
   * Reglas de ventanas en Hyprland: Zoom opera en mosaico estándar (`tile true`) exactamente igual que cualquier otro programa del sistema, garantizando que en `eDP-1` respete automáticamente la reserva de 228 píxeles de la franja rota sin quedar nunca oculto, y ocupe el espacio completo en `HDMI-A-1`. Diálogos emergentes de configuración permanecen en `float`.
+* **Steam Nativo y Proton en Debian:**
+  * Paquetes nativos Debian con soporte 32-bit (`mesa-vulkan-drivers:i386`, `libgl1-mesa-dri:i386`, `steam-devices` y `steam-installer`).
+  * Wrapper declarativo en `~/.local/bin/steam` que detecta dinámicamente `config.vdf` (rutas estándar XDG o retrocompatibles) y preconfigura idioma español (`registry.vdf`) y compatibilidad global con **Proton 9.0** (`SteamPlay = 1`, `EnableSteamDesktopPlay = 1`, `CompatToolMapping -> proton_9`).
+  * Reglas de ventana en Hyprland para diálogos emergentes flotantes y lanzador `steam.desktop` en `~/.local/share/applications/`.
 * **Atajos de Lanzamiento Clave:**
   * `Super + A`: Antigravity IDE (`antigravity-ide`).
   * `Super + M`: Zoom (`zoom`).
