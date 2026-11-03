@@ -19,6 +19,7 @@ Este catálogo resume todos los atajos de teclado configurados en [raw_configs/h
 | `Super + M` | Zoom con patrón *Raise or Launch* (`zoom`) |
 | `Super + O` | Bóveda de notas Obsidian (`obsidian`) |
 | `Super + T` | Entorno de desarrollo Orca IDE (`orca-ide`) |
+| `Super + P` | Entorno de pseudocódigo PSeInt (`wxpseint`) |
 | `Ctrl + Shift + Esc` | Monitor del sistema interactivo (Btop) |
 | `Super + Space` | Lanzador de aplicaciones (Rofi Drun) |
 | `Super + Tab` | Selector de ventanas abiertas (Rofi Window) |

@@ -42,7 +42,7 @@
    * Motivo: En Debian con Nix standalone (no NixOS), los paquetes con QtWebEngine/Chromium/OpenGL de Nixpkgs fallan por incompatibilidad ABI con el driver Mesa del host (`radeonsi_drv_video.so` enlazado a `libLLVM.so` de Debian). Flatpak empaqueta sus propios runtimes de Mesa desacoplados de las librerías dinámicas del host, garantizando aceleración completa sin errores de RHI o core dumps.
    * Replicación: `setup/instalar.sh` aprovisiona automáticamente `flatpak`, el remoto Flathub y `com.rtosta.zapzap` para paridad total en nuevas máquinas.
 6. **Arquitectura Estricta en 3 Niveles de Ejecución y Privilegios:**
-   * **Nivel 1 (Sistema Base Debian .deb):** Componentes que exigen privilegios de root, módulos de kernel, aceleración directa GPU/Mesa, integración PAM (`sddm`, `hyprlock` mediante `/etc/pam.d/hyprlock`), almacenamiento de sistema/FUSE (`gvfs`, `gvfs-fuse`, `thunar`, `tumbler`), servidor PipeWire y aceleración nativa VA-API (`brave-browser`, `zoom`). `hyprlock` e `hypridle` se delegan exclusivamente a Debian para blindar la autenticación de desbloqueo.
+   * **Nivel 1 (Sistema Base Debian .deb):** Componentes que exigen privilegios de root, módulos de kernel, aceleración directa GPU/Mesa, integración PAM (`sddm`, `hyprlock` mediante `/etc/pam.d/hyprlock`), almacenamiento de sistema/FUSE (`gvfs`, `gvfs-fuse`, `thunar`, `tumbler`), servidor PipeWire, aceleración nativa VA-API (`brave-browser`, `zoom`) y suites de software nativas en `/opt/` (`antigravity`, `antigravity-ide`, `pseint`, `Obsidian`, `zoom`). `hyprlock` e `hypridle` se delegan exclusivamente a Debian para blindar la autenticación de desbloqueo.
    * **Nivel 2 (Espacio de Usuario Declarativo Nix):** Herramientas CLI inmutables (`neovim`, `yazi`, `rclone`), linters/formatters, monitor `btop`, entorno visual de sesión (`waybar`, `rofi`, `swaync`) y dotfiles en `/nix/store/`. Waybar se genera declarativamente a través de la opción `mySystem.waybarConfig`, erradicando la duplicación de `config.json` en los hosts.
    * **Nivel 3 (Sandbox Gráfico Flatpak):** Aplicaciones de terceros desacopladas del ABI del host (`com.rtosta.zapzap`) para máxima estabilidad gráfica sin interferir con librerías del sistema.
 7. **Escalabilidad Multi-Host y CI:**
@@ -118,6 +118,7 @@
   * `Super + M`: Zoom (`zoom`).
   * `Super + O`: Obsidian (`obsidian`).
   * `Super + T`: Orca IDE (`orca-ide`).
+  * `Super + P`: Entorno de pseudocódigo PSeInt (`wxpseint`).
 * **Respaldo Git en Obsidian (`vida_de_jorge.git`):**
   * La bóveda `/home/jorge/Documentos/Vida de Jorge` (Linux) y `G:\Mi unidad\Documents\Vida de Jorge` (Windows) coexiste con Git (GitHub Privado) y Google Drive.
   * **Linux:** `sincro-filters.txt` excluye estrictamente `- .git/**` para que Google Drive no interfiera ni corrompa objetos locales de Git.

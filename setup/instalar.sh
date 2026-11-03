@@ -225,6 +225,16 @@ fi
 echo "=> Aprovisionando SDK de .NET oficial..."
 apt-get install -y --no-install-recommends dotnet-sdk-10.0 || true
 
+# 12. Aprovisionar PSeInt en /opt (Nivel 1 - Entorno de lógica y pseudocódigo)
+if [ ! -d "/opt/pseint" ]; then
+    echo "=> Aprovisionando PSeInt en /opt/pseint..."
+    curl -fLo /tmp/pseint.tgz "https://downloads.sourceforge.net/project/pseint/20210609/pseint-l64-20210609.tgz"
+    tar -xzf /tmp/pseint.tgz -C /opt/
+    ln -sf /opt/pseint/pseint /usr/local/bin/pseint
+    ln -sf /opt/pseint/wxPSeInt /usr/local/bin/wxpseint
+    rm -f /tmp/pseint.tgz
+fi
+
 echo "=== MIGRACIÓN Y RÉPLICA COMPLETADA CON ÉXITO ==="
 echo "Ahora instala Nix y ejecuta Home Manager para restaurar todo el entorno de usuario:"
 echo "  1. sh <(curl -L https://install.determinate.systems/nix) install"
