@@ -49,6 +49,10 @@
    * `flake.nix` utiliza `builtins.readDir ./hosts` para auto-descubrir dinámicamente cualquier subdirectorio en `hosts/` y registrarlo como `jorge@<hostname>`.
    * El script wrapper `./switch` resuelve automáticamente `$(hostname)` y valida que el perfil exista en `hosts/`.
    * Pipeline de integración continua en `.github/workflows/ci.yml` ejecuta `nix flake check` en cada push a `main`.
+8. **Gestión de Binarios CLI Autónomos con Auto-Actualización (`agy`):**
+   * Herramientas de desarrollo con mecanismos nativos de auto-actualización rápida y rolling (ej. `agy update`) se mantienen como binarios autónomos en `$HOME/.local/bin/` y **no se empaquetan en Nix ni se instalan en `/usr/local/bin`**.
+   * **Causa raíz:** `/nix/store/` es inmutable y de solo lectura (invalida el auto-updater obligando a modificar hashes SHA256 en el repositorio en cada release), mientras que `/usr/local/bin` exige privilegios de `root` (rompe actualizaciones desatendidas de usuario y deja binarios obsoletos huérfanos).
+   * **Resolución de entorno:** El `$PATH` de sesión en `raw_configs/hypr/hyprland.conf` y `~/.bashrc` prioriza `$HOME/.local/bin`, garantizando ejecución unívoca sin colisionar con los symlinks que Home Manager gestiona en ese directorio mediante `modules/scripts.nix`.
 
 ---
 
