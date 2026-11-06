@@ -97,6 +97,11 @@ Para garantizar compatibilidad nativa con Neovim (`neotest-dotnet`), depuradores
 * Se aprovisiona la llave oficial de Microsoft (`microsoft-prod.gpg`) y el repositorio oficial [setup/etc/microsoft-prod.list](../setup/etc/microsoft-prod.list) para Debian 13 (Trixie).
 * Despliegue automatizado del SDK oficial `dotnet-sdk-10.0` y los runtimes asociados.
 
+### 13. Suites Nativas en `/opt` (Antigravity IDE y Antigravity)
+Las aplicaciones y suites propietarias basadas en Electron que exigen integración nativa directa con bibliotecas gráficas del sistema residen en `/opt/`:
+* **Antigravity IDE:** Desplegado en `/opt/antigravity-ide/` y expuesto globalmente mediante enlace en `/usr/local/bin/antigravity-ide`. Se erradica la ubicación anterior en `~/.local/share/antigravity-ide` para unificar el estándar de Nivel 1.
+* **Antigravity Desktop / Backend:** Desplegado en `/opt/antigravity/` y expuesto globalmente mediante enlace en `/usr/local/bin/antigravity`.
+
 ---
 
 ## 3. Ejecución del Script de Aprovisionamiento

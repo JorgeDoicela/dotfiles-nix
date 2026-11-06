@@ -243,6 +243,15 @@ if [ ! -d "/opt/pseint" ]; then
     rm -f /tmp/pseint.tgz
 fi
 
+# 13. Enlaces globales para suites nativas en /opt (Antigravity IDE y Antigravity)
+echo "=> Asegurando enlaces simbólicos en /usr/local/bin para suites en /opt..."
+if [ -d "/opt/antigravity-ide" ]; then
+    ln -sfn /opt/antigravity-ide/antigravity-ide /usr/local/bin/antigravity-ide
+fi
+if [ -d "/opt/antigravity" ]; then
+    ln -sfn /opt/antigravity/antigravity /usr/local/bin/antigravity
+fi
+
 echo "=== MIGRACIÓN Y RÉPLICA COMPLETADA CON ÉXITO ==="
 echo "Ahora instala Nix y ejecuta Home Manager para restaurar todo el entorno de usuario:"
 echo "  1. sh <(curl -L https://install.determinate.systems/nix) install"
