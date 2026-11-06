@@ -26,6 +26,8 @@
     shfmt
     shellcheck
     ruff
+
+    # Gestor de entornos y paquetes Python declarativo (uv determinista de alta velocidad)
     uv
 
     # Herramientas de productividad académica y comunicación

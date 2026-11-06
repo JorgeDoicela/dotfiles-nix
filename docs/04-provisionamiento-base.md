@@ -82,6 +82,7 @@ Para erradicar dependencias externas frágiles que degradan el tiempo de ejecuci
 * **Stack Completo del Explorador Gráfico:** Despliegue automatizado de `thunar`, `thunar-volman` (gestor de volúmenes y dispositivos externos) y `thunar-archive-plugin`.
 * **Capa de Abstracción VFS de Usuario:** Instalación de `gvfs-backends` y `gvfs-fuse`. Sin `gvfs-fuse`, el subsistema GIO intenta ejecutar llamadas síncronas bloqueantes de metadatos directamente sobre puntos de montaje FUSE, provocando que el hilo de renderizado de GTK se cuelgue al abrir `$HOME`.
 * **Motor de Miniaturas y Previsualizaciones:** Instalación de `tumbler`, `tumbler-plugins-extra` y `ffmpegthumbnailer` para procesamiento eficiente de imágenes y videos locales.
+* **Procesamiento Multimedia y Códecs Acelerados por Hardware:** Instalación de `ffmpeg` a nivel de sistema base (.deb) para garantizar enlace directo con los controladores Mesa (`radeonsi_dri.so`), aceleración por hardware VA-API y soporte de códecs (H.264/H.265/AV1) sin desajustes de ABI.
 * **Optimización Defensiva de Montajes GVFS:** Desactivación formal de `AutoMount=true` en `/usr/share/gvfs/mounts/network.mount` y `wsdd.mount` para erradicar emisiones síncronas de broadcast en red local y llamadas fallidas al demonio `wsdd` al abrir el explorador de archivos local.
 
 ### 11. Plataforma de Videojuegos y Soporte Multiarch (Steam y Mesa 32 bits)
