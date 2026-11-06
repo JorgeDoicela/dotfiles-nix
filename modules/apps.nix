@@ -26,6 +26,7 @@
     shfmt
     shellcheck
     ruff
+    uv
 
     # Herramientas de productividad académica y comunicación
     # Nota: Zoom se delega al paquete nativo .deb de Debian y ZapZap a Flatpak para compatibilidad completa con Mesa/DRI y aceleración GPU

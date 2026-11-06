@@ -194,6 +194,7 @@ apt-get install -y --no-install-recommends \
     gvfs-fuse \
     tumbler \
     tumbler-plugins-extra \
+    ffmpeg \
     ffmpegthumbnailer || true
 
 # 8.1 Optimización de GVFS (Desactivar sondeos automáticos de red para erradicar bloqueos en exploradores)
