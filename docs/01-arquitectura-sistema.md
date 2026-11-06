@@ -38,6 +38,12 @@ Una de las decisiones arquitectónicas más importantes de este entorno es el us
 1. **Estabilidad Gráfica en Wayland:** Compositor Wayland (Hyprland) y navegadores (Brave/Chromium) se comunican directamente con el subsistema gráfico del kernel y Mesa sin desajustes de versiones de drivers.
 2. **Portabilidad Multi-Distribución:** Si una laptop futura utiliza Arch Linux, Fedora u otra distro, la capa de usuario de Nix se despliega de forma idéntica sin modificar la lógica declarativa.
 
+### Gestión de Binarios CLI Autónomos con Auto-Actualización (`agy`)
+Ciertas herramientas CLI de desarrollo incorporan rutinas nativas de actualización continua (*rolling updates* como `agy update`):
+* **Aislamiento en `$HOME/.local/bin/`:** Estos binarios se instalan en el espacio de usuario y se excluyen deliberadamente de los paquetes de Nixpkgs.
+* **Causa Raíz Técnica:** `/nix/store/` es estrictamente inmutable y de solo lectura; empaquetar una herramienta con auto-updater en Nix bloquearía sus actualizaciones automáticas (requiriendo actualizar hashes criptográficos en el repositorio para cada micro-versión). Al mismo tiempo, ubicarlas en `/usr/local/bin/` exigiría privilegios de `root` en cada invocación de actualización.
+* **Resolución de Entorno:** El `PATH` del entorno de usuario prioriza `$HOME/.local/bin` sobre las rutas del sistema, garantizando ejecución directa y sin colisiones con los symlinks que Home Manager gestiona en ese mismo directorio.
+
 ---
 
 ## 3. La Dupla Técnica: Nix Flakes + Home Manager

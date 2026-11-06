@@ -39,6 +39,23 @@ Desde la raíz del repositorio, ejecuta el wrapper unificado:
 ```
 *El script detectará automáticamente el hostname local, validará que exista en `hosts/` y ejecutará Home Manager (haciendo uso automático de `nix run` si el comando `home-manager` aún no está en el `PATH`).*
 
+### Paso 5: Despliegue de Herramientas de Desarrollo y CLI Autónomas
+Tras la activación de Home Manager, aprovisiona las herramientas complementarias fuera del Nix Store:
+
+1. **Instalar Antigravity CLI (`agy`):**
+   ```bash
+   curl -fsSL https://antigravity.google/cli/install.sh | bash
+   ```
+   *El instalador ubica el binario en `~/.local/bin/agy`, permitiendo actualizaciones directas mediante `agy update`.*
+
+2. **Desplegar Antigravity IDE y Backend en `/opt/`:**
+   Si los paquetes descargados se encuentran en `~/Descargas`:
+   ```bash
+   sudo tar -xzf ~/Descargas/"Antigravity IDE.tar.gz" -C /opt/
+   sudo tar -xzf ~/Descargas/Antigravity.tar.gz -C /opt/
+   ```
+   *(Los enlaces `/usr/local/bin/antigravity-ide` y `/usr/local/bin/antigravity` ya quedan asegurados de forma idempotente por `setup/instalar.sh`).*
+
 ---
 
 ## Runbook 2: Agregar una Nueva Laptop al Repositorio

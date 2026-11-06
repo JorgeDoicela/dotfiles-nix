@@ -101,6 +101,7 @@ Para garantizar compatibilidad nativa con Neovim (`neotest-dotnet`), depuradores
 Las aplicaciones y suites propietarias basadas en Electron que exigen integración nativa directa con bibliotecas gráficas del sistema residen en `/opt/`:
 * **Antigravity IDE:** Desplegado en `/opt/antigravity-ide/` y expuesto globalmente mediante enlace en `/usr/local/bin/antigravity-ide`. Se erradica la ubicación anterior en `~/.local/share/antigravity-ide` para unificar el estándar de Nivel 1.
 * **Antigravity Desktop / Backend:** Desplegado en `/opt/antigravity/` y expuesto globalmente mediante enlace en `/usr/local/bin/antigravity`.
+* **Antigravity CLI (`agy`):** A diferencia de las suites GUI desplegadas en `/opt/`, la CLI oficial opera en el espacio de usuario en `~/.local/bin/agy` para soportar actualizaciones desatendidas (`agy update`) sin elevar privilegios a `root`.
 
 ---
 
