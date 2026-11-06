@@ -156,7 +156,7 @@
           --vfs-cache-mode full \
           --vfs-cache-max-size 15G \
           --vfs-cache-max-age 72h \
-          --dir-cache-time 24h \
+          --dir-cache-time 72h \
           --attr-timeout 10m \
           --poll-interval 1m \
           --vfs-cache-poll-interval 1m \
@@ -165,8 +165,9 @@
           --vfs-read-chunk-size 32M \
           --vfs-read-chunk-size-limit 2G \
           --buffer-size 32M \
-          --timeout 30s \
-          --contimeout 10s \
+          --daemon-timeout 5s \
+          --contimeout 5s \
+          --timeout 10s \
           --drive-acknowledge-abuse \
           --no-modtime \
           --umask 022
@@ -176,7 +177,7 @@
       RestartSec = "10s";
     };
     Install = {
-      WantedBy = [ "default.target" ];
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 

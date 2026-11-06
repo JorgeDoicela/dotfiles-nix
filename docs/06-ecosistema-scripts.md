@@ -15,8 +15,8 @@ El entorno implementa un **modelo híbrido de dos capas** para gestionar Google 
 * **Resiliencia VFS y Emulación de Cuota:**
   * `--vfs-disk-space-total-size 5T`: Emula un tamaño estático para responder al instante las llamadas al sistema `statfs()`/`statvfs()` de Linux sin consultar la cuota remota por HTTP.
   * `--vfs-cache-mode full` con límite de 15 GB y expiración de 72h.
-  * `--attr-timeout 10m` y `--dir-cache-time 24h` para caching agresivo de metadatos.
-  * `--timeout 30s` y `--contimeout 10s` para desconexión limpia ante fallos de red.
+  * `--attr-timeout 10m` y `--dir-cache-time 72h` para caching agresivo de metadatos en memoria.
+  * `--daemon-timeout 5s`, `--timeout 10s` y `--contimeout 5s` para desconexión limpia ante caídas de red o rate-limits de Google Drive, garantizando que el kernel FUSE nunca retenga procesos en estado D bloqueante al listar directorios.
 * **Aliases rápidos en Zsh:** `drive` o `gdrive` para navegar directamente a `$HOME/Drive`.
 
 ### Capa 2: Gestor Modular de Sincronización Offline (`sincro`)

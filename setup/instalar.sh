@@ -196,6 +196,14 @@ apt-get install -y --no-install-recommends \
     tumbler-plugins-extra \
     ffmpegthumbnailer || true
 
+# 8.1 Optimización de GVFS (Desactivar sondeos automáticos de red para erradicar bloqueos en exploradores)
+echo "=> Optimizando servicios de montaje de GVFS (desactivando automount de red)..."
+for mount_file in /usr/share/gvfs/mounts/network.mount /usr/share/gvfs/mounts/wsdd.mount; do
+    if [ -f "$mount_file" ]; then
+        sed -i 's/^AutoMount=true/AutoMount=false/' "$mount_file"
+    fi
+done
+
 # 9. Aprovisionar Steam nativo y controladores gráficos 32 bits (Multiarch)
 echo "=> Aprovisionando Steam nativo, soporte de mandos y controladores gráficos 32 bits..."
 echo "steam steam/question select I AGREE" | debconf-set-selections 2>/dev/null || true

@@ -104,11 +104,14 @@ graph TD
    * Gestionado por Home Manager mediante canal Xfconf.
    * Fija `misc-thumbnail-mode` en `THUNAR_THUMBNAIL_MODE_ONLY_LOCAL` y `misc-parallel-copy-mode` en `THUNAR_PARALLEL_COPY_MODE_ALWAYS`.
 3. **Resiliencia en el Montaje FUSE de Rclone ([modules/apps.nix](../modules/apps.nix)):**
-   * Vinculado a `graphical-session.target` (eliminando la dependencia inexistente `network-online.target` en el gestor de usuario).
-   * Banderas críticas: `--attr-timeout 10m` y `--dir-cache-time 24h` (eliminan llamadas remotas `stat()` redundantes), `--poll-interval 1m` (notificaciones asíncronas de cambios), `--vfs-disk-space-total-size 5T` (emulación estática de espacio que previene congelamiento en `statfs()`), `--timeout 30s` y `--contimeout 10s` (corte estricto de sockets para prevenir procesos en estado D no interrumpible ante fallos de red).
+   * Vinculado a `graphical-session.target`.
+   * Banderas críticas: `--attr-timeout 10m` y `--dir-cache-time 72h` (eliminan llamadas remotas `stat()` redundantes al retener metadatos en memoria), `--poll-interval 1m` (notificaciones asíncronas de cambios), `--vfs-disk-space-total-size 5T` (emulación estática de espacio que previene congelamiento en `statfs()`), `--daemon-timeout 5s` (límite estricto para que rclone nunca retenga peticiones del kernel en estado D si la red está en negociación), `--timeout 10s` y `--contimeout 5s` (corte estricto de sockets para prevenir procesos en estado D no interrumpible ante fallos de red o rate-limits de Google Drive) y `--no-modtime`.
 4. **Aislamiento FUSE contra Sondeos de Discos GVFS ([modules/apps.nix](../modules/apps.nix)):**
    * El sistema FUSE se monta en `~/.local/share/gdrive` y se expone como enlace simbólico transparente en `~/Drive`.
    * Motivo técnico: La regla nativa de GVFS (`g_strstr_len(mount_path, -1, "/.") != NULL`) ignora automáticamente cualquier montaje en subdirectorios ocultos. Esto impide que `gvfs-udisks2-volume-monitor` lo catalogue como unidad extraíble y envíe sondeos síncronos de red (`autorun.inf`, `bdmv`, `xdg_volume_info`) al arrancar exploradores en frío como Thunar, eliminando de raíz el timeout de 25 segundos de D-Bus.
+5. **Desactivación de AutoMount en GVFS de Red ([setup/instalar.sh](../setup/instalar.sh)):**
+   * Se fija `AutoMount=false` en `/usr/share/gvfs/mounts/network.mount` y `/usr/share/gvfs/mounts/wsdd.mount`.
+   * Motivo técnico: Por defecto Debian activa el sondeo automático de red local (mDNS, SMB y WSDD). Si la máquina arranca en frío o no dispone del demonio `wsdd`, GVFS intenta sondear la red en el hilo de renderizado de la barra lateral de Thunar, induciendo bloqueos de 20 a 25 segundos. Al desactivar el automount preventivo, la red solo se consulta si el usuario accede expresamente a la ubicación de red.
 
 ---
 

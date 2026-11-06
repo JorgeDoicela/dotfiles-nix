@@ -211,6 +211,14 @@
         size = config.mySystem.fontSize;
       };
       gtk4.theme = config.gtk.theme;
+      gtk3.bookmarks = [
+        "file://${config.home.homeDirectory}/Documentos Documentos"
+        "file://${config.home.homeDirectory}/Descargas Descargas"
+        "file://${config.home.homeDirectory}/Im%C3%A1genes Imágenes"
+        "file://${config.home.homeDirectory}/V%C3%ADdeos Vídeos"
+        "file://${config.home.homeDirectory}/proyectos proyectos"
+        "file://${config.home.homeDirectory}/Drive Drive"
+      ];
       gtk3.extraConfig = {
         gtk-application-prefer-dark-theme = 1;
       };
@@ -218,6 +226,9 @@
         gtk-application-prefer-dark-theme = 1;
       };
     };
+
+    # Forzar sobreescritura limpia del archivo de marcadores GTK gestionado por Home Manager
+    xdg.configFile."gtk-3.0/bookmarks".force = true;
 
     # Enlaces simbólicos directos en ~/.local/share y ~/.themes / ~/.icons para compatibilidad universal en Debian
     home.file.".local/share/themes/WhiteSur-Dark".source = "${pkgs.whitesur-gtk-theme}/share/themes/WhiteSur-Dark";
