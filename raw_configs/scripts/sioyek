@@ -1,0 +1,95 @@
+#!/usr/bin/env python3
+"""
+Sioyek Wrapper & Cache Synchronizer (dotfiles-nix)
+==================================================
+Previene violaciones de segmento (SIGSEGV / exit code 139) en Sioyek causadas por
+entradas desincronizadas en su base de datos SQLite (~/.local/share/sioyek/local.db).
+
+Causa Raíz Resuelta:
+-------------------
+Sioyek 2.0.0 mapea 'path -> hash' en la tabla 'document_hash'. Si un archivo PDF es
+modificado o recompilado en la misma ruta absoluta (p. ej. en ~/Descargas o proyectos),
+Sioyek no valida la fecha de modificación (mtime) ni recalcula el hash, intentando
+restaurar coordenadas de scroll (offset_y) obsoletas de un documento con geometría distinta,
+lo que provoca una desreferenciación inválida en MuPDF / C++.
+
+Este sincronizador:
+1. Comprueba en < 2 ms si los archivos pasados como argumentos tienen un hash en disco
+   que difiere del registrado en local.db.
+2. Si difieren (archivo modificado o sobreescrito), purga la tupla obsoleta de document_hash
+   para que Sioyek procese el documento como nuevo y registre su hash real de forma nativa.
+3. Transfiere la ejecución in-place mediante os.execv a /usr/bin/sioyek (cero sobrecarga).
+"""
+import os
+import sys
+import sqlite3
+import hashlib
+import shutil
+
+SIOYEK_BIN = "/usr/bin/sioyek"
+if not os.path.isfile(SIOYEK_BIN):
+    SIOYEK_BIN = shutil.which("sioyek") or "/usr/bin/sioyek"
+
+
+def sanitize_pdf_cache(paths):
+    db_path = os.path.expanduser("~/.local/share/sioyek/local.db")
+    if not os.path.isfile(db_path):
+        return
+
+    conn = None
+    try:
+        conn = sqlite3.connect(db_path, timeout=1.0)
+        cur = conn.cursor()
+        dirty = False
+
+        for raw_path in paths:
+            abs_path = os.path.abspath(os.path.expanduser(raw_path))
+            real_path = os.path.realpath(abs_path)
+            target_file = real_path if os.path.isfile(real_path) else abs_path
+
+            if not (os.path.isfile(target_file) and target_file.lower().endswith(".pdf")):
+                continue
+
+            # Consultar si alguna de las variantes de ruta está en cache
+            rows = cur.execute(
+                "SELECT path, hash FROM document_hash WHERE path IN (?, ?)",
+                (abs_path, real_path),
+            ).fetchall()
+
+            if not rows:
+                continue
+
+            try:
+                with open(target_file, "rb") as f:
+                    real_hash = hashlib.md5(f.read()).hexdigest()
+            except (OSError, PermissionError):
+                continue
+
+            for db_path_entry, cached_hash in rows:
+                if real_hash != cached_hash:
+                    cur.execute("DELETE FROM document_hash WHERE path = ?", (db_path_entry,))
+                    dirty = True
+
+        if dirty:
+            conn.commit()
+    except Exception:
+        pass
+    finally:
+        if conn:
+            try:
+                conn.close()
+            except Exception:
+                pass
+
+
+def main():
+    if len(sys.argv) > 1:
+        candidate_files = [arg for arg in sys.argv[1:] if not arg.startswith("-")]
+        if candidate_files:
+            sanitize_pdf_cache(candidate_files)
+
+    os.execv(SIOYEK_BIN, [SIOYEK_BIN] + sys.argv[1:])
+
+
+if __name__ == "__main__":
+    main()

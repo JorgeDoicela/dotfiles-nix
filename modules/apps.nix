@@ -127,7 +127,10 @@
   xdg.configFile."electron-flags.conf".source = ../raw_configs/electron-flags.conf;
 
   # Asociaciones de archivos por defecto
-  xdg.configFile."mimeapps.list".source = ../raw_configs/mimeapps.list;
+  xdg.configFile."mimeapps.list" = {
+    source = ../raw_configs/mimeapps.list;
+    force = true;
+  };
 
   # Definicion declarativa de targets para el gestor sincro
   xdg.configFile."rclone/sincro-targets.conf".source = ../raw_configs/rclone/sincro-targets.conf;

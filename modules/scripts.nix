@@ -27,6 +27,12 @@
     executable = true;
   };
 
+  # Wrapper sincronizador de caché para Sioyek (previene SIGSEGV por PDFs modificados)
+  home.file.".local/bin/sioyek" = {
+    source = ../raw_configs/scripts/sioyek;
+    executable = true;
+  };
+
   home.file.".local/bin/check-kbd-backlight-boot.sh" = {
     source = ../raw_configs/scripts/check-kbd-backlight-boot.sh;
     executable = true;
