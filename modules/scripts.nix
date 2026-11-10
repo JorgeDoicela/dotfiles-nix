@@ -141,7 +141,7 @@
       fi
 
       if [ "''${#ARGS[@]}" -eq 0 ] && command -v hyprctl >/dev/null 2>&1 && hyprctl clients -j 2>/dev/null | ${pkgs.jq}/bin/jq -e '.[] | select(.class == "com.rtosta.zapzap" or .class == "zapzap")' >/dev/null 2>&1; then
-          hyprctl dispatch focuswindow class:^(com\.rtosta\.zapzap|zapzap)$ >/dev/null 2>&1
+          hyprctl dispatch focuswindow "class:^(com\.rtosta\.zapzap|zapzap)$" >/dev/null 2>&1
           exit 0
       fi
 
