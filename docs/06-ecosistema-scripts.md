@@ -156,8 +156,10 @@ Para erradicar la causa raíz, `sincro-filters.txt` aplica las siguientes reglas
 ## 8. Wrapper Declarativo para ZapZap / WhatsApp (`zapzap`)
 
 * **Ubicación:** Generado por [modules/scripts.nix](../modules/scripts.nix) hacia `~/.local/bin/zapzap`.
-* **Propósito:** Encapsula la ejecución del contenedor Flatpak (`exec /usr/bin/flatpak run com.rtosta.zapzap "$@"`).
-* **Beneficio:** Permite lanzar el cliente de WhatsApp desde terminales, scripts personalizados o lanzadores rápidos de manera transparente sin depender de la sintaxis verbosa de Flatpak.
+* **Propósito:** Encapsula la ejecución del contenedor Flatpak implementando control estricto de instancia única (*Raise or Launch*):
+  1. **Patrón Raise or Launch en Hyprland:** Si se invoca sin argumentos (o con argumentos vacíos/placeholders de lanzador como `%u`) y ya existe una ventana activa con clase `com.rtosta.zapzap` o `zapzap`, enfoca de inmediato la ventana existente (`hyprctl dispatch focuswindow`) y finaliza.
+  2. **Prevención de Agotamiento de Recursos:** Erradica el lanzamiento accidental de múltiples instancias de Flatpak en paralelo, evitando que los motores Chromium/QtWebEngine consuman gigabytes redundantes de RAM y bloqueen los núcleos de CPU.
+  3. **Sobrescritura Declarativa del Lanzador XDG:** [modules/apps.nix](../modules/apps.nix) declara `~/.local/share/applications/com.rtosta.zapzap.desktop` apuntando directamente a `~/.local/bin/zapzap`, garantizando que aperturas desde Rofi, enlaces MIME (`whatsapp://`) o atajos respeten siempre el wrapper de instancia única.
 
 ---
 

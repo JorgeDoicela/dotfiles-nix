@@ -237,6 +237,24 @@
         MimeType=x-scheme-handler/zoommtg;x-scheme-handler/zoomus;x-scheme-handler/tel;x-scheme-handler/callto;x-scheme-handler/zoomphonecall;x-scheme-handler/zoomphonesms;x-scheme-handler/zoomcontactcentercall;application/x-zoom
         X-KDE-Protocols=zoommtg;zoomus;tel;callto;zoomphonecall;zoomphonesms;zoomcontactcentercall;
       '';
+
+      "applications/com.rtosta.zapzap.desktop".text = ''
+        [Desktop Entry]
+        Version=1.0
+        Name=ZapZap
+        Comment=WhatsApp Desktop for Linux
+        Exec=${config.home.homeDirectory}/.local/bin/zapzap %u
+        Icon=com.rtosta.zapzap
+        Type=Application
+        Categories=Chat;Network;InstantMessaging;Qt;
+        Keywords=WhatsApp;Chat;ZapZap;
+        StartupWMClass=zapzap
+        MimeType=x-scheme-handler/whatsapp
+        Terminal=false
+        SingleMainWindow=true
+        X-GNOME-UsesNotifications=true
+        X-GNOME-SingleWindow=true
+      '';
     };
 }
 

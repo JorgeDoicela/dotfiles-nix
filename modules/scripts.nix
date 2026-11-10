@@ -126,11 +126,26 @@
   };
 
   # Wrapper declarativo para ZapZap (WhatsApp) desplegado vía Flatpak
+  # 1. Aplica patrón Raise or Launch en Hyprland si ya existe ventana activa sin argumentos.
+  # 2. Despacha al contenedor Flatpak de forma unívoca, erradicando instancias duplicadas que agoten RAM.
   home.file.".local/bin/zapzap" = {
     executable = true;
     text = ''
       #!/usr/bin/env bash
-      exec /usr/bin/flatpak run com.rtosta.zapzap "$@"
+      set -euo pipefail
+
+      # Sanitizar argumentos de Rofi / lanzadores de escritorio (ej. %u no expandido o vacio)
+      ARGS=("$@")
+      if [ "''${#ARGS[@]}" -eq 1 ] && { [ "''${ARGS[0]}" = "%u" ] || [ -z "''${ARGS[0]}" ]; }; then
+          ARGS=()
+      fi
+
+      if [ "''${#ARGS[@]}" -eq 0 ] && command -v hyprctl >/dev/null 2>&1 && hyprctl clients -j 2>/dev/null | ${pkgs.jq}/bin/jq -e '.[] | select(.class == "com.rtosta.zapzap" or .class == "zapzap")' >/dev/null 2>&1; then
+          hyprctl dispatch focuswindow class:^(com\.rtosta\.zapzap|zapzap)$ >/dev/null 2>&1
+          exit 0
+      fi
+
+      exec /usr/bin/flatpak run com.rtosta.zapzap "''${ARGS[@]}"
     '';
   };
 

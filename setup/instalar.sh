@@ -53,9 +53,12 @@ safe_copy "$CURRENT_DIR/etc/microsoft-prod.list" /etc/apt/sources.list.d/microso
 
 # 2. Copiar archivos de configuración de etc
 echo "=> Copiando archivos de optimización y arranque silencioso..."
-mkdir -p /etc/sysctl.d /etc/ssh/sshd_config.d /etc/default/grub.d /etc/systemd/system/systemd-fsck@.service.d /etc/systemd/system/systemd-fsck-root.service.d /etc/plymouth /etc/systemd /etc/bluetooth /boot/grub/themes
+mkdir -p /etc/sysctl.d /etc/ssh/sshd_config.d /etc/default/grub.d /etc/systemd/system/systemd-fsck@.service.d /etc/systemd/system/systemd-fsck-root.service.d /etc/plymouth /etc/systemd /etc/bluetooth /boot/grub/themes /etc/default
 
+# Limpiar configuraciones redundantes o conflictivas de sysctl
+rm -f /etc/sysctl.d/99-sysctl.conf
 safe_copy "$CURRENT_DIR/etc/sysctl-optimization.conf" /etc/sysctl.d/99-sysctl-optimization.conf
+safe_copy "$CURRENT_DIR/etc/default/earlyoom" /etc/default/earlyoom
 safe_copy "$CURRENT_DIR/etc/ssh-hardening.conf" /etc/ssh/sshd_config.d/99-hardening.conf
 safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck@.service.d/silent.conf
 safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck-root.service.d/silent.conf
@@ -160,6 +163,7 @@ apt-get update
 apt-get install -y --no-install-recommends \
     curl \
     git \
+    earlyoom \
     sddm \
     qml6-module-qtquick-layouts \
     qml6-module-qtquick-controls \
@@ -204,6 +208,11 @@ for mount_file in /usr/share/gvfs/mounts/network.mount /usr/share/gvfs/mounts/ws
         sed -i 's/^AutoMount=true/AutoMount=false/' "$mount_file"
     fi
 done
+
+# 8.2 Demonio defensivo de gestión de memoria OOM (earlyoom)
+echo "=> Habilitando earlyoom para prevención activa de freeze por swap thrashing..."
+systemctl daemon-reload
+systemctl enable --now earlyoom || true
 
 # 9. Aprovisionar Steam nativo y controladores gráficos 32 bits (Multiarch)
 echo "=> Aprovisionando Steam nativo, soporte de mandos y controladores gráficos 32 bits..."

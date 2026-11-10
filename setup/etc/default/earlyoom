@@ -1,0 +1,9 @@
+# ==============================================================================
+# CONFIGURACIÓN DE DEFENSIVA EARLYOOM — PREVENCIÓN DE FREEZE Y SWAP THRASHING
+# ==============================================================================
+# -m 5: Envía SIGTERM (y luego SIGKILL) si la RAM libre cae por debajo del 5%
+# -s 10: Actúa si la Swap libre cae por debajo del 10%
+# -r 60: Reporta estado de memoria en syslog/journal cada 60 segundos
+# --prefer: Prioriza renderizadores web desbocados y suites de ofimática pesadas
+# --avoid: Protege estrictamente el compositor gráfico Wayland, login, audio y shell
+EARLYOOM_ARGS="-m 5 -s 10 -r 60 --prefer '^(QtWebEngineProcess|chrome|brave|firefox|DesktopEditors|editors_helper)$' --avoid '^(Hyprland|sddm|systemd|dbus-daemon|pipewire|wireplumber|waybar|alacritty|sshd|bash)$' --syslog"

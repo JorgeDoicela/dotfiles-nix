@@ -55,7 +55,15 @@ Para maximizar la autonomía de las laptops desconectadas de la corriente:
 * **Control de Teclado Dell (Condicional):** El servicio [dell-kbd-backlight-timeout.service](../setup/etc/dell-kbd-backlight-timeout.service) solo se instala y activa si `/sys/class/dmi/id/sys_vendor` detecta hardware de fabricante Dell, garantizando portabilidad limpia en laptops HP, Lenovo u otras marcas.
 * **Ahorro de Energía GPU AMD (Condicional):** Los servicios y reglas udev de `amdgpu-powersave` se despliegan exclusivamente si se detecta una controladora VGA/3D de AMD vía `lspci`.
 
-### 6. Estabilidad del Kernel y Aislamiento de Almacenamiento (Swap y Docker)
+### 6. Estabilidad del Kernel, Defensa Anti-Freeze (earlyoom) y Almacenamiento
+* **Defensa Activa contra Congelamientos y Swap Thrashing (`earlyoom`):**
+  El kernel de Linux por defecto no interviene mientras existan páginas que puedan ser expulsadas a swap, lo que provoca que un proceso desbocado (como renderizadores web o suites de oficina colgadas) sature la swap y genere hiperpaginación (*thrashing*) con tasas de I/O Wait superiores al 20%, congelando por completo la sesión gráfica de Wayland. Para erradicar este fallo de raíz:
+  * `instalar.sh` aprovisiona el demonio nativo `earlyoom` y despliega la configuración defensiva [setup/etc/default/earlyoom](../setup/etc/default/earlyoom).
+  * Monitorea la presión de memoria en tiempo real: si la RAM libre cae por debajo del 5% y la swap libre por debajo del 10%, envía `SIGTERM` y posteriormente `SIGKILL` al proceso causante.
+  * Protege explícitamente componentes críticos del escritorio (`--avoid '^(Hyprland|sddm|systemd|dbus-daemon|pipewire|wireplumber|waybar|alacritty|sshd|bash)$'`).
+  * Prioriza la eliminación selectiva de procesos pesados desbocados (`--prefer '^(QtWebEngineProcess|chrome|brave|firefox|DesktopEditors|editors_helper)$'`), garantizando que la máquina mantenga fluidez total y nunca requiera un reinicio forzado.
+* **Optimización de Parámetros de Kernel (`sysctl-optimization.conf`):**
+  Despliega `/etc/sysctl.d/99-sysctl-optimization.conf` fijando `vm.swappiness = 10` (evita expulsiones prematuras a disco), `vm.vfs_cache_pressure = 50` (mantiene metadatos de archivos en RAM mitigando la latencia del disco mecánico `/home`) y `kernel.nmi_watchdog = 0` (ahorro de ciclos de CPU y apagado limpio), purgando cualquier archivo conflictivo legacy.
 * **Memoria de Intercambio Defensiva (Swap 8 GB en `/home/swapfile`):** Si el sistema no cuenta con partición swap activa, `instalar.sh` crea y configura de forma idempotente un archivo swap de 8 GB en `/home/swapfile` (aprovechando el espacio mayoritario de `/home`) y lo registra en `/etc/fstab`. Esto elimina los cierres abruptos por el *OOM Killer* del kernel en cargas pesadas de desarrollo o emulación.
 * **Desacoplamiento de Docker (`/home/docker`):** Se instala el paquete base nativo `docker.io` y se aprovisiona declarativamente `/etc/docker/daemon.json` fijando `"data-root": "/home/docker"` y limitación de logs JSON a 50 MB (3 archivos rotativos). Esto previene que imágenes, volúmenes y cachés de Docker saturen los ~46 GB de la partición raíz `/`.
 * **Privilegios de Usuario para Contenedores:** `instalar.sh` asegura automáticamente la pertenencia de `$CURRENT_USER` al grupo de sistema `docker` para permitir la invocación sin privilegios de `sudo`.
