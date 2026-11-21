@@ -118,7 +118,7 @@
   * Reglas de ventana en Hyprland para diálogos emergentes flotantes y lanzador `steam.desktop` en `~/.local/share/applications/`.
 * **Wine 10 Multiarch y e-Sword Aislado (`~/.wine-esword`):**
   * Aprovisionado nativamente en Debian 13 (`wine`, `wine64`, `wine32:i386`, `winetricks`, `cabextract`) sin repositorios externos WineHQ.
-  * Prefix dedicado `WINEPREFIX=~/.wine-esword` (`WINEARCH=win64`) inicializado con `riched20`, `corefonts` y `fontsmooth=rgb`.
+  * Prefix dedicado `WINEPREFIX=~/.wine-esword` (`WINEARCH=win32`) inicializado con `riched20`, `vb6run`, `corefonts` y `fontsmooth=rgb` para compatibilidad óptima con controles ActiveX/VB6 de 32 bits.
   * Wrapper declarativo en `~/.local/bin/esword` ([modules/scripts.nix](../modules/scripts.nix)) con patrón *Raise or Launch* en Hyprland, detección automática de ruta 32/64-bit y lanzador `esword.desktop` para Rofi.
 * **Atajos de Lanzamiento Clave:**
   * `Super + A`: Antigravity IDE (`antigravity-ide`).

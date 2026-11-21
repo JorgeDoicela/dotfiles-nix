@@ -230,7 +230,7 @@ with open(path, "w", encoding="utf-8") as f:
       set -euo pipefail
 
       export WINEPREFIX="$HOME/.wine-esword"
-      export WINEARCH="win64"
+      export WINEARCH="win32"
 
       if [ "$#" -eq 0 ] && command -v hyprctl >/dev/null 2>&1 && hyprctl clients -j 2>/dev/null | ${pkgs.jq}/bin/jq -e '.[] | select(.class | test("e-sword"; "i"))' >/dev/null 2>&1; then
           hyprctl dispatch focuswindow "class:^(?i).*e-sword.*$" >/dev/null 2>&1
