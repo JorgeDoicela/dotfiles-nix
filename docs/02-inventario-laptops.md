@@ -6,11 +6,12 @@ Este documento especifica los perfiles técnicos de hardware para cada laptop ge
 
 ## 1. Tabla Comparativa de Parámetros de Hardware
 
-| Parámetro (`mySystem`) | `jorge-terciaria` (Principal) | `jorge-secundaria` (Dual Display) | Explicación Técnica |
+| Parámetro (`mySystem`) | `jorge-terciaria` (Terciaria / Silenciosa) | `jorge-secundaria` (Dual Display) | Explicación Técnica |
 | :--- | :--- | :--- | :--- |
-| **Rol del Equipo** | Estación móvil primaria | Estación fija / desarrollo con monitor externo | Propósito de despliegue. |
+| **Rol del Equipo** | Lectura, estudio y multimedia (máxima batería) | Estación fija / desarrollo con monitor externo | Propósito de despliegue. |
+| **`performanceProfile`** | `"low"` | `"balanced"` | Perfil visual de Hyprland (`low`: sin blur/sombras/animaciones; `balanced`: blur ligero 1 pasada). |
 | **Resolución Nativa** | 1920x1080 (1080p) | 1366x768 (768p) | Panel interno de la laptop (`eDP-1`). |
-| **`fontSize`** | `11` | `9` | Tamaño de fuente base (GTK, Terminal, DConf). |
+| **`fontSize`** | `11` | `9` | Tamaño de fuente base (GTK, Qt6CT, Terminal, DConf). |
 | **`cursorSize`** | `24` | `20` | Tamaño de puntero Bibata en Wayland. |
 | **`waybarFontSize`** | `13px` | `11px` | Tipografía para barra de estado Waybar. |
 | **`rofiFontSize`** | `10` | `8.5` | Tamaño tipográfico del lanzador Rofi. |
@@ -26,9 +27,13 @@ Este documento especifica los perfiles técnicos de hardware para cada laptop ge
 
 ---
 
-## 2. Perfil 1: `jorge-terciaria` (Laptop Principal)
+## 2. Perfil 1: `jorge-terciaria` (Laptop Terciaria — Lectura, Estudio y Multimedia)
 
 * **Ruta de Configuración:** [hosts/jorge-terciaria/](../hosts/jorge-terciaria/)
+* **Hardware:** Dell Inspiron 5570 (Intel Core i7-8550U, Intel UHD 620 con VA-API H.264/VP9/HEVC + AMD Radeon R7 M360 dedicada, SSD `sda` + HDD `sdb`).
+* **Perfil Térmico y de Autonomía:**
+  * `performanceProfile = "low"` en Hyprland (sin blur, sombras ni animaciones costosas).
+  * [setup/etc/tlp.conf](../setup/etc/tlp.conf): sin Turbo Boost en AC/BAT, `CPU_MAX_PERF` limitado a 70% (AC) / 45% (BAT), Intel UHD 620 limitada a 850 MHz (AC) / 600 MHz (BAT), `RUNTIME_PM_ON_AC=auto` para suspender la dGPU AMD y *spin-down* del HDD `sdb` a los 10 min tanto en AC como en batería.
 * **Esquema de Pantallas:** Panel interno único (`eDP-1`).
 * **Archivo de Monitores ([monitors.conf](../hosts/jorge-terciaria/monitors.conf)):**
   ```ini

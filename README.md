@@ -21,17 +21,17 @@ dotfiles-nix/
 │   ├── 01-arquitectura-sistema.md
 │   ├── ...
 ├── hosts/                 # Perfiles de hardware por máquina (Auto-descubiertos)
-│   ├── jorge-terciaria/   # Laptop principal (Panel 1080p nativo, optimización AMD)
+│   ├── jorge-terciaria/   # Laptop terciaria (1080p, perfil térmico silencioso "low", lectura/video)
 │   │   ├── default.nix    # Calibración mySystem y enlace de monitores
 │   │   └── monitors.conf
-│   └── jorge-secundaria/  # Laptop auxiliar (Dual display 768p + compensación de franja rota)
+│   └── jorge-secundaria/  # Laptop auxiliar (Dual display 768p, perfil "balanced" + compensación franja rota)
 │       ├── default.nix    # Calibración compacta, 2 barras Waybar declarativas
 │       └── monitors.conf
 ├── modules/               # Módulos declarativos de Home Manager
-│   ├── style.nix          # Opciones tipadas mySystem, temas GTK/Qt, cursores Bibata y fuentes
-│   ├── desktop.nix        # Waybar centralizado declarativo, Rofi, SwayNC, SwayOSD, Wlogout y sesión
-│   ├── apps.nix           # Terminal Alacritty, Neovim, Yazi, Node.js 22, pnpm, Sioyek, Typst y FUSE
-│   ├── shell.nix          # Zsh, Starship Prompt, FZF monocromático, Git y GitHub CLI
+│   ├── style.nix          # Opciones tipadas mySystem (performanceProfile), temas GTK/Qt6CT, Bibata y fuentes
+│   ├── desktop.nix        # Waybar declarativo, Rofi, SwayNC, SwayOSD, Hyprshell, PCManFM-Qt y sesión
+│   ├── apps.nix           # Alacritty, Neovim, Yazi, Node.js 22, pnpm, uv, Sioyek, Typst, DevSecOps CLI y FUSE
+│   ├── shell.nix          # Zsh, Tmux, Starship, FZF, Zoxide, Bat, Direnv, Delta, Git (firma SSH) y GitHub CLI
 │   └── scripts.nix        # Wrappers e inyección declarativa de scripts a ~/.local/bin/
 ├── setup/                 # Aprovisionamiento del sistema base Debian (/etc/, TLP, sysctl, SDDM, GRUB)
 │   ├── instalar.sh        # Script maestro idempotente con detección condicional de hardware y swap
@@ -47,7 +47,7 @@ dotfiles-nix/
 
 La biblioteca documental sigue el estándar **Docs-as-Code** con taxonomía numérica jerárquica. Consulta el catálogo maestro en:
 
-👉 **[Catálogo Maestro de Documentación Técnica](docs/00-indice-general.md)**
+**[Catálogo Maestro de Documentación Técnica](docs/00-indice-general.md)**
 
 | Módulo | Documento | Dominio de Ingeniería |
 | :---: | :--- | :--- |
@@ -69,8 +69,8 @@ Este repositorio implementa un motor de **auto-descubrimiento dinámico**: cualq
 
 | Hostname | Perfil Flake | Propósito y Particularidades de Hardware |
 | :--- | :--- | :--- |
-| **`jorge-terciaria`** | `.#jorge@jorge-terciaria` | Laptop principal (Panel 1080p nativo `eDP-1`, touchpad ágil, barra de estado única de 26px). |
-| **`jorge-secundaria`** | `.#jorge@jorge-secundaria` | Laptop auxiliar / estación de trabajo (Dual Display 768p, 2 barras Waybar y margen reservado de 228px por franja rota en `eDP-1`). |
+| **`jorge-terciaria`** | `.#jorge@jorge-terciaria` | Laptop terciaria de lectura, estudio y multimedia (Panel 1080p `eDP-1`, `performanceProfile = "low"`, TLP silencioso, touchpad ágil y barra única de 26px). |
+| **`jorge-secundaria`** | `.#jorge@jorge-secundaria` | Laptop auxiliar / estación de trabajo (Dual Display 768p, `performanceProfile = "balanced"`, 2 barras Waybar y margen reservado de 228px por franja rota en `eDP-1`). |
 | *(Default)* | `.#jorge` | Alias de compatibilidad directa hacia el perfil estándar. |
 
 ---
