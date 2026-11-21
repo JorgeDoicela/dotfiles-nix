@@ -237,6 +237,15 @@ apt-get install -y --no-install-recommends \
     mesa-vulkan-drivers:i386 \
     libgl1-mesa-dri:i386 || true
 
+# 9.1 Aprovisionar stack Wine 10 multiarch (64/32 bits) + Winetricks para e-Sword aislado
+echo "=> Aprovisionando Wine multiarch (wine, wine64, wine32:i386, winetricks, cabextract)..."
+apt-get install -y --no-install-recommends \
+    wine \
+    wine64 \
+    wine32:i386 \
+    winetricks \
+    cabextract || true
+
 # 10. Configurar repositorio Flatpak Flathub y aplicaciones de escritorio esenciales
 echo "=> Configurando Flathub y aplicaciones Flatpak..."
 if command -v flatpak >/dev/null 2>&1; then

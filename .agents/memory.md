@@ -116,6 +116,10 @@
   * Paquetes nativos Debian con soporte 32-bit (`mesa-vulkan-drivers:i386`, `libgl1-mesa-dri:i386`, `steam-devices` y `steam-installer`).
   * Wrapper declarativo en `~/.local/bin/steam` que detecta dinámicamente `config.vdf` (rutas estándar XDG o retrocompatibles) y preconfigura idioma español (`registry.vdf`) y compatibilidad global con **Proton 9.0** (`SteamPlay = 1`, `EnableSteamDesktopPlay = 1`, `CompatToolMapping -> proton_9`).
   * Reglas de ventana en Hyprland para diálogos emergentes flotantes y lanzador `steam.desktop` en `~/.local/share/applications/`.
+* **Wine 10 Multiarch y e-Sword Aislado (`~/.wine-esword`):**
+  * Aprovisionado nativamente en Debian 13 (`wine`, `wine64`, `wine32:i386`, `winetricks`, `cabextract`) sin repositorios externos WineHQ.
+  * Prefix dedicado `WINEPREFIX=~/.wine-esword` (`WINEARCH=win64`) inicializado con `riched20`, `corefonts` y `fontsmooth=rgb`.
+  * Wrapper declarativo en `~/.local/bin/esword` ([modules/scripts.nix](../modules/scripts.nix)) con patrón *Raise or Launch* en Hyprland, detección automática de ruta 32/64-bit y lanzador `esword.desktop` para Rofi.
 * **Atajos de Lanzamiento Clave:**
   * `Super + A`: Antigravity IDE (`antigravity-ide`).
   * `Super + M`: Zoom (`zoom`).

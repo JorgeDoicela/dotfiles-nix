@@ -97,6 +97,7 @@ Para habilitar videojuegos nativos y de Windows (mediante la capa de compatibili
 * **Controladores Gráficos Multi-Fabricante de 32 bits (`mesa-vulkan-drivers:i386`, `libgl1-mesa-dri:i386`):** Proveen soporte Vulkan y OpenGL tanto para GPUs AMD Radeon (`radv`) como para GPUs integradas Intel Iris Xe/UHD (`anv`), garantizando compatibilidad universal en laptops de cualquier marca.
 * **Soporte de Mandos Plug-and-Play (`steam-devices`):** Despliega reglas udev a nivel de kernel para permitir el emparejamiento y uso de controladores de PlayStation (DualShock/DualSense), Xbox y Nintendo Switch Pro sin requerir privilegios de superusuario.
 * **Pre-configuración No Interactiva en Debconf:** Aceptación automatizada de las licencias requeridas por Valve (`steam steam/question select I AGREE`) para ejecuciones desatendidas y reproducibles.
+* **Stack Wine 10 Multiarch (`wine`, `wine64`, `wine32:i386`, `winetricks`, `cabextract`):** Aprovisionado nativamente desde Debian 13 (sin repositorios externos WineHQ) para ejecutar herramientas Windows aisladas como e-Sword en prefix dedicado (`~/.wine-esword` con `riched20`, `corefonts` y `fontsmooth=rgb`).
 
 ### 12. Ecosistema de Desarrollo .NET Oficial
 Para garantizar compatibilidad nativa con Neovim (`neotest-dotnet`), depuradores C# y herramientas de compilación sin fricciones con librerías dinámicas FHS:

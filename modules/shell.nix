@@ -171,7 +171,6 @@
       ld = "lazydocker";
       Hyprland = "start-hyprland";
       hyprland = "start-hyprland";
-      esword = "env WINEPREFIX=\"$HOME/.wine-esword\" wine \"C:\\Program Files\\e-Sword\\e-Sword.exe\" > /dev/null 2>&1 &";
     };
     initContent = ''
       # Función wrapper de Yazi para cambiar de directorio al salir

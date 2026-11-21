@@ -219,4 +219,54 @@ with open(path, "w", encoding="utf-8") as f:
       exec /usr/games/steam "$@"
     '';
   };
+
+  # Wrapper declarativo para e-Sword en prefix Wine aislado (~/.wine-esword)
+  # 1. Aplica patrón Raise or Launch en Hyprland si ya existe ventana activa.
+  # 2. Detecta automáticamente la ruta de instalación (32-bit o 64-bit) dentro del prefix.
+  home.file.".local/bin/esword" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      set -euo pipefail
+
+      export WINEPREFIX="$HOME/.wine-esword"
+      export WINEARCH="win64"
+
+      if [ "$#" -eq 0 ] && command -v hyprctl >/dev/null 2>&1 && hyprctl clients -j 2>/dev/null | ${pkgs.jq}/bin/jq -e '.[] | select(.class | test("e-sword"; "i"))' >/dev/null 2>&1; then
+          hyprctl dispatch focuswindow "class:^(?i).*e-sword.*$" >/dev/null 2>&1
+          exit 0
+      fi
+
+      EXE=""
+      for candidate in \
+          "$WINEPREFIX/drive_c/Program Files (x86)/e-Sword/e-Sword.exe" \
+          "$WINEPREFIX/drive_c/Program Files/e-Sword/e-Sword.exe"; do
+          if [ -f "$candidate" ]; then
+              EXE="$candidate"
+              break
+          fi
+      done
+
+      if [ -z "$EXE" ]; then
+          echo "[ERROR] e-Sword no está instalado en $WINEPREFIX." >&2
+          echo "Instálalo ejecutando: WINEPREFIX=\"\$HOME/.wine-esword\" wine /ruta/al/instalador_esword.exe" >&2
+          exit 1
+      fi
+
+      exec /usr/bin/wine "$EXE" "$@" >/dev/null 2>&1
+    '';
+  };
+
+  # Lanzador de escritorio XDG para e-Sword (Rofi / menú de aplicaciones)
+  xdg.dataFile."applications/esword.desktop".text = ''
+    [Desktop Entry]
+    Type=Application
+    Name=e-Sword
+    Comment=Estudio bíblico (Wine prefix aislado)
+    Exec=${config.home.homeDirectory}/.local/bin/esword
+    Icon=accessories-dictionary
+    Terminal=false
+    Categories=Education;Office;
+    StartupWMClass=e-sword.exe
+  '';
 }
