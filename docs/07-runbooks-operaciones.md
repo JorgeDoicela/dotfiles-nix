@@ -400,4 +400,33 @@ git checkout flake.lock
 ~/.local/state/nix/profiles/home-manager-*-link/activate
 ```
 
+---
+
+## Runbook 8: Identidad Criptográfica en GitHub (SSH Signing) y OAuth Privado de Rclone
+
+Ninguna credencial, token ni llave privada se versiona en `dotfiles-nix`. Los siguientes procedimientos se ejecutan una sola vez en las plataformas externas y en el almacenamiento local mutable del usuario.
+
+### 1. Habilitar Insignia `Verified` en GitHub (Firma SSH de Commits)
+Git ya firma automáticamente los commits locales con `~/.ssh/id_ed25519_github` mediante [modules/shell.nix](../modules/shell.nix). Para que GitHub valide las firmas:
+1. Imprimir la llave pública local:
+   ```bash
+   cat ~/.ssh/id_ed25519_github.pub
+   ```
+2. En **GitHub -> Settings -> SSH and GPG keys -> New SSH key**, seleccionar **Key type: Signing Key**, pegar la llave pública y guardar.
+3. GitHub validará de forma retroactiva todos los commits firmados previamente con esa llave.
+
+### 2. Configurar `client_id` OAuth Propio para Google Drive (`rclone`)
+Evita el retiro del `client_id` compartido de `rclone` en 2026 y elimina el *rate-limiting* global en `~/Drive` y `sincro`. Las credenciales residen únicamente en `~/.config/rclone/rclone.conf` (fuera de Git y Nix):
+1. En **Google Cloud Console**, crear un proyecto personal (ej. `rclone-drive`), habilitar **Google Drive API**, configurar la pantalla de consentimiento OAuth (modo *Testing*, agregando tu correo como usuario de prueba) y crear una credencial **OAuth client ID -> Desktop app**.
+2. Ejecutar en terminal:
+   ```bash
+   rclone config
+   ```
+   Seleccionar `e` (*Edit*) sobre el remoto `gdrive`, ingresar `client_id` y `client_secret`, y completar la reautorización en el navegador.
+3. Reiniciar el servicio FUSE para aplicar la nueva cuota exclusiva:
+   ```bash
+   systemctl --user restart rclone-gdrive.service
+   ```
+
+
 
