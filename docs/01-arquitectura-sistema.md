@@ -38,11 +38,10 @@ Una de las decisiones arquitectónicas más importantes de este entorno es el us
 1. **Estabilidad Gráfica en Wayland:** Compositor Wayland (Hyprland) y navegadores (Brave/Chromium) se comunican directamente con el subsistema gráfico del kernel y Mesa sin desajustes de versiones de drivers.
 2. **Portabilidad Multi-Distribución:** Si una laptop futura utiliza Arch Linux, Fedora u otra distro, la capa de usuario de Nix se despliega de forma idéntica sin modificar la lógica declarativa.
 
-### Gestión de Binarios CLI Autónomos con Auto-Actualización (`agy`)
-Ciertas herramientas CLI de desarrollo incorporan rutinas nativas de actualización continua (*rolling updates* como `agy update`):
-* **Aislamiento en `$HOME/.local/bin/`:** Estos binarios se instalan en el espacio de usuario y se excluyen deliberadamente de los paquetes de Nixpkgs.
-* **Causa Raíz Técnica:** `/nix/store/` es estrictamente inmutable y de solo lectura; empaquetar una herramienta con auto-updater en Nix bloquearía sus actualizaciones automáticas (requiriendo actualizar hashes criptográficos en el repositorio para cada micro-versión). Al mismo tiempo, ubicarlas en `/usr/local/bin/` exigiría privilegios de `root` en cada invocación de actualización.
-* **Resolución de Entorno:** El `PATH` del entorno de usuario prioriza `$HOME/.local/bin` sobre las rutas del sistema, garantizando ejecución directa y sin colisiones con los symlinks que Home Manager gestiona en ese mismo directorio.
+### Gestión de Binarios CLI Autónomos en Nivel 1 (`agy`)
+El binario autónomo `agy` (~258 MB, con auto-updater integrado) sigue el mismo estándar FHS de Nivel 1 que `antigravity` y `antigravity-ide`:
+* **Ubicación en SSD (`/opt/agy/agy`):** Expuesto globalmente mediante enlace simbólico en `/usr/local/bin/agy` y excluido de `/nix/store/` para no bloquear su mecanismo de actualización.
+* **Causa Raíz Técnica:** En máquinas con `/` en SSD y `/home` en HDD mecánico de 5400 RPM, alojar un ejecutable monolítico de 258 MB en `$HOME/.local/bin/` provoca lecturas en frío de 5 a 12 segundos. Mantenerlo en `/opt/agy/` respeta la separación `/` vs `/home` sin enlaces rotos, logra lecturas en frío en < 0.5 s sobre el SSD y se actualiza con `sudo agy update`.
 
 ---
 

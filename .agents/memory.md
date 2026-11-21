@@ -5,7 +5,7 @@
 * **`jorge-terciaria` (Laptop Terciaria — Lectura, Estudio y Multimedia):**
   * Pantalla: Panel interno `eDP-1` a 1920x1080 (1080p nativo).
   * Escala: Estándar (11pt GTK/Qt6/DConf, Waybar 13px, cursor Bibata 24px).
-  * Perfil térmico y visual: `performanceProfile = "low"` (cero blur, sombras ni animaciones costosas) y `setup/etc/tlp.conf` optimizado para silencio y autonomía (sin Turbo Boost en AC/BAT, EPP `balance_power`, `CPU_MAX_PERF` 70%/55%, Intel UHD 620 limitada a 850/600 MHz, Runtime PM `auto` excluyendo `ath10k_pci`, `PCIE_ASPM=default` y `WIFI_PWR=off` para evitar bloqueos PCIe `-110/-5` del adaptador Wi-Fi Qualcomm Atheros QCA9377, y spin-down del HDD `sdb` en AC y BAT).
+  * Perfil térmico y visual: `performanceProfile = "low"` (cero blur, sombras ni animaciones costosas) y `setup/etc/tlp.conf` optimizado para silencio y autonomía (sin Turbo Boost en AC/BAT, EPP `balance_power`, `CPU_MAX_PERF` 70%/55%, Intel UHD 620 limitada a 850/600 MHz, Runtime PM `auto` excluyendo `ath10k_pci`, `PCIE_ASPM=default` y `WIFI_PWR=off` para evitar bloqueos PCIe `-110/-5` del adaptador Wi-Fi Qualcomm Atheros QCA9377, y discos configurados por ID persistente con `DISK_SPINDOWN_TIMEOUT="0 0"` y `APM=192` en batería para el HDD `/home`).
   * Touchpad: Calibrado para respuesta ágil con `cursorSensitivity = "0.35"` y `scrollFactor = "0.27"`.
   * Gráficos: Híbrido Intel UHD 620 (VA-API H.264/VP9/HEVC) + AMD Radeon R7 M360 dedicada con `amdgpu-powersave`.
 
@@ -53,10 +53,9 @@
    * `flake.nix` utiliza `builtins.readDir ./hosts` para auto-descubrir dinámicamente cualquier subdirectorio en `hosts/` y registrarlo como `jorge@<hostname>`.
    * El script wrapper `./switch` resuelve automáticamente `$(hostname)` y valida que el perfil exista en `hosts/`.
    * Pipeline de integración continua en `.github/workflows/ci.yml` ejecuta `nix flake check` en cada push a `main`.
-8. **Gestión de Binarios CLI Autónomos con Auto-Actualización (`agy`):**
-   * Herramientas de desarrollo con mecanismos nativos de auto-actualización rápida y rolling (ej. `agy update`) se mantienen como binarios autónomos en `$HOME/.local/bin/` y **no se empaquetan en Nix ni se instalan en `/usr/local/bin`**.
-   * **Causa raíz:** `/nix/store/` es inmutable y de solo lectura (invalida el auto-updater obligando a modificar hashes SHA256 en el repositorio en cada release), mientras que `/usr/local/bin` exige privilegios de `root` (rompe actualizaciones desatendidas de usuario y deja binarios obsoletos huérfanos).
-   * **Resolución de entorno:** El `$PATH` de sesión en `raw_configs/hypr/hyprland.conf` y `~/.bashrc` prioriza `$HOME/.local/bin`, garantizando ejecución unívoca sin colisionar con los symlinks que Home Manager gestiona en ese directorio mediante `modules/scripts.nix`.
+8. **Gestión de Binarios CLI Autónomos en Nivel 1 (`/opt/agy/`):**
+   * `agy` (binario monolítico de ~258 MB con auto-updater) se despliega en el estándar Nivel 1 en `/opt/agy/agy` (partición raíz `/` en SSD) y se expone mediante `/usr/local/bin/agy`, unificado con `/opt/antigravity` y `/opt/antigravity-ide`.
+   * **Causa raíz:** Alojar un ejecutable de 258 MB en `~/.local/bin/` cuando `/home` reside en un HDD mecánico de 5400 RPM impone demoras de 5–12 segundos en el primer arranque en frío, mientras que `/nix/store/` (solo lectura) bloquea su auto-updater. Al residir en `/opt/agy/` sobre el SSD, el arranque en frío baja a < 0.5 s sin romper la separación `/` vs `/home`, y se actualiza mediante `sudo agy update`.
 
 ---
 
