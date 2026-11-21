@@ -138,9 +138,14 @@
   * Se prohíbe el uso de monkey-patches en `vim.notify` para ocultar avisos de deprecación.
 * **Herramientas CLI Declarativas de Soporte:**
   * Linters, formatters y compiladores de parsers (`tree-sitter`, `ripgrep`, `fd`, `stylua`, `shfmt`, `shellcheck`, `ruff`) se declaran en `home.packages` dentro de `modules/apps.nix` para garantizar su presencia independiente del host o distribución subyacente.
-* **GitHub CLI Declarativo (`programs.gh`):**
-  * Declarado en [modules/shell.nix](../modules/shell.nix) con `git_protocol = "ssh"`.
-  * La configuración estructural `~/.config/gh/config.yml` reside inmutable en `/nix/store/`, mientras que los tokens de autenticación (`hosts.yml` / keyring) se almacenan en el espacio mutable de usuario.
+* **GitHub CLI y Toolchain Terminal / DevSecOps Declarativo (`modules/shell.nix`, `modules/apps.nix`):**
+  * `programs.gh` con `git_protocol = "ssh"`. La configuración estructural `~/.config/gh/config.yml` reside inmutable en `/nix/store/`, mientras que los tokens de autenticación (`hosts.yml` / keyring) se almacenan en el espacio mutable de usuario.
+  * `programs.git` endurecido con firma criptográfica SSH nativa (`gpg.format = "ssh"`, `user.signingkey = "~/.ssh/id_ed25519_github.pub"`, `commit.gpgsign = true`, `tag.gpgsign = true`), `pull.rebase = true`, `fetch.prune = true`, `rerere.enabled = true`, `diff.algorithm = "histogram"`, y `programs.delta` como pager de diffs.
+  * Productividad y DevSecOps 100% bajo demanda (cero demonios residentes): `programs.tmux` (prefijo `C-a`, modo `vi`, paleta monocromática Alacritty/Waybar), `programs.zoxide`, `programs.bat`, `programs.direnv` (`nix-direnv`), `lazygit`, `lazydocker`, `gitleaks`, `trivy`, `age` y `sops`.
+* **Perfiles de Rendimiento Escalonado y Higiene GTK4/Qt6 (`modules/style.nix`, `modules/desktop.nix`):**
+  * `mySystem.performanceProfile` (`"low" | "balanced" | "full"`) genera declarativamente `~/.config/hypr/performance.conf` por host (`full` en `jorge-terciaria`, `balanced` en `jorge-secundaria`, listo para `low` en equipos Pentium 4 GB sin blur, sombras ni animaciones).
+  * `gtk.gtk4.theme = null` erradica los errores de parseo CSS y advertencias de Libadwaita (`swaync`, `swayosd`, `hyprshell`), delegando el modo oscuro exclusivamente a `dconf` (`color-scheme = "prefer-dark"`).
+  * `qt5ct.conf` y `qt6ct.conf` se parametrizan con `JetBrainsMono Nerd Font` y `config.mySystem.fontSize` para cohesión tipográfica total en `pcmanfm-qt` y aplicaciones Qt6.
 
 ---
 

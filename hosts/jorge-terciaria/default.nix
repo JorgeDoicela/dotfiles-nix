@@ -3,6 +3,7 @@
 {
   # Parámetros declarativos de escala de UI para jorge-terciaria (Pantalla 1080p estándar)
   mySystem = {
+    performanceProfile = "full";
     fontSize = 11;
     cursorSize = 24;
     waybarFontSize = "13px";

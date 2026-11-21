@@ -3,6 +3,7 @@
 {
   # Parámetros declarativos de escala de UI para jorge-secundaria (Pantalla 768p compacta)
   mySystem = {
+    performanceProfile = "balanced";
     fontSize = 9;
     cursorSize = 20;
     waybarFontSize = "11px";

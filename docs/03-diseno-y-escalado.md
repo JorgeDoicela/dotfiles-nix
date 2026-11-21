@@ -23,17 +23,24 @@ En [modules/style.nix](../modules/style.nix) se declaran las opciones que cada h
 
 ```nix
 options.mySystem = {
-  fontSize          = lib.mkOption { type = lib.types.number; default = 11; };
-  cursorSize        = lib.mkOption { type = lib.types.int;    default = 24; };
-  waybarFontSize    = lib.mkOption { type = lib.types.str;    default = "13px"; };
-  rofiFontSize      = lib.mkOption { type = lib.types.str;    default = "10"; };
-  rofiWidth         = lib.mkOption { type = lib.types.str;    default = "600px"; };
-  rofiHeight        = lib.mkOption { type = lib.types.str;    default = "350px"; };
-  browserScale      = lib.mkOption { type = lib.types.str;    default = "1"; };
-  cursorSensitivity = lib.mkOption { type = lib.types.str;    default = "0.2"; };
-  scrollFactor      = lib.mkOption { type = lib.types.str;    default = "0.75"; };
+  fontSize           = lib.mkOption { type = lib.types.number; default = 11; };
+  performanceProfile = lib.mkOption { type = lib.types.enum [ "low" "balanced" "full" ]; default = "full"; };
+  cursorSize         = lib.mkOption { type = lib.types.int;    default = 24; };
+  waybarFontSize     = lib.mkOption { type = lib.types.str;    default = "13px"; };
+  rofiFontSize       = lib.mkOption { type = lib.types.str;    default = "10"; };
+  rofiWidth          = lib.mkOption { type = lib.types.str;    default = "600px"; };
+  rofiHeight         = lib.mkOption { type = lib.types.str;    default = "350px"; };
+  browserScale       = lib.mkOption { type = lib.types.str;    default = "1"; };
+  cursorSensitivity  = lib.mkOption { type = lib.types.str;    default = "0.2"; };
+  scrollFactor       = lib.mkOption { type = lib.types.str;    default = "0.75"; };
 };
 ```
+
+### Perfiles de Rendimiento Escalonado (`performanceProfile`)
+Cada host declara su capacidad de hardware en `hosts/<host>/default.nix`, generando automáticamente `~/.config/hypr/performance.conf` en [modules/desktop.nix](../modules/desktop.nix):
+* **`low` (Pentium / 4 GB RAM):** Desactiva `blur`, `shadow`, transparencias (`opacity = 1.0`) y `animations`.
+* **`balanced` (Ryzen 3 / 8 GB RAM — `jorge-secundaria`):** Mantiene animaciones fluidas y `blur` ligero (1 pasada) sin sombras costosas.
+* **`full` (Ryzen 7 / 16 GB RAM — `jorge-terciaria`):** Activa `blur` completo (2 pasadas), sombras y animaciones.
 
 ---
 
@@ -41,13 +48,14 @@ options.mySystem = {
 
 Los valores definidos en cada host se propagan automáticamente a las siguientes capas del sistema:
 
-### 1. Entorno GTK3, GTK4 y DConf / GNOME
+### 1. Entorno GTK3, GTK4 (Libadwaita), Qt6 (`qt6ct`) y DConf
 ```nix
 gtk = {
   font = {
     name = "JetBrainsMono Nerd Font";
     size = config.mySystem.fontSize;
   };
+  gtk4.theme = null; # Estándar moderno Libadwaita: delega modo oscuro a dconf (sin errores CSS)
   cursorTheme = {
     name = "Bibata-Modern-Ice";
     size = config.mySystem.cursorSize;
@@ -55,11 +63,13 @@ gtk = {
 };
 
 dconf.settings."org/gnome/desktop/interface" = {
+  color-scheme = "prefer-dark";
   cursor-size = config.mySystem.cursorSize;
   document-font-name = "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}";
   monospace-font-name = "JetBrainsMono Nerd Font ${toString config.mySystem.fontSize}";
 };
 ```
+Adicionalmente, `qt5ct.conf` y `qt6ct.conf` se parametrizan mediante `@FONT_SIZE@` con `JetBrainsMono Nerd Font` y `Tela-circle-dark` para que aplicaciones Qt6 nativas como `pcmanfm-qt` mantengan paridad visual exacta con GTK y Alacritty.
 
 ### 2. X11 / XWayland (`xsettingsd`)
 Garantiza que aplicaciones legacy o juegos que corren bajo XWayland mantengan la escala y tamaño del cursor idénticos a las aplicaciones nativas de Wayland:

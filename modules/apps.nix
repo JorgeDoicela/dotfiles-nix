@@ -27,6 +27,14 @@
     shellcheck
     ruff
 
+    # Toolchain DevSecOps y productividad CLI (bajo demanda, cero demonios residentes)
+    lazygit
+    lazydocker
+    gitleaks
+    trivy
+    age
+    sops
+
     # Gestor de entornos y paquetes Python declarativo (uv determinista de alta velocidad)
     uv
 

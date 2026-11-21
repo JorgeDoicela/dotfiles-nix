@@ -5,7 +5,12 @@
     fontSize = lib.mkOption {
       type = lib.types.number;
       default = 11;
-      description = "Tamaño base de tipografía del sistema (GTK, Terminal, DConf)";
+      description = "Tamaño base de tipografía del sistema (GTK, Qt, Terminal, DConf)";
+    };
+    performanceProfile = lib.mkOption {
+      type = lib.types.enum [ "low" "balanced" "full" ];
+      default = "full";
+      description = "Perfil de rendimiento visual de Hyprland (low: Pentium 4GB, balanced: Ryzen 3 8GB, full: Ryzen 7 16GB)";
     };
     cursorSize = lib.mkOption {
       type = lib.types.int;
@@ -210,7 +215,8 @@
         name = "JetBrainsMono Nerd Font";
         size = config.mySystem.fontSize;
       };
-      gtk4.theme = config.gtk.theme;
+      # Estándar moderno GTK4 / Libadwaita: delegar tema oscuro a dconf (color-scheme = "prefer-dark")
+      gtk4.theme = null;
       gtk3.bookmarks = [
         "file://${config.home.homeDirectory}/Documentos Documentos"
         "file://${config.home.homeDirectory}/Descargas Descargas"
@@ -220,9 +226,6 @@
         "file://${config.home.homeDirectory}/Drive Drive"
       ];
       gtk3.extraConfig = {
-        gtk-application-prefer-dark-theme = 1;
-      };
-      gtk4.extraConfig = {
         gtk-application-prefer-dark-theme = 1;
       };
     };
@@ -281,8 +284,12 @@
       Inherits=Bibata-Modern-Ice
     '';
 
-    # Configuraciones declarativas de qt5ct y qt6ct
-    xdg.configFile."qt5ct/qt5ct.conf".source = ../raw_configs/qt5ct/qt5ct.conf;
-    xdg.configFile."qt6ct/qt6ct.conf".source = ../raw_configs/qt6ct/qt6ct.conf;
+    # Configuraciones declarativas de qt5ct y qt6ct parametrizadas con la escala tipográfica del host
+    xdg.configFile."qt5ct/qt5ct.conf".text =
+      builtins.replaceStrings [ "@FONT_SIZE@" ] [ (toString config.mySystem.fontSize) ]
+        (builtins.readFile ../raw_configs/qt5ct/qt5ct.conf);
+    xdg.configFile."qt6ct/qt6ct.conf".text =
+      builtins.replaceStrings [ "@FONT_SIZE@" ] [ (toString config.mySystem.fontSize) ]
+        (builtins.readFile ../raw_configs/qt6ct/qt6ct.conf);
   };
 }

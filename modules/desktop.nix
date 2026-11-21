@@ -110,7 +110,54 @@
   xdg.configFile."hypr/hyprlock.conf".source = ../raw_configs/hypr/hyprlock.conf;
   xdg.configFile."hypr/hyprpaper.conf".source = ../raw_configs/hypr/hyprpaper.conf;
   xdg.configFile."hypr/keybindings.conf".source = ../raw_configs/hypr/keybindings.conf;
-  xdg.configFile."hypr/performance.conf".source = ../raw_configs/hypr/performance.conf;
+  # Perfil de rendimiento escalonado de Hyprland (low | balanced | full) generado por host
+  xdg.configFile."hypr/performance.conf".text =
+    if config.mySystem.performanceProfile == "low" then ''
+      # Perfil: LOW (Hardware limitado, ej. Pentium 4 GB RAM)
+      decoration {
+          active_opacity = 1.0
+          inactive_opacity = 1.0
+          blur {
+              enabled = false
+          }
+          shadow {
+              enabled = false
+          }
+      }
+      animations {
+          enabled = no
+      }
+    '' else if config.mySystem.performanceProfile == "balanced" then ''
+      # Perfil: BALANCED (Equilibrio estética / rendimiento, ej. Ryzen 3 8 GB RAM)
+      decoration {
+          blur {
+              enabled = true
+              size = 6
+              passes = 1
+          }
+          shadow {
+              enabled = false
+          }
+      }
+      animations {
+          enabled = yes
+      }
+    '' else ''
+      # Perfil: FULL (Experiencia visual completa, ej. Ryzen 7 16 GB RAM)
+      decoration {
+          blur {
+              enabled = true
+              size = 8
+              passes = 2
+          }
+          shadow {
+              enabled = true
+          }
+      }
+      animations {
+          enabled = yes
+      }
+    '';
   xdg.configFile."hypr/userprefs.conf".text =
     builtins.replaceStrings
       [ "@CURSOR_SENSITIVITY@"

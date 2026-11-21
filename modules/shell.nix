@@ -1,14 +1,54 @@
 { config, pkgs, ... }:
 
 {
-  # Configuración declarativa de Git (sintaxis actualizada de Home Manager)
+  # Configuración declarativa de Git endurecida (firma SSH, rebase, histogram diff, rerere)
   programs.git = {
     enable = true;
     settings = {
       user = {
         name = "JorgeDoicela";
         email = "ismael02doicela@gmail.com";
+        signingkey = "~/.ssh/id_ed25519_github.pub";
       };
+      gpg = {
+        format = "ssh";
+      };
+      commit = {
+        gpgsign = true;
+      };
+      tag = {
+        gpgsign = true;
+      };
+      init = {
+        defaultBranch = "main";
+      };
+      pull = {
+        rebase = true;
+      };
+      fetch = {
+        prune = true;
+      };
+      rerere = {
+        enabled = true;
+      };
+      diff = {
+        algorithm = "histogram";
+      };
+      core = {
+        autocrlf = "input";
+      };
+    };
+  };
+
+  # Pager moderno para diffs de Git con resaltado de sintaxis
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      navigate = true;
+      dark = true;
+      line-numbers = true;
+      side-by-side = false;
     };
   };
 
@@ -18,6 +58,68 @@
     settings = {
       git_protocol = "ssh";
     };
+  };
+
+  # Navegación inteligente de directorios (zoxide)
+  programs.zoxide = {
+    enable = true;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
+  };
+
+  # Visor de archivos con resaltado de sintaxis e integración Git (bat)
+  programs.bat = {
+    enable = true;
+    config = {
+      theme = "TwoDark";
+      style = "numbers,changes,header";
+    };
+  };
+
+  # Carga automática de entornos de proyecto por directorio (direnv + nix-direnv)
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    enableBashIntegration = true;
+    nix-direnv.enable = true;
+  };
+
+  # Multiplexor de sesiones Tmux declarativo (paleta monocromática coherente con Alacritty)
+  programs.tmux = {
+    enable = true;
+    prefix = "C-a";
+    mouse = true;
+    baseIndex = 1;
+    escapeTime = 0;
+    historyLimit = 10000;
+    keyMode = "vi";
+    terminal = "tmux-256color";
+    extraConfig = ''
+      set -ag terminal-overrides ",alacritty:RGB"
+      set -g renumber-windows on
+      set -g status-position top
+
+      # División intuitiva de paneles manteniendo el directorio actual
+      bind | split-window -h -c "#{pane_current_path}"
+      bind - split-window -v -c "#{pane_current_path}"
+      bind c new-window -c "#{pane_current_path}"
+
+      # Navegación de paneles estilo Vim
+      bind h select-pane -L
+      bind j select-pane -D
+      bind k select-pane -U
+      bind l select-pane -R
+
+      # Estética monocromática oscura (coherente con Alacritty / Waybar)
+      set -g status-style "bg=#1c1c1e,fg=#f5f5f7"
+      set -g status-left "#[bg=#ffffff,fg=#000000,bold] #S #[default] "
+      set -g status-right "#[fg=#8e8e93]%H:%M "
+      set -g window-status-current-style "bg=#2c2c2e,fg=#ffffff,bold"
+      set -g window-status-format " #I:#W "
+      set -g window-status-current-format " #I:#W "
+      set -g pane-border-style "fg=#2c2c2e"
+      set -g pane-active-border-style "fg=#ffffff"
+    '';
   };
 
   # Configuración declarativa de Xresources
@@ -64,6 +166,9 @@
       la = "lsd -a";
       lla = "lsd -la";
       lt = "lsd --tree";
+      cat = "bat";
+      lg = "lazygit";
+      ld = "lazydocker";
       Hyprland = "start-hyprland";
       hyprland = "start-hyprland";
       esword = "env WINEPREFIX=\"$HOME/.wine-esword\" wine \"C:\\Program Files\\e-Sword\\e-Sword.exe\" > /dev/null 2>&1 &";
