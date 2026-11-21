@@ -30,7 +30,7 @@ Una de las decisiones arquitectónicas más importantes de este entorno es el us
 
 | Capa | Administrador | Responsabilidad Técnica | Razón de Ingeniería |
 | :--- | :--- | :--- | :--- |
-| **Capa 1: Sistema Base** | Debian (`apt` + `/etc/`) | Kernel Linux, Firmware/DRM, controladores gráficos Mesa 32/64 bits (AMDGPU/Intel), PipeWire, compositor Hyprland base, Display Manager SDDM (módulos Qt6), autenticación PAM (`/etc/pam.d/hyprlock` para `hyprlock`/`hypridle`), almacenamiento de sistema/FUSE (`gvfs`, `gvfs-fuse`, `thunar`, `tumbler`), TLP y aplicaciones nativas aceleradas (`brave-browser`, `zoom`, `steam-installer`, `ffmpeg`). | Enlace 100% nativo con librerías dinámicas del sistema (`radeonsi_dri.so`, `libEGL.so`), aceleración por hardware por GPU sin wrappers ni desajustes de ABI, y gestión de seguridad privilegiada en PAM que no puede ser gobernada por gestores de paquetes no privilegiados de usuario. |
+| **Capa 1: Sistema Base** | Debian (`apt` + `/etc/`) | Kernel Linux, Firmware/DRM, controladores gráficos Mesa 32/64 bits (AMDGPU/Intel), PipeWire, compositor Hyprland base, Display Manager SDDM (módulos Qt6), autenticación PAM (`/etc/pam.d/hyprlock` para `hyprlock`/`hypridle`), almacenamiento de sistema/FUSE (`gvfs`, `gvfs-fuse`, `pcmanfm-qt`, `lxqt-archiver`), TLP y aplicaciones nativas aceleradas (`brave-browser`, `zoom`, `steam-installer`, `ffmpeg`). | Enlace 100% nativo con librerías dinámicas del sistema (`radeonsi_dri.so`, `libEGL.so`), aceleración por hardware por GPU sin wrappers ni desajustes de ABI, y gestión de seguridad privilegiada en PAM que no puede ser gobernada por gestores de paquetes no privilegiados de usuario. |
 | **Capa 2: Entorno Declarativo** | Nix Flakes + Home Manager | Herramientas CLI (Neovim, Yazi, Fastfetch, LSD, Rclone, Linters/Formatters, gestor Python `uv`, Node.js 22), monitor `btop`, entorno visual de sesión (Waybar, Rofi, SwayNC, SwayOSD, Hyprshell), temas GTK/Qt, cursores, fuentes, scripts en `~/.local/bin/` y dotfiles inmutables en `/nix/store/` (incluyendo `hyprlock.conf` e `hypridle.conf`). | Entorno reproducible, versionado, aislado de dependencias de Debian y con posibilidad de rollback instantáneo sin romper el sistema operativo. Se evita instalar paquetes que colisionen con PAM del host. |
 | **Capa 3: Aplicaciones GUI Aisladas** | Flatpak (`flathub`) | Clientes de mensajería (ZapZap / WhatsApp), multimedia y aplicaciones de terceros con interfaces web o QtWebEngine complejas. | Provee runtimes y drivers Mesa autocontenidos que operan directamente sobre el subsistema DRM del kernel, eliminando rupturas de enlaces dinámicos (ABI) que ocurren al ejecutar aplicaciones gráficas pesadas dentro de Nix Standalone sobre Debian. |
 
@@ -94,30 +94,28 @@ La exploración de archivos y el montaje de unidades virtuales combinan la base 
 
 ```mermaid
 graph TD
-    Thunar["Thunar (GTK3 / Wayland)"] -->|Solicitud de miniaturas| Tumbler["Tumbler Daemon (tumblerd)"]
-    Tumbler -->|Exclusión declarativa| BlockRemote["Regla Excludes: ~/Drive;~/.cache; (Ignorado)"]
-    Thunar -->|I/O Local| Ext4["Almacenamiento Local (SSD / Ext4)"]
-    Thunar -->|Acceso a ~/Drive| FUSE["Kernel VFS / FUSE (/etc/fuse.conf)"]
+    PCManFM["PCManFM-Qt (Qt6 / Wayland)"] -->|Miniaturas locales <= 2 MB| LocalThumb["libfm-qt (ThumbnailLocalFilesOnly=true)"]
+    PCManFM -->|I/O Local| Ext4["Almacenamiento Local (SSD / Ext4)"]
+    PCManFM -->|Acceso a ~/Drive| FUSE["Kernel VFS / FUSE (/etc/fuse.conf)"]
     FUSE -->|Lectura con Caché VFS| Rclone["Rclone Daemon (rclone-gdrive.service)"]
     Rclone -->|HTTPS con Timeout estricto| GDrive["Google Drive (Cloud)"]
 ```
 
 ### Principios de Aislamiento
-1. **Aislamiento de Miniaturas ([raw_configs/tumbler/tumbler.rc](../raw_configs/tumbler/tumbler.rc)):**
-   * Enlazado declarativamente a `~/.config/tumbler/tumbler.rc`.
-   * Define formalmente `Excludes=~/Drive;~/.cache;` y tope `MaxFileSize=52428800` (50 MB) en todos los generadores. Impide que `tumblerd` intente descargar o procesar archivos masivos a través del montaje FUSE, protegiendo el bus D-Bus de saturación.
-2. **Políticas Inmutables en Thunar ([raw_configs/xfce4/.../thunar.xml](../raw_configs/xfce4/xfconf/xfce-perchannel-xml/thunar.xml)):**
-   * Gestionado por Home Manager mediante canal Xfconf.
-   * Fija `misc-thumbnail-mode` en `THUNAR_THUMBNAIL_MODE_ONLY_LOCAL` y `misc-parallel-copy-mode` en `THUNAR_PARALLEL_COPY_MODE_ALWAYS`.
-3. **Resiliencia en el Montaje FUSE de Rclone ([modules/apps.nix](../modules/apps.nix)):**
+1. **Políticas Inmutables en PCManFM-Qt ([raw_configs/pcmanfm-qt/settings.conf](../raw_configs/pcmanfm-qt/settings.conf)):**
+   * Enlazado declarativamente por Home Manager a `~/.config/pcmanfm-qt/default/settings.conf`.
+   * Fija `ThumbnailLocalFilesOnly=true` y `MaxThumbnailFileSize=2048` (2 MB) para impedir que `libfm-qt` descargue archivos a través de FUSE al generar previsualizaciones.
+   * Fija `PlacesNetwork=false` y `MountOnStartup=false` para erradicar sondeos de red y demoras en el arranque en frío.
+   * Integra de forma nativa `Terminal=alacritty` (`F4`), `Archiver=lxqt-archiver`, vista dividida (`F3`), barra de rutas moderna (`PathBarButtons=true`) sin barra de menú legacy (`ShowMenuBar=false`), y tema visual oscuro coherente vía `qt6ct` (`Tela-circle-dark` + `Fusion`).
+2. **Resiliencia en el Montaje FUSE de Rclone ([modules/apps.nix](../modules/apps.nix)):**
    * Vinculado a `graphical-session.target`.
    * Banderas críticas: `--attr-timeout 10m` y `--dir-cache-time 72h` (eliminan llamadas remotas `stat()` redundantes al retener metadatos en memoria), `--poll-interval 1m` (notificaciones asíncronas de cambios), `--vfs-disk-space-total-size 5T` (emulación estática de espacio que previene congelamiento en `statfs()`), `--daemon-timeout 5s` (límite estricto para que rclone nunca retenga peticiones del kernel en estado D si la red está en negociación), `--timeout 10s` y `--contimeout 5s` (corte estricto de sockets para prevenir procesos en estado D no interrumpible ante fallos de red o rate-limits de Google Drive) y `--no-modtime`.
-4. **Aislamiento FUSE contra Sondeos de Discos GVFS ([modules/apps.nix](../modules/apps.nix)):**
+3. **Aislamiento FUSE contra Sondeos de Discos GVFS ([modules/apps.nix](../modules/apps.nix)):**
    * El sistema FUSE se monta en `~/.local/share/gdrive` y se expone como enlace simbólico transparente en `~/Drive`.
-   * Motivo técnico: La regla nativa de GVFS (`g_strstr_len(mount_path, -1, "/.") != NULL`) ignora automáticamente cualquier montaje en subdirectorios ocultos. Esto impide que `gvfs-udisks2-volume-monitor` lo catalogue como unidad extraíble y envíe sondeos síncronos de red (`autorun.inf`, `bdmv`, `xdg_volume_info`) al arrancar exploradores en frío como Thunar, eliminando de raíz el timeout de 25 segundos de D-Bus.
-5. **Desactivación de AutoMount en GVFS de Red ([setup/instalar.sh](../setup/instalar.sh)):**
-   * Se fija `AutoMount=false` en `/usr/share/gvfs/mounts/network.mount` y `/usr/share/gvfs/mounts/wsdd.mount`.
-   * Motivo técnico: Por defecto Debian activa el sondeo automático de red local (mDNS, SMB y WSDD). Si la máquina arranca en frío o no dispone del demonio `wsdd`, GVFS intenta sondear la red en el hilo de renderizado de la barra lateral de Thunar, induciendo bloqueos de 20 a 25 segundos. Al desactivar el automount preventivo, la red solo se consulta si el usuario accede expresamente a la ubicación de red.
+   * Motivo técnico: La regla nativa de GVFS (`g_strstr_len(mount_path, -1, "/.") != NULL`) ignora automáticamente cualquier montaje en subdirectorios ocultos. Esto impide que `gvfs-udisks2-volume-monitor` lo catalogue como unidad extraíble y envíe sondeos síncronos de red (`autorun.inf`, `bdmv`, `xdg_volume_info`) al abrir diálogos de archivos o exploradores en frío, eliminando de raíz el timeout de 25 segundos de D-Bus.
+4. **Desactivación Blindada de AutoMount en GVFS de Red ([setup/instalar.sh](../setup/instalar.sh)):**
+   * Se fija `AutoMount=false` en `/usr/share/gvfs/mounts/network.mount` y `/usr/share/gvfs/mounts/wsdd.mount` protegidos mediante `dpkg-divert` contra futuras actualizaciones de `apt`.
+   * Motivo técnico: Por defecto Debian activa el sondeo automático de red local (mDNS, SMB y WSDD), lo cual induce bloqueos de 20 a 25 segundos en los diálogos de archivos GTK (navegadores, Obsidian, etc.). Al desactivar el automount preventivo con `dpkg-divert`, la política sobrevive a cualquier actualización del sistema.
 
 ---
 

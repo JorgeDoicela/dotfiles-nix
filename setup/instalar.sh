@@ -190,21 +190,24 @@ apt-get install -y --no-install-recommends \
     docker-cli \
     flatpak \
     brave-browser \
-    thunar \
-    thunar-volman \
-    thunar-archive-plugin \
+    pcmanfm-qt \
+    lxqt-archiver \
     gvfs \
     gvfs-backends \
     gvfs-fuse \
-    tumbler \
-    tumbler-plugins-extra \
     ffmpeg \
     ffmpegthumbnailer || true
 
 # 8.1 Optimización de GVFS (Desactivar sondeos automáticos de red para erradicar bloqueos en exploradores)
-echo "=> Optimizando servicios de montaje de GVFS (desactivando automount de red)..."
+echo "=> Optimizando servicios de montaje de GVFS (desactivando automount de red permanentemente con dpkg-divert)..."
 for mount_file in /usr/share/gvfs/mounts/network.mount /usr/share/gvfs/mounts/wsdd.mount; do
     if [ -f "$mount_file" ]; then
+        if command -v dpkg-divert >/dev/null 2>&1; then
+            if ! dpkg-divert --list "$mount_file" | grep -q "$mount_file"; then
+                dpkg-divert --add --rename --divert "${mount_file}.distrib" "$mount_file"
+                cp -a "${mount_file}.distrib" "$mount_file"
+            fi
+        fi
         sed -i 's/^AutoMount=true/AutoMount=false/' "$mount_file"
     fi
 done

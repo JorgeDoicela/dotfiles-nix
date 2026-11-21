@@ -141,7 +141,7 @@
   # Servicio de usuario Systemd para montaje FUSE de Google Drive bajo demanda (~/Drive)
   # El montaje real se realiza en ~/.local/share/gdrive (ruta XDG con subdirectorio oculto '/.')
   # para que GVFS / GVolumeMonitor lo ignore por diseno nativo (g_strstr_len "/.") y nunca
-  # realice sondeos sincronos de autorun/bdmv que bloqueen D-Bus y exploradores como Thunar.
+  # realice sondeos sincronos de autorun/bdmv que bloqueen D-Bus y exploradores de archivos.
   # Se enlaza de forma transparente como symlink a %h/Drive para paridad total con CLI y scripts.
   systemd.user.services.rclone-gdrive = {
     Unit = {

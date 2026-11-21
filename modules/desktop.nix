@@ -90,7 +90,7 @@
 
   # Unidad Systemd de sesión para Hyprland (eleva graphical-session.target por dependencia respetando el estándar systemd)
   # Precarga el monitor de dispositivos de almacenamiento del SO (gvfs-udisks2-volume-monitor) en el login
-  # para que clientes gráficos bajo demanda como Thunar dispongan del bus D-Bus de inmediato sin congelarse.
+  # para que clientes gráficos y diálogos de archivo bajo demanda dispongan del bus D-Bus de inmediato sin congelarse.
   systemd.user.targets.hyprland-session = {
     Unit = {
       Description = "Hyprland compositor session";
@@ -228,14 +228,10 @@
     fill_shape=false
   '';
 
-  # Configuración declarativa del explorador de archivos Thunar (Xfconf)
-  # Fuerza miniaturas solo locales para evitar cuelgues en sistemas FUSE / red
-  xdg.configFile."xfce4/xfconf/xfce-perchannel-xml/thunar.xml" = {
-    source = ../raw_configs/xfce4/xfconf/xfce-perchannel-xml/thunar.xml;
+  # Configuración declarativa del explorador de archivos PCManFM-Qt (Qt6 / Wayland)
+  # Aísla miniaturas solo a almacenamiento local, desactiva sondeos de red y enlaza Alacritty + lxqt-archiver
+  xdg.configFile."pcmanfm-qt/default/settings.conf" = {
+    source = ../raw_configs/pcmanfm-qt/settings.conf;
     force = true;
   };
-
-  # Configuración declarativa de Tumbler (Daemon de miniaturas)
-  # Excluye explícitamente ~/Drive para evitar saturación de D-Bus y bloqueos del hilo GTK
-  xdg.configFile."tumbler/tumbler.rc".source = ../raw_configs/tumbler/tumbler.rc;
 }

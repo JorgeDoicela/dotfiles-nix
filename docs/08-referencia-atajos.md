@@ -15,7 +15,7 @@ Este catálogo resume todos los atajos de teclado configurados en [raw_configs/h
 | `Super + B` | Navegador web Brave |
 | `Super + C` | Editor de código VS Code |
 | `Super + E` | Explorador de archivos terminal Yazi |
-| `Super + Shift + E` | Explorador de archivos gráfico Thunar |
+| `Super + Shift + E` | Explorador de archivos gráfico PCManFM-Qt (`F3` doble panel, `F4` terminal Alacritty) |
 | `Super + M` | Zoom con patrón *Raise or Launch* (`zoom`) |
 | `Super + O` | Bóveda de notas Obsidian (`obsidian`) |
 | `Super + T` | Entorno de desarrollo Orca IDE (`orca-ide`) |

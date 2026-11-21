@@ -10,7 +10,7 @@ El entorno implementa un **modelo híbrido de dos capas** para gestionar Google 
 
 ### Capa 1: Disco Virtual On-Demand (`~/Drive` vía FUSE Aislado)
 * **Servicio:** `rclone-gdrive.service` (Systemd de usuario en [modules/apps.nix](../modules/apps.nix)).
-* **Arquitectura de Aislamiento XDG:** Para evitar que GVFS (`gvfs-udisks2-volume-monitor`) sondee la API de Google Drive buscando archivos `autorun.inf` o `bdmv` y bloquee D-Bus durante 25 segundos al abrir exploradores como Thunar, el punto de montaje real reside en un subdirectorio XDG oculto: `%h/.local/share/gdrive`.
+* **Arquitectura de Aislamiento XDG:** Para evitar que GVFS (`gvfs-udisks2-volume-monitor`) sondee la API de Google Drive buscando archivos `autorun.inf` o `bdmv` y bloquee D-Bus durante 25 segundos al abrir exploradores o diálogos de archivo, el punto de montaje real reside en un subdirectorio XDG oculto: `%h/.local/share/gdrive`.
 * **Symlink Transparente:** Se expone de forma automática hacia `%h/Drive` (`~/Drive`) para paridad con terminales y scripts.
 * **Resiliencia VFS y Emulación de Cuota:**
   * `--vfs-disk-space-total-size 5T`: Emula un tamaño estático para responder al instante las llamadas al sistema `statfs()`/`statvfs()` de Linux sin consultar la cuota remota por HTTP.

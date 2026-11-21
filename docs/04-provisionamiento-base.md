@@ -87,11 +87,10 @@ Para garantizar que el explorador de archivos y las operaciones de entrada/salid
 Para erradicar dependencias externas frágiles que degradan el tiempo de ejecución de `apt update` o provocan fallos por expiración de llaves GPG:
 * Se eliminaron todas las listas y llaves de HashiCorp y NodeSource en `/etc/apt/`.
 * Todo el stack de desarrollo (Node.js 22, pnpm, formatters y utilidades de infraestructura) se delega exclusivamente al motor hermético de Nix Flakes.
-* **Stack Completo del Explorador Gráfico:** Despliegue automatizado de `thunar`, `thunar-volman` (gestor de volúmenes y dispositivos externos) y `thunar-archive-plugin`.
-* **Capa de Abstracción VFS de Usuario:** Instalación de `gvfs-backends` y `gvfs-fuse`. Sin `gvfs-fuse`, el subsistema GIO intenta ejecutar llamadas síncronas bloqueantes de metadatos directamente sobre puntos de montaje FUSE, provocando que el hilo de renderizado de GTK se cuelgue al abrir `$HOME`.
-* **Motor de Miniaturas y Previsualizaciones:** Instalación de `tumbler`, `tumbler-plugins-extra` y `ffmpegthumbnailer` para procesamiento eficiente de imágenes y videos locales.
-* **Procesamiento Multimedia y Códecs Acelerados por Hardware:** Instalación de `ffmpeg` a nivel de sistema base (.deb) para garantizar enlace directo con los controladores Mesa (`radeonsi_dri.so`), aceleración por hardware VA-API y soporte de códecs (H.264/H.265/AV1) sin desajustes de ABI.
-* **Optimización Defensiva de Montajes GVFS:** Desactivación formal de `AutoMount=true` en `/usr/share/gvfs/mounts/network.mount` y `wsdd.mount` para erradicar emisiones síncronas de broadcast en red local y llamadas fallidas al demonio `wsdd` al abrir el explorador de archivos local.
+* **Stack Completo del Explorador Gráfico (Qt6 / Wayland):** Despliegue automatizado de `pcmanfm-qt` (explorador ligero nativo Qt6/Wayland sin demonios residentes) y `lxqt-archiver` (gestor de archivos comprimidos integrado).
+* **Capa de Abstracción VFS de Usuario:** Instalación de `gvfs`, `gvfs-backends` y `gvfs-fuse` para soporte de papelera, dispositivos MTP/USB y compatibilidad FUSE en diálogos de archivo GTK.
+* **Procesamiento Multimedia y Miniaturas:** Instalación de `ffmpeg` y `ffmpegthumbnailer` a nivel de sistema base (.deb) para garantizar enlace directo con los controladores Mesa (`radeonsi_dri.so`), aceleración por hardware VA-API y generación eficiente de vistas previas locales.
+* **Optimización Defensiva de Montajes GVFS (`dpkg-divert`):** Desactivación permanente de `AutoMount=true` en `/usr/share/gvfs/mounts/network.mount` y `wsdd.mount` protegida con `dpkg-divert` para erradicar emisiones síncronas de broadcast en red local y llamadas fallidas al demonio `wsdd`, resistiendo futuras actualizaciones de `apt`.
 
 ### 11. Plataforma de Videojuegos y Soporte Multiarch (Steam y Mesa 32 bits)
 Para habilitar videojuegos nativos y de Windows (mediante la capa de compatibilidad Proton) con aceleración gráfica completa por hardware:
