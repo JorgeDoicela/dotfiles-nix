@@ -32,12 +32,10 @@ El script está diseñado para ejecutarse múltiples veces de forma segura sin p
 * Se restaura el [sources.list](../setup/etc/sources.list) base de Debian Bookworm/Trixie.
 * Se mantiene `/etc/apt/sources.list.d/` estrictamente libre de repositorios de terceros para herramientas de desarrollo (las cuales se gestionan mediante Nix).
 
-### 2. Gestión de Energía y Batería con TLP ([setup/etc/tlp.conf](../setup/etc/tlp.conf))
-Para maximizar la autonomía de las laptops desconectadas de la corriente:
-* Gobernador de CPU configurado en modo dinámico eficiente en batería.
-* Autosuspend de puertos USB inactivos.
-* Desactivación de ahorro de energía agresivo en Wi-Fi que provoque pérdida de paquetes.
-* Integración con `tlp-rdw` para gestión inteligente de radiofrecuencias.
+### 2. Gestión de Energía y Batería Modular con TLP ([setup/etc/tlp.d/](../setup/etc/tlp.d/))
+Arquitectura 100% *drop-in* (idéntica a GRUB y SDDM) con `/etc/tlp.conf` limpio sin parámetros activos para garantizar precedencia real de `/etc/tlp.d/*.conf`:
+* **Base universal ([setup/etc/tlp.d/10-base.conf](../setup/etc/tlp.d/10-base.conf)):** Política segura para cualquier laptop (100% en AC con Turbo, 60% en batería sin Turbo, `PCIE_ASPM=default`, `RUNTIME_PM_DRIVER_DENYLIST` con `ath10k_pci` y `radeon`, `WIFI_PWR=off`, umbrales de carga 75%–80%, autosuspend USB e integración `tlp-rdw`).
+* **Override automático por host (`setup/etc/tlp.d/99-<hostname>.conf`):** `instalar.sh` detecta `$(hostname)` y despliega automáticamente el perfil térmico específico si existe (por ejemplo [99-jorge-terciaria.conf](../setup/etc/tlp.d/99-jorge-terciaria.conf) para el perfil silencioso de la Dell 5570 con IDs persistentes de disco y límites de Intel UHD 620).
 
 ### 3. Arranque Silencioso y Rápido (GRUB, Plymouth y FSCK)
 * **GRUB Silencioso ([99-clean-boot.cfg](../setup/etc/grub.d/99-clean-boot.cfg)):** Elimina mensajes ruidosos del kernel durante el POST (`quiet splash loglevel=3 rd.systemd.show_status=auto`).

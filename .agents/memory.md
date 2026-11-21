@@ -5,7 +5,7 @@
 * **`jorge-terciaria` (Laptop Terciaria — Lectura, Estudio y Multimedia):**
   * Pantalla: Panel interno `eDP-1` a 1920x1080 (1080p nativo).
   * Escala: Estándar (11pt GTK/Qt6/DConf, Waybar 13px, cursor Bibata 24px).
-  * Perfil térmico y visual: `performanceProfile = "low"` (cero blur, sombras ni animaciones costosas) y `setup/etc/tlp.conf` optimizado para silencio y autonomía (sin Turbo Boost en AC/BAT, EPP `balance_power`, `CPU_MAX_PERF` 70%/55%, Intel UHD 620 limitada a 850/600 MHz, Runtime PM `auto` excluyendo `ath10k_pci`, `PCIE_ASPM=default` y `WIFI_PWR=off` para evitar bloqueos PCIe `-110/-5` del adaptador Wi-Fi Qualcomm Atheros QCA9377, y discos configurados por ID persistente con `DISK_SPINDOWN_TIMEOUT="0 0"` y `APM=192` en batería para el HDD `/home`).
+  * Perfil térmico y visual: `performanceProfile = "low"` (cero blur, sombras ni animaciones costosas) y arquitectura TLP modular en drop-ins (`setup/etc/tlp.d/10-base.conf` universal + `setup/etc/tlp.d/99-jorge-terciaria.conf` específico del host: sin Turbo Boost en AC/BAT, EPP `balance_power`, `CPU_MAX_PERF` 70%/55%, Intel UHD 620 limitada a 850/600 MHz, Runtime PM `auto` excluyendo `ath10k_pci`, `PCIE_ASPM=default` y `WIFI_PWR=off` para QCA9377, y discos por ID persistente con `DISK_SPINDOWN_TIMEOUT="0 0"` y `APM=192` en batería para el HDD `/home`).
   * Touchpad: Calibrado para respuesta ágil con `cursorSensitivity = "0.35"` y `scrollFactor = "0.27"`.
   * Gráficos: Híbrido Intel UHD 620 (VA-API H.264/VP9/HEVC) + AMD Radeon R7 M360 dedicada con `amdgpu-powersave`.
 

@@ -64,8 +64,14 @@ safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck@.
 safe_copy "$CURRENT_DIR/etc/fsck-silent.conf" /etc/systemd/system/systemd-fsck-root.service.d/silent.conf
 safe_copy "$CURRENT_DIR/etc/apt-no-recommends.conf" /etc/apt/apt.conf.d/99no-recommends
 
-# Configurar TLP, System.conf y Bluetooth
+# Configurar TLP modular mediante drop-ins en /etc/tlp.d/ (base universal + override por host)
+mkdir -p /etc/tlp.d
 safe_copy "$CURRENT_DIR/etc/tlp.conf" /etc/tlp.conf
+safe_copy "$CURRENT_DIR/etc/tlp.d/10-base.conf" /etc/tlp.d/10-base.conf
+CURRENT_HOST="$(hostname)"
+if [ -f "$CURRENT_DIR/etc/tlp.d/99-${CURRENT_HOST}.conf" ]; then
+    safe_copy "$CURRENT_DIR/etc/tlp.d/99-${CURRENT_HOST}.conf" "/etc/tlp.d/99-${CURRENT_HOST}.conf"
+fi
 safe_copy "$CURRENT_DIR/etc/system.conf" /etc/systemd/system.conf
 
 # Configurar bluetooth: deshabilitar autoenable forzado para que arranque siempre apagado

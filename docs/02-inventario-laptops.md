@@ -33,7 +33,7 @@ Este documento especifica los perfiles técnicos de hardware para cada laptop ge
 * **Hardware:** Dell Inspiron 5570 (Intel Core i7-8550U, Intel UHD 620 con VA-API H.264/VP9/HEVC + AMD Radeon R7 M360 dedicada, SSD `sda` + HDD `sdb`).
 * **Perfil Térmico y de Autonomía:**
   * `performanceProfile = "low"` en Hyprland (sin blur, sombras ni animaciones costosas).
-  * [setup/etc/tlp.conf](../setup/etc/tlp.conf): sin Turbo Boost en AC/BAT, EPP `balance_power`, `CPU_MAX_PERF` limitado a 70% (AC) / 55% (BAT), Intel UHD 620 limitada a 850 MHz (AC) / 600 MHz (BAT), `RUNTIME_PM_ON_AC=auto` excluyendo `ath10k_pci`, `PCIE_ASPM=default` y `WIFI_PWR=off` para estabilidad del Wi-Fi QCA9377, y discos declarados por ID persistente (`tlp diskid`) sin *spin-down* agresivo sobre el HDD que aloja `/home` (`APM=192` en batería).
+  * Drop-in TLP específico ([setup/etc/tlp.d/99-jorge-terciaria.conf](../setup/etc/tlp.d/99-jorge-terciaria.conf) sobre [10-base.conf](../setup/etc/tlp.d/10-base.conf)): sin Turbo Boost en AC/BAT, EPP `balance_power`, `CPU_MAX_PERF` limitado a 70% (AC) / 55% (BAT), Intel UHD 620 limitada a 850 MHz (AC) / 600 MHz (BAT), `RUNTIME_PM_ON_AC=auto` excluyendo `ath10k_pci`, `PCIE_ASPM=default` y `WIFI_PWR=off` para estabilidad del Wi-Fi QCA9377, y discos declarados por ID persistente (`tlp diskid`) sin *spin-down* agresivo sobre el HDD que aloja `/home` (`APM=192` en batería).
 * **Esquema de Pantallas:** Panel interno único (`eDP-1`).
 * **Archivo de Monitores ([monitors.conf](../hosts/jorge-terciaria/monitors.conf)):**
   ```ini
