@@ -1,9 +1,10 @@
 { config, pkgs, ... }:
 
 {
-  # Parámetros declarativos de escala de UI para jorge-terciaria (Pantalla 1080p estándar)
+  # Parámetros declarativos de escala y perfil térmico silencioso para jorge-terciaria
+  # Rol: lectura, estudio y video en cama (máxima batería, mínimas temperaturas, cero blur/sombras)
   mySystem = {
-    performanceProfile = "full";
+    performanceProfile = "low";
     fontSize = 11;
     cursorSize = 24;
     waybarFontSize = "13px";

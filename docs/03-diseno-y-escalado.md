@@ -38,9 +38,9 @@ options.mySystem = {
 
 ### Perfiles de Rendimiento Escalonado (`performanceProfile`)
 Cada host declara su capacidad de hardware en `hosts/<host>/default.nix`, generando automáticamente `~/.config/hypr/performance.conf` en [modules/desktop.nix](../modules/desktop.nix):
-* **`low` (Pentium / 4 GB RAM):** Desactiva `blur`, `shadow`, transparencias (`opacity = 1.0`) y `animations`.
+* **`low` (Pentium / 4 GB RAM o perfil silencioso de máxima batería — `jorge-terciaria`):** Desactiva `blur`, `shadow`, transparencias (`opacity = 1.0`) y `animations`.
 * **`balanced` (Ryzen 3 / 8 GB RAM — `jorge-secundaria`):** Mantiene animaciones fluidas y `blur` ligero (1 pasada) sin sombras costosas.
-* **`full` (Ryzen 7 / 16 GB RAM — `jorge-terciaria`):** Activa `blur` completo (2 pasadas), sombras y animaciones.
+* **`full` (Ryzen 7 / 16 GB RAM):** Activa `blur` completo (2 pasadas), sombras y animaciones.
 
 ---
 

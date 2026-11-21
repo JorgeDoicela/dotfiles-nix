@@ -2,11 +2,12 @@
 
 ## 1. Identificación de Equipos y Contexto de Hardware
 
-* **`jorge-terciaria` (Laptop Principal):**
+* **`jorge-terciaria` (Laptop Terciaria — Lectura, Estudio y Multimedia):**
   * Pantalla: Panel interno `eDP-1` a 1920x1080 (1080p nativo).
-  * Escala: Estándar (11pt GTK/DConf, Waybar 13px, cursor Bibata 24px).
+  * Escala: Estándar (11pt GTK/Qt6/DConf, Waybar 13px, cursor Bibata 24px).
+  * Perfil térmico y visual: `performanceProfile = "low"` (cero blur, sombras ni animaciones costosas) y `setup/etc/tlp.conf` optimizado para silencio y autonomía (sin Turbo Boost en AC/BAT, `CPU_MAX_PERF` 70%/45%, Intel UHD 620 limitada a 850/600 MHz, Runtime PM `auto` para suspender dGPU AMD y spin-down del HDD `sdb` en AC y BAT).
   * Touchpad: Calibrado para respuesta ágil con `cursorSensitivity = "0.35"` y `scrollFactor = "0.27"`.
-  * Gráficos: AMD Radeon con soporte para perfiles `amdgpu-powersave` y `amdgpu-performance`.
+  * Gráficos: Híbrido Intel UHD 620 (VA-API H.264/VP9/HEVC) + AMD Radeon R7 M360 dedicada con `amdgpu-powersave`.
 
 * **`jorge-secundaria` (Laptop Auxiliar / Dual Display):**
   * Pantallas:
@@ -143,7 +144,7 @@
   * `programs.git` endurecido con firma criptográfica SSH nativa (`gpg.format = "ssh"`, `user.signingkey = "~/.ssh/id_ed25519_github.pub"`, `commit.gpgsign = true`, `tag.gpgsign = true`), `pull.rebase = true`, `fetch.prune = true`, `rerere.enabled = true`, `diff.algorithm = "histogram"`, y `programs.delta` como pager de diffs.
   * Productividad y DevSecOps 100% bajo demanda (cero demonios residentes): `programs.tmux` (prefijo `C-a`, modo `vi`, paleta monocromática Alacritty/Waybar), `programs.zoxide`, `programs.bat`, `programs.direnv` (`nix-direnv`), `lazygit`, `lazydocker`, `gitleaks`, `trivy`, `age` y `sops`.
 * **Perfiles de Rendimiento Escalonado y Higiene GTK4/Qt6 (`modules/style.nix`, `modules/desktop.nix`):**
-  * `mySystem.performanceProfile` (`"low" | "balanced" | "full"`) genera declarativamente `~/.config/hypr/performance.conf` por host (`full` en `jorge-terciaria`, `balanced` en `jorge-secundaria`, listo para `low` en equipos Pentium 4 GB sin blur, sombras ni animaciones).
+  * `mySystem.performanceProfile` (`"low" | "balanced" | "full"`) genera declarativamente `~/.config/hypr/performance.conf` por host (`low` en `jorge-terciaria` para máxima autonomía y bajas temperaturas, `balanced` en `jorge-secundaria`, `full` disponible para equipos Ryzen 7 16 GB).
   * `gtk.gtk4.theme = null` erradica los errores de parseo CSS y advertencias de Libadwaita (`swaync`, `swayosd`, `hyprshell`), delegando el modo oscuro exclusivamente a `dconf` (`color-scheme = "prefer-dark"`).
   * `qt5ct.conf` y `qt6ct.conf` se parametrizan con `JetBrainsMono Nerd Font` y `config.mySystem.fontSize` para cohesión tipográfica total en `pcmanfm-qt` y aplicaciones Qt6.
 
