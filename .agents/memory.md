@@ -5,7 +5,7 @@
 * **`jorge-terciaria` (Laptop Terciaria — Lectura, Estudio y Multimedia):**
   * Pantalla: Panel interno `eDP-1` a 1920x1080 (1080p nativo).
   * Escala: Estándar (11pt GTK/Qt6/DConf, Waybar 13px, cursor Bibata 24px).
-  * Perfil térmico y visual: `performanceProfile = "low"` (cero blur, sombras ni animaciones costosas) y arquitectura TLP modular en drop-ins (`setup/etc/tlp.d/10-base.conf` universal + `setup/etc/tlp.d/99-jorge-terciaria.conf` específico del host: sin Turbo Boost en AC/BAT, EPP `balance_power`, `CPU_MAX_PERF` 70%/55%, Intel UHD 620 limitada a 850/600 MHz, Runtime PM `auto` excluyendo `ath10k_pci`, `PCIE_ASPM=default` y `WIFI_PWR=off` para QCA9377, y discos por ID persistente con `DISK_SPINDOWN_TIMEOUT="0 0"` y `APM=192` en batería para el HDD `/home`).
+  * Perfil térmico y visual: `performanceProfile = "low"` (cero blur, sombras ni animaciones costosas) y arquitectura TLP modular en drop-ins (`setup/etc/tlp.d/10-base.conf` universal + `setup/etc/tlp.d/99-jorge-terciaria.conf` específico del host: sin Turbo Boost en AC/BAT, EPP `balance_power`, `CPU_MAX_PERF` 70%/55%, Intel UHD 620 limitada a 850/600 MHz, Runtime PM `auto` excluyendo `ath10k_pci`, `PCIE_ASPM=default` y `WIFI_PWR=off` para QCA9377, `AHCI_RUNTIME_PM_ON_AC/BAT=on` para evitar suspensión de puertos SATA y pausas de 3–5 s al despertar discos, y discos por ID persistente con `DISK_SPINDOWN_TIMEOUT="0 0"` y `APM=192` en batería para el HDD `/home`).
   * Touchpad: Calibrado para respuesta ágil con `cursorSensitivity = "0.35"` y `scrollFactor = "0.27"`.
   * Gráficos: Híbrido Intel UHD 620 (VA-API H.264/VP9/HEVC) + AMD Radeon R7 M360 dedicada con `amdgpu-powersave`.
 
@@ -116,10 +116,10 @@
   * Paquetes nativos Debian con soporte 32-bit (`mesa-vulkan-drivers:i386`, `libgl1-mesa-dri:i386`, `steam-devices` y `steam-installer`).
   * Wrapper declarativo en `~/.local/bin/steam` que detecta dinámicamente `config.vdf` (rutas estándar XDG o retrocompatibles) y preconfigura idioma español (`registry.vdf`) y compatibilidad global con **Proton 9.0** (`SteamPlay = 1`, `EnableSteamDesktopPlay = 1`, `CompatToolMapping -> proton_9`).
   * Reglas de ventana en Hyprland para diálogos emergentes flotantes y lanzador `steam.desktop` en `~/.local/share/applications/`.
-* **Wine 10 Multiarch y e-Sword Aislado (`~/.wine-esword`):**
+* **Wine 10 Multiarch y e-Sword 12.2.0 Aislado en Wayland Nativo (`~/.wine-esword`):**
   * Aprovisionado nativamente en Debian 13 (`wine`, `wine64`, `wine32:i386`, `winetricks`, `cabextract`) sin repositorios externos WineHQ.
-  * Prefix dedicado `WINEPREFIX=~/.wine-esword` (`WINEARCH=win32`) inicializado con `riched20`, `vb6run`, `corefonts` y `fontsmooth=rgb` para compatibilidad óptima con controles ActiveX/VB6 de 32 bits.
-  * Wrapper declarativo en `~/.local/bin/esword` ([modules/scripts.nix](../modules/scripts.nix)) con patrón *Raise or Launch* en Hyprland, detección automática de ruta 32/64-bit y lanzador `esword.desktop` para Rofi.
+  * Prefix dedicado virgen `WINEPREFIX=~/.wine-esword` (`WINEARCH=win32`) usando librerías nativas de Wine 10.0 (sin overrides legacy de `winetricks` que provocan bloqueos COM).
+  * Wrapper declarativo en `~/.local/bin/esword` ([modules/scripts.nix](../modules/scripts.nix)) con patrón *Raise or Launch*, detección automática de ruta 32/64-bit, `env -u DISPLAY` obligatorio para forzar `winewayland.drv` nativo (`xwayland=False`, erradicando el bucle XWayland `recvmsg EAGAIN` en la pantalla de carga) y lanzador único `esword.desktop` para Rofi. Mantener tema por defecto (no cambiar skins `.cjstyles` bajo Wine).
 * **Atajos de Lanzamiento Clave:**
   * `Super + A`: Antigravity IDE (`antigravity-ide`).
   * `Super + M`: Zoom (`zoom`).

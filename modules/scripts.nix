@@ -223,6 +223,8 @@ with open(path, "w", encoding="utf-8") as f:
   # Wrapper declarativo para e-Sword en prefix Wine aislado (~/.wine-esword)
   # 1. Aplica patrón Raise or Launch en Hyprland si ya existe ventana activa.
   # 2. Detecta automáticamente la ruta de instalación (32-bit o 64-bit) dentro del prefix.
+  # 3. Purga DISPLAY para forzar el driver nativo Wayland de Wine 10 (winewayland.drv),
+  #    evitando el bucle XWayland (recvmsg EAGAIN) que congela la pantalla de carga.
   home.file.".local/bin/esword" = {
     executable = true;
     text = ''
@@ -249,11 +251,11 @@ with open(path, "w", encoding="utf-8") as f:
 
       if [ -z "$EXE" ]; then
           echo "[ERROR] e-Sword no está instalado en $WINEPREFIX." >&2
-          echo "Instálalo ejecutando: WINEPREFIX=\"\$HOME/.wine-esword\" wine /ruta/al/instalador_esword.exe" >&2
+          echo "Instálalo ejecutando: WINEPREFIX=\"\$HOME/.wine-esword\" WINEARCH=win32 wine /ruta/al/e-sword_1220_setup.exe" >&2
           exit 1
       fi
 
-      exec /usr/bin/wine "$EXE" "$@" >/dev/null 2>&1
+      exec env -u DISPLAY /usr/bin/wine "$EXE" "$@" >/dev/null 2>&1
     '';
   };
 

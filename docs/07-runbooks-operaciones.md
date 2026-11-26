@@ -428,5 +428,34 @@ Evita el retiro del `client_id` compartido de `rclone` en 2026 y elimina el *rat
    systemctl --user restart rclone-gdrive.service
    ```
 
+---
+
+## Runbook 9: Despliegue y Operación de e-Sword 12.2.0 en Wine 10 (Wayland Nativo)
+
+Para replicar **e-Sword 12.2.0** de forma limpia y estable en cualquiera de tus máquinas Linux con Hyprland:
+
+### 1. Crear un Prefix `win32` Virgen (Sin Overrides Legacy)
+No instalar DLLs antiguas de Windows 2000/XP vía `winetricks` (`riched20`, `msxml3`), ya que las implementaciones internas de Wine 10.0 son superiores y evitan bloqueos COM:
+```bash
+WINEPREFIX="$HOME/.wine-esword" WINEARCH=win32 wineboot --init
+WINEPREFIX="$HOME/.wine-esword" wineserver -w
+```
+
+### 2. Instalar e-Sword 12.2.0 y Limpiar Lanzador Duplicado de Wine
+```bash
+WINEPREFIX="$HOME/.wine-esword" WINEARCH=win32 wine ~/Descargas/e-sword_1220_setup.exe
+rm -rf ~/.local/share/applications/wine/Programs/e-Sword ~/Escritorio/e-Sword* ~/Desktop/e-Sword*
+update-desktop-database ~/.local/share/applications
+```
+
+### 3. Ejecución en Wayland Nativo y Reglas Operativas
+* Lanzar siempre mediante `~/.local/bin/esword` (o desde Rofi `Super + Space -> e-Sword`). El wrapper purga `DISPLAY` (`env -u DISPLAY`) para forzar el driver nativo **`winewayland.drv`** (`xwayland=False`), erradicando el bucle XWayland (`recvmsg EAGAIN`) que congela la pantalla de carga.
+* **Tema visual:** Mantener el tema por defecto de e-Sword (evitar cambiar skins `.cjstyles` bajo Wine, ya que pueden bloquear los controles ActiveX).
+* **Cierre de emergencia:** Si alguna instancia queda retenida, terminar el servidor del prefix aislado sin afectar otros programas:
+  ```bash
+  WINEPREFIX="$HOME/.wine-esword" wineserver -k
+  ```
+
+
 
 
